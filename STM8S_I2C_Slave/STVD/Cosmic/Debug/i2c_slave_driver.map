@@ -1,5 +1,5 @@
 
-Map of Debug\i2c_slave_driver.sm8 from link file Debug\i2c_slave_driver.lkf - Thu Jun 29 21:30:54 2017
+Map of Debug\i2c_slave_driver.sm8 from link file Debug\i2c_slave_driver.lkf - Mon Jul 03 22:47:10 2017
 
 
                                --------
@@ -7,7 +7,7 @@ Map of Debug\i2c_slave_driver.sm8 from link file Debug\i2c_slave_driver.lkf - Th
                                --------
 
 start 00008080 end 000081ce length   334 segment .const
-start 000081f6 end 0000971d length  5415 segment .text
+start 000081f6 end 000096e2 length  5356 segment .text
 start 00004000 end 00004000 length     0 segment .eeprom
 start 00000000 end 00000020 length    32 segment .bsct, initialized
 start 000081d6 end 000081f6 length    32 segment .bsct, from
@@ -247,39 +247,39 @@ start 000086e5 end 0000871e length    57 section .text
 start 0000871e end 0000874f length    49 section .text
 start 0000874f end 00008794 length    69 section .text
 start 00008794 end 00008799 length     5 section .text
-start 00008799 end 0000891e length   389 section .text
-start 0000891e end 0000895b length    61 section .text
-start 0000895b end 0000898e length    51 section .text
-start 0000898e end 000089b5 length    39 section .text
-start 000089b5 end 000089ec length    55 section .text
-start 000089ec end 000089f5 length     9 section .text
+start 00008799 end 00008926 length   397 section .text
+start 00008926 end 00008963 length    61 section .text
+start 00008963 end 00008996 length    51 section .text
+start 00008996 end 000089bd length    39 section .text
+start 000089bd end 000089f4 length    55 section .text
+start 000089f4 end 000089fd length     9 section .text
 start ******** end ******** length     0 section .text *** removed ***
-start 000089f5 end 00008a0e length    25 section .text
-start 00008a0e end 00008a19 length    11 section .text
-start 00008a19 end 00008ab1 length   152 section .text
-start 00008ab1 end 00008ae4 length    51 section .text
+start 000089fd end 00008a16 length    25 section .text
+start 00008a16 end 00008a21 length    11 section .text
+start 00008a21 end 00008ab9 length   152 section .text
+start 00008ab9 end 00008ad4 length    27 section .text
 start 000081b2 end 000081b6 length     4 section .const
 
 Debug\main.o:
 start 00000003 end 00000020 length    29 section .bsct
 start 00000091 end 0000009f length    14 section .ubsct
 start 0000a2bd end 0000ab8d length  2256 section .debug
-start 00008ae4 end 00008b0e length    42 section .text
-start 00008b0e end 00008c59 length   331 section .text
-start 00008c59 end 00008c5b length     2 section .text
-start 00008c5b end 00008c8f length    52 section .text
-start 00008c8f end 00008ce2 length    83 section .text
-start 00008ce2 end 00008cef length    13 section .text
-start 00008cef end 00008dc4 length   213 section .text
-start 00008dc4 end 00008de1 length    29 section .text
-start 00008de1 end 00008e5b length   122 section .text
-start 00008e5b end 00008e7e length    35 section .text
-start 00008e7e end 00008ef1 length   115 section .text
-start 00008ef1 end 00008f2e length    61 section .text
-start 00008f2e end 00008f72 length    68 section .text
-start 00008f72 end 00008fbb length    73 section .text
-start 00008fbb end 00009052 length   151 section .text
-start 00009052 end 000093c3 length   881 section .text
+start 00008ad4 end 00008afe length    42 section .text
+start 00008afe end 00008c1e length   288 section .text
+start 00008c1e end 00008c20 length     2 section .text
+start 00008c20 end 00008c54 length    52 section .text
+start 00008c54 end 00008ca7 length    83 section .text
+start 00008ca7 end 00008cb4 length    13 section .text
+start 00008cb4 end 00008d89 length   213 section .text
+start 00008d89 end 00008da6 length    29 section .text
+start 00008da6 end 00008e20 length   122 section .text
+start 00008e20 end 00008e43 length    35 section .text
+start 00008e43 end 00008eb6 length   115 section .text
+start 00008eb6 end 00008ef3 length    61 section .text
+start 00008ef3 end 00008f37 length    68 section .text
+start 00008f37 end 00008f80 length    73 section .text
+start 00008f80 end 00009017 length   151 section .text
+start 00009017 end 00009388 length   881 section .text
 start 000081b6 end 000081ce length    24 section .const
 
 Debug\stm8s_it.o:
@@ -310,43 +310,43 @@ start ******** end ******** length     0 section .text *** removed ***
 start ******** end ******** length     0 section .text *** removed ***
 
 (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)ctof.o:
-start 000093c3 end 000093cb length     8 section .text
+start 00009388 end 00009390 length     8 section .text
 
 (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fcmp.o:
-start 000093cb end 00009401 length    54 section .text
+start 00009390 end 000093c6 length    54 section .text
 
 (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fdiv.o:
-start 00009401 end 00009485 length   132 section .text
+start 000093c6 end 0000944a length   132 section .text
 
 (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fgadd.o:
-start 00009485 end 0000948d length     8 section .text
+start 0000944a end 00009452 length     8 section .text
 
 (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fadd.o:
-start 0000948d end 0000956a length   221 section .text
+start 00009452 end 0000952f length   221 section .text
 
 (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fmul.o:
-start 0000956a end 0000963f length   213 section .text
+start 0000952f end 00009604 length   213 section .text
 
 (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)ftol.o:
-start 0000963f end 000096a1 length    98 section .text
+start 00009604 end 00009666 length    98 section .text
 
 (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)itof.o:
-start 000096a1 end 000096cf length    46 section .text
+start 00009666 end 00009694 length    46 section .text
 
 (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)lgsbc.o:
-start 000096cf end 000096e5 length    22 section .text
+start 00009694 end 000096aa length    22 section .text
 
 (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)lreg.o:
 start 0000009f end 000000a3 length     4 section .ubsct
 
 (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)lrzmp.o:
-start 000096e5 end 000096f8 length    19 section .text
+start 000096aa end 000096bd length    19 section .text
 
 (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)ltor.o:
-start 000096f8 end 0000970a length    18 section .text
+start 000096bd end 000096cf length    18 section .text
 
 (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)rtol.o:
-start 0000970a end 0000971c length    18 section .text
+start 000096cf end 000096e1 length    18 section .text
 
 (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)xreg.o:
 start 000000a3 end 000000a6 length     3 section .ubsct
@@ -356,7 +356,7 @@ start 000000a6 end 000000a9 length     3 section .ubsct
 
 Debug\stm8_interrupt_vector.o:
 start 0000b273 end 0000b3de length   363 section .debug
-start 0000971c end 0000971d length     1 section .text
+start 000096e1 end 000096e2 length     1 section .text
 start 00008000 end 00008080 length   128 section .const
 
 
@@ -690,8 +690,8 @@ _EXTI_GetTLISensitivity             ********   *** removed from Debug\stm8s_exti
 _EXTI_SetExtIntSensitivity          00008338   defined in Debug\stm8s_exti.o section .text
                                                used in Debug\main.o
 _EXTI_SetTLISensitivity             ********   *** removed from Debug\stm8s_exti.o ***
-_EraseIn                            00008f2e   defined in Debug\main.o section .text
-_EraseOut                           00008f72   defined in Debug\main.o section .text
+_EraseIn                            00008ef3   defined in Debug\main.o section .text
+_EraseOut                           00008f37   defined in Debug\main.o section .text
 _GPIO_DeInit                        ********   *** removed from Debug\stm8s_gpio.o ***
 _GPIO_ExternalPullUpConfig          ********   *** removed from Debug\stm8s_gpio.o ***
 _GPIO_Init                          00008406   defined in Debug\stm8s_gpio.o section .text
@@ -729,14 +729,14 @@ _I2C_Send7bitAddress                ********   *** removed from Debug\stm8s_i2c.
 _I2C_SendData                       ********   *** removed from Debug\stm8s_i2c.o ***
 _I2C_SoftwareResetCmd               ********   *** removed from Debug\stm8s_i2c.o ***
 _I2C_StretchClockCmd                ********   *** removed from Debug\stm8s_i2c.o ***
-_I2C_byte_received                  000089f5   defined in Debug\i2c_slave_interrupt.o section .text
-_I2C_byte_write                     00008a0e   defined in Debug\i2c_slave_interrupt.o section .text
+_I2C_byte_received                  000089fd   defined in Debug\i2c_slave_interrupt.o section .text
+_I2C_byte_write                     00008a16   defined in Debug\i2c_slave_interrupt.o section .text
 _I2C_receive_begin                  00008794   defined in Debug\i2c_slave_interrupt.o section .text
 _I2C_transaction_begin              00008799   defined in Debug\i2c_slave_interrupt.o section .text
-_I2C_transaction_end                000089ec   defined in Debug\i2c_slave_interrupt.o section .text
+_I2C_transaction_end                000089f4   defined in Debug\i2c_slave_interrupt.o section .text
 _I2C_transaction_receive            ********   *** removed from Debug\i2c_slave_interrupt.o ***
 _IIC_RxBuffer                       00000056   defined in Debug\i2c_slave_interrupt.o section .ubsct
-_IIC_SlaveConfig                    00008ab1   defined in Debug\i2c_slave_interrupt.o section .text
+_IIC_SlaveConfig                    00008ab9   defined in Debug\i2c_slave_interrupt.o section .text
                                                used in Debug\main.o
 _IIC_TxBuffer                       00000036   defined in Debug\i2c_slave_interrupt.o section .ubsct
 _IWDG_Enable                        ********   *** removed from Debug\stm8s_iwdg.o ***
@@ -744,10 +744,10 @@ _IWDG_ReloadCounter                 ********   *** removed from Debug\stm8s_iwdg
 _IWDG_SetPrescaler                  ********   *** removed from Debug\stm8s_iwdg.o ***
 _IWDG_SetReload                     ********   *** removed from Debug\stm8s_iwdg.o ***
 _IWDG_WriteAccessCmd                ********   *** removed from Debug\stm8s_iwdg.o ***
-_Linear                             00008ef1   defined in Debug\main.o section .text
+_Linear                             00008eb6   defined in Debug\main.o section .text
 _ReceiveState                       00000001   defined in Debug\i2c_slave_interrupt.o section .bsct, initialized
 _SendDataIndex                      00000002   defined in Debug\i2c_slave_interrupt.o section .bsct, initialized
-_Swing                              00008fbb   defined in Debug\main.o section .text
+_Swing                              00008f80   defined in Debug\main.o section .text
 _TIM2_ARRPreloadConfig              ********   *** removed from Debug\stm8s_tim2.o ***
 _TIM2_CCxCmd                        ********   *** removed from Debug\stm8s_tim2.o ***
 _TIM2_ClearFlag                     0000858d   defined in Debug\stm8s_tim2.o section .text
@@ -870,7 +870,7 @@ _aim_bright1                        00000031   defined in Debug\i2c_slave_interr
                                                used in Debug\main.o
 _aim_bright2                        0000002d   defined in Debug\i2c_slave_interrupt.o section .ubsct
                                                used in Debug\main.o
-_assert_failed                      00008c59   defined in Debug\main.o section .text
+_assert_failed                      00008c1e   defined in Debug\main.o section .text
                                                used in Debug\stm8s_adc1.o
                                                        Debug\stm8s_clk.o
                                                        Debug\stm8s_exti.o
@@ -887,55 +887,57 @@ _change_step2                       00000024   defined in Debug\i2c_slave_interr
 _change_time                        0000002c   defined in Debug\i2c_slave_interrupt.o section .ubsct
 _channel                            00000035   defined in Debug\i2c_slave_interrupt.o section .ubsct
                                                used in Debug\main.o
-_delay                              00008ae4   defined in Debug\main.o section .text
+_delay                              00008ad4   defined in Debug\main.o section .text
 _exit                               0000823f   defined in D:\Program Files (x86)\COSMIC\CXSTM8\Lib\crtsi0.sm8 section .text
 _f_100ms                            00000092   defined in Debug\main.o section .ubsct
 _getchar                            ********   *** removed from Debug\uart_printf.o ***
 _i2c_init_message                   0000874f   defined in Debug\i2c_slave_interrupt.o section .text
-_init_device_info                   0000891e   defined in Debug\i2c_slave_interrupt.o section .text
+_init_device_info                   00008926   defined in Debug\i2c_slave_interrupt.o section .text
 _last_bright1                       0000009b   defined in Debug\main.o section .ubsct
                                                used in Debug\i2c_slave_interrupt.o
 _last_bright2                       00000097   defined in Debug\main.o section .ubsct
                                                used in Debug\i2c_slave_interrupt.o
-_lightCtrl100ms                     00009052   defined in Debug\main.o section .text
-_main                               00008b0e   defined in Debug\main.o section .text
+_lightCtrl100ms                     00009017   defined in Debug\main.o section .text
+_main                               00008afe   defined in Debug\main.o section .text
                                                used in D:\Program Files (x86)\COSMIC\CXSTM8\Lib\crtsi0.sm8
 _mymemcpy                           000086e5   defined in Debug\i2c_slave_interrupt.o section .text
 _putchar                            ********   *** removed from Debug\uart_printf.o ***
 _realtime_bright1                   00000096   defined in Debug\main.o section .ubsct
+                                               used in Debug\i2c_slave_interrupt.o
 _realtime_bright2                   00000095   defined in Debug\main.o section .ubsct
-_rev_action_dimmer_OK               0000898e   defined in Debug\i2c_slave_interrupt.o section .text
-_rev_action_dimmer_done             000089b5   defined in Debug\i2c_slave_interrupt.o section .text
-_rev_heart_breat                    0000895b   defined in Debug\i2c_slave_interrupt.o section .text
+                                               used in Debug\i2c_slave_interrupt.o
+_rev_action_dimmer_OK               00008996   defined in Debug\i2c_slave_interrupt.o section .text
+_rev_action_dimmer_done             000089bd   defined in Debug\i2c_slave_interrupt.o section .text
+_rev_heart_breat                    00008963   defined in Debug\i2c_slave_interrupt.o section .text
 _slave_address                      00000077   defined in Debug\i2c_slave_interrupt.o section .ubsct
                                                used in Debug\main.o
 _slc                                00000078   defined in Debug\i2c_slave_interrupt.o section .ubsct
                                                used in Debug\main.o
 _sys                                00000003   defined in Debug\main.o section .bsct, initialized
 _tick1s                             00000091   defined in Debug\main.o section .ubsct
-c_ctof                              000093c3   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)ctof.o section .text
+c_ctof                              00009388   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)ctof.o section .text
                                                used in Debug\main.o
-c_fadd                              000094a1   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fadd.o section .text
+c_fadd                              00009466   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fadd.o section .text
                                                used in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fgadd.o
-c_fcmp                              000093cb   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fcmp.o section .text
+c_fcmp                              00009390   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fcmp.o section .text
                                                used in Debug\main.o
-c_fdiv                              00009401   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fdiv.o section .text
+c_fdiv                              000093c6   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fdiv.o section .text
                                                used in Debug\i2c_slave_interrupt.o
-c_fgadd                             00009485   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fgadd.o section .text
+c_fgadd                             0000944a   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fgadd.o section .text
                                                used in Debug\main.o
-c_fmul                              0000956a   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fmul.o section .text
+c_fmul                              0000952f   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fmul.o section .text
                                                used in Debug\main.o
-c_fsub                              0000948d   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fadd.o section .text
+c_fsub                              00009452   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fadd.o section .text
                                                used in Debug\i2c_slave_interrupt.o
                                                        Debug\main.o
-c_ftoi                              0000963f   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)ftol.o section .text
+c_ftoi                              00009604   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)ftol.o section .text
                                                *** not used ***
-c_ftol                              00009645   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)ftol.o section .text
+c_ftol                              0000960a   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)ftol.o section .text
                                                used in Debug\main.o
-c_itof                              000096a1   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)itof.o section .text
+c_itof                              00009666   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)itof.o section .text
                                                used in Debug\i2c_slave_interrupt.o
                                                        (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)ctof.o
-c_lgsbc                             000096cf   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)lgsbc.o section .text
+c_lgsbc                             00009694   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)lgsbc.o section .text
                                                used in Debug\i2c_slave_interrupt.o
 c_lreg                              0000009f   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)lreg.o section .ubsct
                                                used in Debug\stm8s_clk.o
@@ -960,22 +962,22 @@ c_lreg                              0000009f   defined in (D:\Program Files (x86
                                                        (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)lursh.o
                                                        (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)rtol.o
                                                        (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)smul.o
-c_lrzmp                             000096e5   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)lrzmp.o section .text
+c_lrzmp                             000096aa   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)lrzmp.o section .text
                                                used in Debug\i2c_slave_interrupt.o
-c_ltor                              000096f8   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)ltor.o section .text
+c_ltor                              000096bd   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)ltor.o section .text
                                                used in Debug\stm8s_clk.o
                                                        Debug\stm8s_i2c.o
                                                        Debug\stm8s_uart1.o
                                                        Debug\i2c_slave_interrupt.o
                                                        Debug\main.o
-c_okadd                             000094ab   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fadd.o section .text
-c_okdiv                             00009411   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fdiv.o section .text
+c_okadd                             00009470   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fadd.o section .text
+c_okdiv                             000093d6   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fdiv.o section .text
                                                *** not used ***
-c_okmul                             00009578   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fmul.o section .text
+c_okmul                             0000953d   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fmul.o section .text
                                                *** not used ***
-c_oksub                             00009497   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fadd.o section .text
+c_oksub                             0000945c   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)fadd.o section .text
                                                *** not used ***
-c_rtol                              0000970a   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)rtol.o section .text
+c_rtol                              000096cf   defined in (D:\Program Files (x86)\COSMIC\CXSTM8\Lib\libm0.sm8)rtol.o section .text
                                                used in Debug\stm8s_clk.o
                                                        Debug\stm8s_i2c.o
                                                        Debug\stm8s_uart1.o
@@ -1006,11 +1008,11 @@ f_EXTI_PORTB_IRQHandler             ********   *** removed from Debug\stm8s_it.o
 f_EXTI_PORTC_IRQHandler             ********   *** removed from Debug\stm8s_it.o ***
 f_EXTI_PORTD_IRQHandler             ********   *** removed from Debug\stm8s_it.o ***
 f_EXTI_PORTE_IRQHandler             ********   *** removed from Debug\stm8s_it.o ***
-f_Ext_PortD_ISR                     00008cef   defined in Debug\main.o section .text
+f_Ext_PortD_ISR                     00008cb4   defined in Debug\main.o section .text
                                                used in Debug\stm8_interrupt_vector.o
-f_I2C_Slave_check_event             00008a19   defined in Debug\i2c_slave_interrupt.o section .text
+f_I2C_Slave_check_event             00008a21   defined in Debug\i2c_slave_interrupt.o section .text
                                                used in Debug\stm8_interrupt_vector.o
-f_NonHandledInterrupt               0000971c   defined in Debug\stm8_interrupt_vector.o section .text
+f_NonHandledInterrupt               000096e1   defined in Debug\stm8_interrupt_vector.o section .text
 f_SPI_IRQHandler                    ********   *** removed from Debug\stm8s_it.o ***
 f_TIM1_CAP_COM_IRQHandler           ********   *** removed from Debug\stm8s_it.o ***
 f_TIM1_UPD_OVF_TRG_BRK_IRQHandler   ********   *** removed from Debug\stm8s_it.o ***
@@ -1018,9 +1020,9 @@ f_TIM2_CAP_COM_IRQHandler           ********   *** removed from Debug\stm8s_it.o
 f_TIM2_UPD_OVF_BRK_IRQHandler       ********   *** removed from Debug\stm8s_it.o ***
 f_TLI_IRQHandler                    ********   *** removed from Debug\stm8s_it.o ***
 f_TRAP_IRQHandler                   ********   *** removed from Debug\stm8s_it.o ***
-f_Timer2_ISR                        00008e7e   defined in Debug\main.o section .text
+f_Timer2_ISR                        00008e43   defined in Debug\main.o section .text
                                                used in Debug\stm8_interrupt_vector.o
-f_Timer4_ISR                        00008de1   defined in Debug\main.o section .text
+f_Timer4_ISR                        00008da6   defined in Debug\main.o section .text
                                                used in Debug\stm8_interrupt_vector.o
 f_UART1_RX_IRQHandler               ********   *** removed from Debug\stm8s_it.o ***
 f_UART1_TX_IRQHandler               ********   *** removed from Debug\stm8s_it.o ***

@@ -92,14 +92,16 @@ void main(void)
 	//µÿ÷∑IO≥ı ºªØ
 	slave_address = 0x00;
 	GPIO_Init(GPIOD, (GPIO_Pin_TypeDef)GPIO_PIN_2, GPIO_MODE_IN_FL_NO_IT);
+	GPIO_Init(GPIOC, (GPIO_Pin_TypeDef)GPIO_PIN_7, GPIO_MODE_IN_FL_NO_IT);
 	GPIO_Init(GPIOC, (GPIO_Pin_TypeDef)GPIO_PIN_6, GPIO_MODE_IN_FL_NO_IT);
-	GPIO_Init(GPIOC, (GPIO_Pin_TypeDef)GPIO_PIN_5, GPIO_MODE_IN_FL_NO_IT);
+	GPIO_Init(GPIOC, (GPIO_Pin_TypeDef)GPIO_PIN_6, GPIO_MODE_IN_FL_NO_IT);
 	GPIO_Init(GPIOA, (GPIO_Pin_TypeDef)GPIO_PIN_3, GPIO_MODE_IN_FL_NO_IT);
 	delay(100);
+	
 	if(GPIO_ReadInputData(GPIOD) & 0x04)	slave_address |= 0x08;
-	if(GPIO_ReadInputData(GPIOC) & 0x40)	slave_address |= 0x04;
-	if(GPIO_ReadInputData(GPIOC) & 0x20)	slave_address |= 0x02;
-	if(GPIO_ReadInputData(GPIOA) & 0x08)	slave_address |= 0x01;
+	if(GPIO_ReadInputData(GPIOC) & 0x20)	slave_address |= 0x04;
+	if(GPIO_ReadInputData(GPIOC) & 0x40)	slave_address |= 0x02;
+	if(GPIO_ReadInputData(GPIOC) & 0x80)	slave_address |= 0x01;
 	slc.MDID = slave_address;
 	GPIO_Config();
 	Sys_Init();
@@ -116,37 +118,37 @@ void main(void)
 	/* Enable general interrupts */
 	enableInterrupts();
 	 /*waiting for the main power input and calculate the main AC Hz*/
-	 while(!sys.gotHzFlag)
-	 {
-		 if (sys.checkAcCnt == 0)
-		 {
+	 //while(!sys.gotHzFlag)
+	 //{
+		 //if (sys.checkAcCnt == 0)
+		 //{
 			 /*no main AC input or fuse has been fused and respone a message to
 			 master*/
 			 //SendOnePkg(AC_ERR);			 
 			 // while (1);
 			 /*remonitor the main AC input and calculate the Hz*/
-			sys.gotHzFlag = FALSE;    
-			sys.reqCalHzFlag = FALSE;
-			sys.calHzIntCnt = GET_AC_FRE_CNT;
-			sys.hzCnt = 0;
-			sys.checkAcCnt = CHECK_AC_INPUT_CNT;
-			break;
-		 }
-	 }
+			//sys.gotHzFlag = FALSE;    
+			//sys.reqCalHzFlag = FALSE;
+			//sys.calHzIntCnt = GET_AC_FRE_CNT;
+			//sys.hzCnt = 0;
+			//sys.checkAcCnt = CHECK_AC_INPUT_CNT;
+			//break;
+		 //}
+	 //}
 
 	 /*waiting for the main power input and calculate tha main AC Hz*/
-	 while(!sys.gotHzFlag)
-	 {
-		 if (sys.checkAcCnt == 0)
-		 {		
+	 //while(!sys.gotHzFlag)
+	 //{
+		 //if (sys.checkAcCnt == 0)
+		 //{		
 			 /*remonitor the main AC input and calculate the Hz*/
-			sys.gotHzFlag = FALSE;    
-			sys.reqCalHzFlag = FALSE;
-			sys.calHzIntCnt = GET_AC_FRE_CNT;
-			sys.hzCnt = 0;
-			sys.checkAcCnt = CHECK_AC_INPUT_CNT;
-		 }
-	 }
+			//sys.gotHzFlag = FALSE;    
+			//sys.reqCalHzFlag = FALSE;
+			//sys.calHzIntCnt = GET_AC_FRE_CNT;
+			//sys.hzCnt = 0;
+			//sys.checkAcCnt = CHECK_AC_INPUT_CNT;
+		 //}
+	 //}
 	 sys.acOkFlag = TRUE;
 	 TIMER2_Init();
 	 

@@ -11,7 +11,8 @@ uint8_t IIC_TxBuffer[MAX_BUFFER];
 uint8_t GetDataIndex = 0;
 uint8_t ReceiveState = IIC_STATE_UNKNOWN;
 uint8_t SendDataIndex = 0;
-
+extern u8 realtime_bright1;
+extern u8 realtime_bright2;
 extern float last_bright1;
 extern float last_bright2;
 uint8_t channel;
@@ -104,8 +105,10 @@ u8 i2c_init_message(I2C_Message *tx,u8 payload_len)
 						if((channel & 0x01) == 0x01)
 						{	
 							if(IIC_RxBuffer[4] == 0x51)	{linear1_begin = 1;}
-							else if((IIC_RxBuffer[4] == 0x52)&& (IIC_RxBuffer[6]==0))	{action_flag._flag_byte |= 0x04;}
-							else if((IIC_RxBuffer[4] == 0x53)&& (IIC_RxBuffer[6]==100)){action_flag._flag_byte |= 0x10;}
+							//Erase in:accelerating from zero velocity
+							else if((IIC_RxBuffer[4] == 0x52)&& ((realtime_bright1 == 0) || (realtime_bright1 == 1)))	{action_flag._flag_byte |= 0x04;}
+							//Erase out:decelerating ro zero velocity
+							else if((IIC_RxBuffer[4] == 0x53)&& (IIC_RxBuffer[6]== 0)){action_flag._flag_byte |= 0x10;}
 							else if(IIC_RxBuffer[4] == 0x54)	{action_flag._flag_byte |= 0x40;}
 							aim_bright1 = ((float)IIC_RxBuffer[6]) / 100;
 							change_step1 = (aim_bright1 - last_bright1)/change_time;//change_step1可正可负
@@ -114,8 +117,8 @@ u8 i2c_init_message(I2C_Message *tx,u8 payload_len)
 						if((channel & 0x02) == 0x02)
 						{
 							if(IIC_RxBuffer[4] == 0x51)	{linear2_begin = 1;}
-							else if((IIC_RxBuffer[4] == 0x52)&& (IIC_RxBuffer[6]==0))	{action_flag._flag_byte |= 0x08;}
-							else if((IIC_RxBuffer[4] == 0x53)&& (IIC_RxBuffer[6]==100)){action_flag._flag_byte |= 0x20;}
+							else if((IIC_RxBuffer[4] == 0x52)&& ((realtime_bright2 == 0) || (realtime_bright2 == 1)))	{action_flag._flag_byte |= 0x08;}
+							else if((IIC_RxBuffer[4] == 0x53)&& (IIC_RxBuffer[6]==0)){action_flag._flag_byte |= 0x20;}
 							else if(IIC_RxBuffer[4] == 0x54)	{action_flag._flag_byte |= 0x80;}
 							aim_bright2 = ((float)IIC_RxBuffer[6]) / 100;
 							change_step2 = (aim_bright2 - last_bright2)/change_time;
@@ -302,9 +305,9 @@ void IIC_SlaveConfig (void)
 	//GPIOD->CR1 |= (0xF<<1);//上拉
 	//GPIOD->CR2 &= ~(0xF<<1);//External interrupt disabled
 	//配置PB4，5为I2C引脚
-  GPIOB->ODR |= (1<<4)|(1<<5);                //define SDA, SCL outputs, HiZ, Open drain, Fast
-  GPIOB->DDR |= (1<<4)|(1<<5);
-  GPIOB->CR2 |= (1<<4)|(1<<5);
+  //GPIOB->ODR |= (1<<4)|(1<<5);                //define SDA, SCL outputs, HiZ, Open drain, Fast
+  //GPIOB->DDR |= (1<<4)|(1<<5);
+  //GPIOB->CR2 |= (1<<4)|(1<<5);
 	#ifdef I2C_slave_7Bits_Address
 		/* Set I2C registers for 7Bits Address */
 		I2C->CR1 |= 0x01;				        	// Enable I2C peripheral
