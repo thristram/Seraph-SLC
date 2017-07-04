@@ -12,14 +12,16 @@ uint8_t GetDataIndex = 0;
 uint8_t ReceiveState = IIC_STATE_UNKNOWN;
 uint8_t SendDataIndex = 0;
 
-extern uint8_t last_bright;
+extern float last_bright1;
+extern float last_bright2;
 uint8_t channel;
-float   aim_bright_float;
-uint8_t aim_bright;
+//float   aim_bright_float;
+float aim_bright1;
+float aim_bright2;
 uint8_t change_time;
-uint8_t change_step;
-bool up = FALSE;
-bool down = FALSE;
+float change_step1;
+float change_step2;
+
 /*****action dimmer用标志位********/
 union FLAG action_flag;
 // ********************** Data link function ****************************
@@ -77,33 +79,8 @@ u8 i2c_init_message(I2C_Message *tx,u8 payload_len)
 		SendDataIndex = 0;
 		cmd = IIC_RxBuffer[4];
 		
-		/*
-		switch(cmd)
-		{
-			case 0x0000:
-				for(i=0;i<8;i++){
-					IIC_TxBuffer[i] = i;
-				}
-				break;
-			case 0x0001:
-				for(i=0;i<8;i++){
-					IIC_TxBuffer[i] = i|(1<<4);
-				}
-				break;
-			case 0x0002:
-				for(i=0;i<8;i++){
-					IIC_TxBuffer[i] = i|(2<<4);
-				}
-				break;
-			case 0x0003:
-				for(i=0;i<8;i++){
-					IIC_TxBuffer[i] = i|(3<<4);
-				}
-				break;
-			default:
-				break;
-		}*/
-		if((IIC_RxBuffer[0] == 0x7E) && (IIC_RxBuffer[1] == 0x7E)){
+
+		//if((IIC_RxBuffer[0] == 0x7E) && (IIC_RxBuffer[1] == 0x7E)){
 			switch(cmd){
 				case 0xFE:
 					if(IIC_RxBuffer[5] == 0x01)	init_device_info();
@@ -117,62 +94,44 @@ u8 i2c_init_message(I2C_Message *tx,u8 payload_len)
 					}
 				break;
 				case 0x51://Linear
-					if(((IIC_RxBuffer[5]&0xf0)>>4) == slave_address){
-						//处理灯光驱动
-						channel = (IIC_RxBuffer[5]&0x0f);
-						aim_bright_float = (float)IIC_RxBuffer[6] * 2.5;
-						aim_bright = (uint8_t)aim_bright_float;
-						change_time = IIC_RxBuffer[7];
-						if(aim_bright > last_bright){
-							up = TRUE;down = FALSE;
-							change_step = (aim_bright - last_bright)/change_time;
-							if(change_step < 1)	change_step = 1;
-						}
-						else{
-							up = FALSE;down = TRUE;
-							change_step = (last_bright - aim_bright)/change_time;
-							if(change_step < 1)	change_step = 1;
-						}
-						rev_action_dimmer_OK();
-					}
 				case 0x52://Erase in
-					if(((IIC_RxBuffer[5]&0xf0)>>4) == slave_address){
-						//处理灯光驱动
-						channel = (IIC_RxBuffer[5]&0x0f);
-						aim_bright_float = (float)IIC_RxBuffer[6] * 2.5;
-						aim_bright = (uint8_t)aim_bright_float;
-						change_time = IIC_RxBuffer[7];
-						rev_action_dimmer_OK();
-					}
 				case 0x53://Erase out
-					if(((IIC_RxBuffer[5]&0xf0)>>4) == slave_address){
-						//处理灯光驱动
-						channel = (IIC_RxBuffer[5]&0x0f);
-						aim_bright_float = (float)IIC_RxBuffer[6] * 2.5;
-						aim_bright = (uint8_t)aim_bright_float;
-						change_time = IIC_RxBuffer[7];
-						rev_action_dimmer_OK();
-					}
 				case 0x54://Swing
 					if(((IIC_RxBuffer[5]&0xf0)>>4) == slave_address){
 						//处理灯光驱动
 						channel = (IIC_RxBuffer[5]&0x0f);
-						aim_bright_float = (float)IIC_RxBuffer[6] * 2.5;
-						aim_bright = (uint8_t)aim_bright_float;
 						change_time = IIC_RxBuffer[7];
+						if((channel & 0x01) == 0x01)
+						{	
+							if(IIC_RxBuffer[4] == 0x51)	{linear1_begin = 1;}
+							else if((IIC_RxBuffer[4] == 0x52)&& (IIC_RxBuffer[6]==0))	{action_flag._flag_byte |= 0x04;}
+							else if((IIC_RxBuffer[4] == 0x53)&& (IIC_RxBuffer[6]==100)){action_flag._flag_byte |= 0x10;}
+							else if(IIC_RxBuffer[4] == 0x54)	{action_flag._flag_byte |= 0x40;}
+							aim_bright1 = ((float)IIC_RxBuffer[6]) / 100;
+							change_step1 = (aim_bright1 - last_bright1)/change_time;//change_step1可正可负
+						
+						}
+						if((channel & 0x02) == 0x02)
+						{
+							if(IIC_RxBuffer[4] == 0x51)	{linear2_begin = 1;}
+							else if((IIC_RxBuffer[4] == 0x52)&& (IIC_RxBuffer[6]==0))	{action_flag._flag_byte |= 0x08;}
+							else if((IIC_RxBuffer[4] == 0x53)&& (IIC_RxBuffer[6]==100)){action_flag._flag_byte |= 0x20;}
+							else if(IIC_RxBuffer[4] == 0x54)	{action_flag._flag_byte |= 0x80;}
+							aim_bright2 = ((float)IIC_RxBuffer[6]) / 100;
+							change_step2 = (aim_bright2 - last_bright2)/change_time;
+						}
 						rev_action_dimmer_OK();
 					}
-
 				break;
 				case 0x59://调光时间结束后SC发送查询ch状态
-					if(IIC_RxBuffer[5] == slave_address){//查询action dimmer执行后SLC状态
+					//if(IIC_RxBuffer[5] == slave_address){//查询action dimmer执行后SLC状态
 						rev_action_dimmer_done();
-					}
+					//}
 				break;
 				default:
 				break;
 			}
-		}
+		//}
 		
 	}
 	
@@ -243,6 +202,8 @@ u8 i2c_init_message(I2C_Message *tx,u8 payload_len)
 	void I2C_transaction_end(void)
 	{
 		ReceiveState = IIC_STATE_END;
+		ReceiveState = IIC_STATE_UNKNOWN;
+			GetDataIndex = 0;
 	}	
 	
 	void I2C_transaction_receive(void)
@@ -337,9 +298,9 @@ void I2C_Slave_check_event(void) interrupt 19 {
 void IIC_SlaveConfig (void)
 {
 	//配置PD1到PD4为从机地址配置引脚
-	GPIOD->DDR &= ~(0xF<<1);
-	GPIOD->CR1 |= (0xF<<1);//上拉
-	GPIOD->CR2 &= ~(0xF<<1);//External interrupt disabled
+	//GPIOD->DDR &= ~(0xF<<1);
+	//GPIOD->CR1 |= (0xF<<1);//上拉
+	//GPIOD->CR2 &= ~(0xF<<1);//External interrupt disabled
 	//配置PB4，5为I2C引脚
   GPIOB->ODR |= (1<<4)|(1<<5);                //define SDA, SCL outputs, HiZ, Open drain, Fast
   GPIOB->DDR |= (1<<4)|(1<<5);
@@ -348,8 +309,8 @@ void IIC_SlaveConfig (void)
 		/* Set I2C registers for 7Bits Address */
 		I2C->CR1 |= 0x01;				        	// Enable I2C peripheral
 		I2C->CR2 = 0x04;					      		// Enable I2C acknowledgement
-		//I2C->FREQR = 16; 					      	// Set I2C Freq value (16MHz)
-		I2C->FREQR = 8;
+		I2C->FREQR = 16; 					      	// Set I2C Freq value (16MHz)
+		//I2C->FREQR = 12;
 		I2C->OARL = (SLAVE_ADDRESS << 1) ;	// set slave address to 0x51 (put 0xA2 for the register dues to7bit address) 
 		I2C->OARH = 0x40;					      	// Set 7bit address mode
 
@@ -359,7 +320,7 @@ void IIC_SlaveConfig (void)
 	  I2C->CR1 |= 0x01;				  // Enable I2C peripheral
 	  I2C->CR2 = 0x04;					// Enable I2C acknowledgement
 	  I2C->FREQR = 16; 					// Set I2C Freq value (16MHz)
-		//I2C->FREQR = 8;
+		//I2C->FREQR = 12;
 	  I2C->OARL = (SLAVE_ADDRESS & 0xFF) ;							// set slave address LSB 
 	  I2C->OARH = 0xC0 | ((SLAVE_ADDRESS & 0x300) >> 7);	// Set 10bits address mode and address MSB
 	#endif

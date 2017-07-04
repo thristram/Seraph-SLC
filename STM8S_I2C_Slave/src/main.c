@@ -22,7 +22,8 @@
 #include "stm8s.h"
 #include "main.h"
 #include "I2c_slave_interrupt.h"
-#include "uart_printf.h"
+//#include "uart_printf.h"
+
 #include <string.h>
 #include <stdio.h>
 /* Private typedef -----------------------------------------------------------*/
@@ -36,13 +37,18 @@ extern uint8_t ReceiveState;
 extern uint8_t SendDataIndex;
 extern uint8_t IIC_TxBuffer[];
 
-uint8_t last_bright;
+float last_bright1;
+float last_bright2;
+u8 realtime_bright1;
+u8 realtime_bright2;
 extern uint8_t channel;
-extern uint8_t aim_bright;
+extern float aim_bright1;
+extern float aim_bright2;
 extern uint8_t change_time;
-extern uint8_t change_step;
-extern bool up;
-extern bool down;
+extern float change_step1;
+extern float change_step2;
+
+extern union FLAG action_flag;
 Sys_TypeDef sys = {0};
 uint16_t Tick100ms;
 uint8_t  f_100ms;
@@ -73,6 +79,7 @@ void delay(u16 Count)
 	
 void main(void)
 {
+	
 	uint8_t i;
 	uint16_t cmd;
 	//CLK->CKDIVR = 0;                // sys clock /1
@@ -81,15 +88,13 @@ void main(void)
   while((CLK->SWCR & 0x01)==0x01);
   CLK->CKDIVR = 0x80;    //不分频
   CLK->SWCR  &= ~0x02; //关闭切换
-	/* Init GPIO for I2C use */
-	/*GPIOE->CR1 |= 0x06;
-	GPIOE->DDR &= ~0x06;
-	GPIOE->CR2 &= ~0x06;*/
+	//disableInterrupts();
 	//地址IO初始化
-	GPIO_Init(GPIOD, (GPIO_Pin_TypeDef)GPIO_PIN_2, GPIO_MODE_IN_PU_NO_IT);
-	GPIO_Init(GPIOC, (GPIO_Pin_TypeDef)GPIO_PIN_6, GPIO_MODE_IN_PU_NO_IT);
-	GPIO_Init(GPIOC, (GPIO_Pin_TypeDef)GPIO_PIN_5, GPIO_MODE_IN_PU_NO_IT);
-	GPIO_Init(GPIOA, (GPIO_Pin_TypeDef)GPIO_PIN_3, GPIO_MODE_IN_PU_NO_IT);
+	slave_address = 0x00;
+	GPIO_Init(GPIOD, (GPIO_Pin_TypeDef)GPIO_PIN_2, GPIO_MODE_IN_FL_NO_IT);
+	GPIO_Init(GPIOC, (GPIO_Pin_TypeDef)GPIO_PIN_6, GPIO_MODE_IN_FL_NO_IT);
+	GPIO_Init(GPIOC, (GPIO_Pin_TypeDef)GPIO_PIN_5, GPIO_MODE_IN_FL_NO_IT);
+	GPIO_Init(GPIOA, (GPIO_Pin_TypeDef)GPIO_PIN_3, GPIO_MODE_IN_FL_NO_IT);
 	delay(100);
 	if(GPIO_ReadInputData(GPIOD) & 0x04)	slave_address |= 0x08;
 	if(GPIO_ReadInputData(GPIOC) & 0x40)	slave_address |= 0x04;
@@ -100,15 +105,16 @@ void main(void)
 	Sys_Init();
 	ExtInterrupt_Config();
 	TIMER4_Init();
-	//串口初始化
-	UART_Init(115200);
 	
-	printf("Hello World!\n");
+	//串口初始化
+	//UART_Init(115200);
+	
+	//printf("Hello World!\n");
 	/* Initialise I2C for communication */
 	IIC_SlaveConfig();
 	
 	/* Enable general interrupts */
-	
+	enableInterrupts();
 	 /*waiting for the main power input and calculate the main AC Hz*/
 	 while(!sys.gotHzFlag)
 	 {
@@ -143,22 +149,21 @@ void main(void)
 	 }
 	 sys.acOkFlag = TRUE;
 	 TIMER2_Init();
-	 enableInterrupts();
 	 
-	 last_bright = DEFAULT_BRIGHTNESS;
-	 aim_bright = 0;
+	 
+	 
 	/*Main Loop */
   while(1)
 	{		
-		if(ReceiveState == IIC_STATE_END)
+		/*if(ReceiveState == IIC_STATE_END)
 		{
-			for(i=0;i<GetDataIndex;i++){
-				printf("%02X ",IIC_RxBuffer[i]&0xFF);
-			}
-			printf("\n");
+			//for(i=0;i<GetDataIndex;i++){
+				//printf("%02X ",IIC_RxBuffer[i]&0xFF);
+			//}
+			//printf("\n");
 			ReceiveState = IIC_STATE_UNKNOWN;
 			GetDataIndex = 0;
-		}
+		}*/
 		/*monitor main AC*/
 		if (sys.checkAcCnt == 0 && sys.acErrFlag == FALSE)
 		{
@@ -178,51 +183,33 @@ void main(void)
 		
 		if(f_100ms){
 			f_100ms = 0;
-			if((up)&&(!down)){//调亮
-				if(last_bright < aim_bright){
-					last_bright += change_step;
-					if(last_bright >= aim_bright)	{last_bright = aim_bright;channel = 0x00;up = FALSE;down = FALSE;}
-				}
-				
-			}
-			else if((!up)&&(down)){//调暗
-				if(last_bright > aim_bright){
-					last_bright -= change_step;
-					if(last_bright <= aim_bright)	{last_bright = aim_bright;channel = 0x00;up = FALSE;down = FALSE;}
-				}
-				
-			}
+			lightCtrl100ms();
+		
+			
+			/*
 			tick1s++;
 			if(tick1s >= 10){
 				tick1s = 0;
-				printf("last_bright = %02X, aim_bright = %02X\n",last_bright&0xFF,aim_bright&0xFF);
+				printf("last_bright = %02X, aim_bright = %02X\n",last_bright1&0xFF,aim_bright1&0xFF);
 				printf("slc.ch1_status = %02X, slc.ch2_status = %02X\n",slc.ch1_status&0xFF,slc.ch2_status&0xFF);
 			}
+			*/
 		}
 		if((channel & 0x01)==0x01)//调节Dimmer1
 		{
-			sys.light1.briVal = last_bright;
-			slc.ch1_status = last_bright;
+			sys.light1.briVal = realtime_bright1;
+			slc.ch1_status = (u8)(last_bright1*100);
 		}
 		if((channel & 0x02)==0x02)//调节Dimmer2
 		{
-			sys.light2.briVal = last_bright;
-			slc.ch2_status = last_bright;
+			sys.light2.briVal = realtime_bright2;
+			slc.ch2_status = (u8)(last_bright2*100);
 		}
-		/*monitor main AC*/
-		if (sys.checkAcCnt == 0 && sys.acErrFlag == FALSE)
+		if (sys.acOkFlag && sys.cnt1s == 0)
 		{
-			 /*notification master when main AC lost or fuse has been fused*/
-			 //SendOnePkg(AC_ERR);
-			 sys.acErrFlag = TRUE;
-			 sys.acOkFlag = FALSE;
-		}
-
-		if (sys.acErrFlag == FALSE && sys.acOkFlag == FALSE)
-		{
-			/*notification maser that AC is restored and start working gain*/
-			//SendOnePkg(AC_OK);
-			sys.acOkFlag = TRUE;
+			/*it indicates the system is working via UART sends a 
+			IS_RUNNING to master every 1s */
+			//SendOnePkg(IS_RUNNING);
 			sys.cnt1s = CNT_1S;
 		}
 	}
@@ -272,10 +259,15 @@ static void Sys_Init(void)
     sys.calHzIntCnt = GET_AC_FRE_CNT;
     sys.hzCnt = 0;
     sys.checkAcCnt = CHECK_AC_INPUT_CNT;
+		last_bright1 = 0.16;
+		aim_bright1 = 0;
+		last_bright2 = 0.16;
+		aim_bright2 = 0;
 }
 
 static void ExtInterrupt_Config(void)
 {
+
 	EXTI_DeInit();
 	EXTI_SetExtIntSensitivity(EXTI_PORT_GPIOD, EXTI_SENSITIVITY_FALL_ONLY);
 	//ITC_SetSoftwarePriority(ITC_IRQ_PORTD, ITC_PRIORITYLEVEL_2);
@@ -474,5 +466,140 @@ void Timer2_ISR(void) interrupt 13 {
 		TIM2_Cmd(DISABLE);
 	}
 }
+//调光函数，t表示调光亮度百分比，范围在[0,1]之间，返回对应的光阶
+u8 Linear(float t)
+{
+	if((t >= 0)&&(t <=1))
+		return (u8)(t*250);
+	else
+		return 40;
+}
+u8 EraseIn(float t)
+{
+	if((t >= 0)&&(t <=1))
+		return (u8)(t*t*250);
+	else
+		return 40;
+}
+u8 EraseOut(float t)
+{
+	if((t >= 0)&&(t <=1))
+		return (u8)((2-t)*t*250);
+	else
+		return 40;
+}
+u8 Swing(float t)
+{
+	if((t >= 0)&&(t <=1)){
+		if(t < 0.5)
+			return (u8)(2*t*t*250);
+		else
+			return (u8)(((4-2*t)*t - 1)*250);
+	}
+	else
+		return 40;
+}
+
+void lightCtrl100ms(void)
+{
+	if(linear1_begin){//channel1 Linear调光开始
+		last_bright1 += change_step1;
+		realtime_bright1 = Linear(last_bright1);
+		if(last_bright1 > aim_bright1){
+			if(((u8)((last_bright1 - aim_bright1)*250) <= 1))
+				linear1_begin = 0;
+		}
+		else{
+			if(((u8)((aim_bright1- last_bright1)*250) <= 1))
+				linear1_begin = 0;
+		}
+	}
+	if(linear2_begin){//channel2 Linear调光开始
+		last_bright2 += change_step2;
+		realtime_bright2 = Linear(last_bright2);
+		if(last_bright2 > aim_bright2){
+			if(((u8)((last_bright2 - aim_bright2)*250)	<= 1))
+				linear2_begin = 0;
+		}
+		else{
+			if(((u8)((aim_bright2- last_bright2)*250) <= 1))
+				linear2_begin = 0;
+		}
+	}
+	if(eraseIn1_begin){//channel1 EraseIn调光开始
+		last_bright1 += change_step1;
+		realtime_bright1 = EraseIn(last_bright1);	
+		if(last_bright1 > aim_bright1){
+			if(((u8)((last_bright1 - aim_bright1)*250) <= 1))
+				eraseIn1_begin = 0;
+		}
+		else{
+			if(((u8)((aim_bright1- last_bright1)*250) <= 1))
+				eraseIn1_begin = 0;
+		}
+	}
+	if(eraseIn2_begin){//channel2 EraseIn调光开始
+		last_bright2 += change_step2;
+		realtime_bright2 = EraseIn(last_bright2);
+		if(last_bright2 > aim_bright2){
+			if(((u8)((last_bright2 - aim_bright2)*250)	<= 1))
+				eraseIn2_begin = 0;
+		}
+		else{
+			if(((u8)((aim_bright2- last_bright2)*250) <= 1))
+				eraseIn2_begin = 0;
+		}
+	}
+	if(eraseOut1_begin){//channel1 EraseOut调光开始
+		last_bright1 += change_step1;
+		realtime_bright1 = EraseOut(last_bright1);	
+		if(last_bright1 > aim_bright1){
+			if(((u8)((last_bright1 - aim_bright1)*250) <= 1))
+				eraseOut1_begin = 0;
+		}
+		else{
+			if(((u8)((aim_bright1- last_bright1)*250) <= 1))
+				eraseOut1_begin = 0;
+		}
+	}
+	if(eraseOut2_begin){//channel2 EraseOut调光开始
+		last_bright2 += change_step2;
+		realtime_bright2 = EraseOut(last_bright2);
+		if(last_bright2 > aim_bright2){
+			if(((u8)((last_bright2 - aim_bright2)*250)	<= 1))
+				eraseOut2_begin = 0;
+		}
+		else{
+			if(((u8)((aim_bright2- last_bright2)*250) <= 1))
+				eraseOut2_begin = 0;
+		}
+	}
+	if(swing1_begin){//channel1 Swing调光开始
+		last_bright1 += change_step1;
+		realtime_bright1 = Swing(last_bright1);	
+		if(last_bright1 > aim_bright1){
+			if(((u8)((last_bright1 - aim_bright1)*250) <= 1))
+				swing1_begin = 0;
+		}
+		else{
+			if(((u8)((aim_bright1- last_bright1)*250) <= 1))
+				swing1_begin = 0;
+		}
+	}
+	if(swing2_begin){//channel2 Swing调光开始
+		last_bright2 += change_step2;
+		realtime_bright2 = Swing(last_bright2);
+		if(last_bright2 > aim_bright2){
+			if(((u8)((last_bright2 - aim_bright2)*250)	<= 1))
+				swing2_begin = 0;
+		}
+		else{
+			if(((u8)((aim_bright2- last_bright2)*250) <= 1))
+				swing2_begin = 0;
+		}
+	}
+}
+
+
 
 /******************* (C) COPYRIGHT 2009 STMicroelectronics *****END OF FILE****/

@@ -7,14 +7,14 @@
 #define IIC_STATE_RECEIVEING	2
 #define	IIC_STATE_END					3
 
-#define linear_begin		action_flag._flag_bit.bit0//接收到Linear调光指令
-#define linear_done			action_flag._flag_bit.bit1//Linear调光指令执行完成标志
-#define eraseIn_begin		action_flag._flag_bit.bit2//接收到Linear调光指令
-#define eraseIn_done		action_flag._flag_bit.bit3
-#define eraseOut_begin	action_flag._flag_bit.bit4//接收到Linear调光指令
-#define eraseOut_done		action_flag._flag_bit.bit5
-#define swing_begin			action_flag._flag_bit.bit6//接收到Linear调光指令
-#define swing_done			action_flag._flag_bit.bit7
+#define linear1_begin		action_flag._flag_bit.bit0//接收到Linear调光指令
+#define linear2_begin		action_flag._flag_bit.bit1//Linear调光指令执行完成标志
+#define eraseIn1_begin	action_flag._flag_bit.bit2//接收到EraseIn调光指令且eraseIn指令有效，即上一次亮度为0
+#define eraseIn2_begin	action_flag._flag_bit.bit3
+#define eraseOut1_begin	action_flag._flag_bit.bit4//接收到EraseOut调光指令且eraseOut指令有效，即目标亮度为0
+#define eraseOut2_begin	action_flag._flag_bit.bit5
+#define swing1_begin		action_flag._flag_bit.bit6//接收到Swing调光指令
+#define swing2_begin		action_flag._flag_bit.bit7
 
 
 typedef struct

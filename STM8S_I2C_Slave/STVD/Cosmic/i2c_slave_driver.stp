@@ -54,7 +54,7 @@ Settings.1.7=Root.Config.1.Settings.7
 Settings.1.8=Root.Config.1.Settings.8
 
 [Root.Config.0.Settings.0]
-String.6.0=2010,2,25,18,47,25
+String.6.0=2017,6,28,23,10,48
 String.100.0=ST Assembler Linker
 String.100.1=ST7 Cosmic
 String.100.2=STM8 Cosmic
@@ -86,7 +86,7 @@ String.2.0=Compiling $(InputFile)...
 String.3.0=cxstm8 +mods0 -customDebCompat -customOpt -no +split -customC-pp -customLst -l -dSTM8S003 -i..\..\..\libraries\stm8s_stdperiph_driver\inc -i..\..\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2017,6,12,0,19,15
+String.6.0=2017,6,20,15,25,57
 
 [Root.Config.0.Settings.4]
 String.2.0=Assembling $(InputFile)...
@@ -245,7 +245,7 @@ String.2.0=Compiling $(InputFile)...
 String.3.0=cxstm8 +mods0 -customDebCompat -customOpt -no +split -customC-pp -customLst -l -dSTM8S003 -i..\..\..\libraries\stm8s_stdperiph_driver\inc -i..\..\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2017,6,12,0,19,15
+String.6.0=2017,6,20,15,25,57
 
 [Root.STM8S_StdPeriph_Driver.Config.0.Settings.2]
 String.2.0=Assembling $(InputFile)...
@@ -503,7 +503,7 @@ String.2.0=Compiling $(InputFile)...
 String.3.0=cxstm8 +mods0 -customDebCompat -customOpt -no +split -customC-pp -customLst -l -dSTM8S003 -i..\..\..\libraries\stm8s_stdperiph_driver\inc -i..\..\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2017,6,12,0,19,15
+String.6.0=2017,6,20,15,25,57
 
 [Root.Source Files.Config.0.Settings.2]
 String.2.0=Assembling $(InputFile)...
@@ -600,7 +600,7 @@ String.2.0=Compiling $(InputFile)...
 String.3.0=cxstm8 +mods0 -customDebCompat -customOpt -no +split -customC-pp -customLst -l -dSTM8S003 -i..\..\..\libraries\stm8s_stdperiph_driver\inc -i..\..\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2017,6,12,0,19,15
+String.6.0=2017,6,20,15,25,57
 
 [Root.Include Files.Config.0.Settings.2]
 String.2.0=Assembling $(InputFile)...

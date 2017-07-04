@@ -135,6 +135,9 @@ extern Sys_TypeDef sys;
 static void Sys_Init(void);
 static void GPIO_Config(void);
 static void ExtInterrupt_Config(void);
+void lightCtrl100ms(void);
+
+
 
 #ifdef _RAISONANCE_
 	void Ext_PortD_ISR(void) interrupt 6;
