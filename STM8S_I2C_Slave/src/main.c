@@ -114,41 +114,48 @@ void main(void)
 	//printf("Hello World!\n");
 	/* Initialise I2C for communication */
 	IIC_SlaveConfig();
+	disableInterrupts();
+	//中断优先级设置
+	ITC_DeInit();
+	ITC_SetSoftwarePriority(ITC_IRQ_PORTD,ITC_PRIORITYLEVEL_1);
+	ITC_SetSoftwarePriority(ITC_IRQ_TIM2_OVF,ITC_PRIORITYLEVEL_2);
+	ITC_SetSoftwarePriority(ITC_IRQ_TIM4_OVF,ITC_PRIORITYLEVEL_2);
+	ITC_SetSoftwarePriority(ITC_IRQ_I2C,ITC_PRIORITYLEVEL_3);
 	
 	/* Enable general interrupts */
 	enableInterrupts();
 	 /*waiting for the main power input and calculate the main AC Hz*/
-	 //while(!sys.gotHzFlag)
-	 //{
-		 //if (sys.checkAcCnt == 0)
-		 //{
+	 while(!sys.gotHzFlag)
+	 {
+		 if (sys.checkAcCnt == 0)
+		 {
 			 /*no main AC input or fuse has been fused and respone a message to
 			 master*/
 			 //SendOnePkg(AC_ERR);			 
 			 // while (1);
 			 /*remonitor the main AC input and calculate the Hz*/
-			//sys.gotHzFlag = FALSE;    
-			//sys.reqCalHzFlag = FALSE;
-			//sys.calHzIntCnt = GET_AC_FRE_CNT;
-			//sys.hzCnt = 0;
-			//sys.checkAcCnt = CHECK_AC_INPUT_CNT;
-			//break;
-		 //}
-	 //}
+			sys.gotHzFlag = FALSE;    
+			sys.reqCalHzFlag = FALSE;
+			sys.calHzIntCnt = GET_AC_FRE_CNT;
+			sys.hzCnt = 0;
+			sys.checkAcCnt = CHECK_AC_INPUT_CNT;
+			break;
+		 }
+	 }
 
 	 /*waiting for the main power input and calculate tha main AC Hz*/
-	 //while(!sys.gotHzFlag)
-	 //{
-		 //if (sys.checkAcCnt == 0)
-		 //{		
+	 while(!sys.gotHzFlag)
+	 {
+		 if (sys.checkAcCnt == 0)
+		 {		
 			 /*remonitor the main AC input and calculate the Hz*/
-			//sys.gotHzFlag = FALSE;    
-			//sys.reqCalHzFlag = FALSE;
-			//sys.calHzIntCnt = GET_AC_FRE_CNT;
-			//sys.hzCnt = 0;
-			//sys.checkAcCnt = CHECK_AC_INPUT_CNT;
-		 //}
-	 //}
+			sys.gotHzFlag = FALSE;    
+			sys.reqCalHzFlag = FALSE;
+			sys.calHzIntCnt = GET_AC_FRE_CNT;
+			sys.hzCnt = 0;
+			sys.checkAcCnt = CHECK_AC_INPUT_CNT;
+		 }
+	 }
 	 sys.acOkFlag = TRUE;
 	 TIMER2_Init();
 	 

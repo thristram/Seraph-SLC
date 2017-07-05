@@ -1381,7 +1381,7 @@ CSR	..\..\inc\stm8s.h	284;"	member	struct:AWU_struct
 CSR	..\..\inc\stm8s.h	326;"	member	struct:BEEP_struct
 CSSR	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	531;"	member	struct:CLK_struct
 CSSR	..\..\inc\stm8s.h	367;"	member	struct:CLK_struct
-Check_Sum	..\..\src\i2c_slave_interrupt.c	47;"	function	signature:(u8 *buf,u8 length)
+Check_Sum	..\..\src\i2c_slave_interrupt.c	48;"	function	signature:(u8 *buf,u8 length)
 ChgBit	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	2809;"	macro
 ChgBit	..\..\inc\stm8s.h	2526;"	macro
 ClrBit	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	2807;"	macro
@@ -1546,12 +1546,12 @@ EXTI_TypeDef	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	1491;"	typede
 EXTI_TypeDef	..\..\inc\stm8s.h	1341;"	typedef	typeref:struct:EXTI_struct
 EXTI_struct	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	1486;"	struct
 EXTI_struct	..\..\inc\stm8s.h	1336;"	struct
-EraseIn	..\..\src\main.c	479;"	function	signature:(float t)
-EraseOut	..\..\src\main.c	486;"	function	signature:(float t)
+EraseIn	..\..\src\main.c	484;"	function	signature:(float t)
+EraseOut	..\..\src\main.c	491;"	function	signature:(float t)
 ErrorStatus	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	255;"	typedef	typeref:enum:__anon5
 ErrorStatus	..\..\inc\stm8s_type.h	85;"	typedef	typeref:enum:__anon262
 ExtInterrupt_Config	..\..\inc\main.h	137;"	prototype	signature:(void)
-ExtInterrupt_Config	..\..\src\main.c	270;"	function	file:	signature:(void)
+ExtInterrupt_Config	..\..\src\main.c	275;"	function	file:	signature:(void)
 Ext_PortD_ISR	..\..\inc\main.h	146;"	prototype	signature:(void)
 F0R1	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	2243;"	member	struct:__anon6::__anon7::__anon10
 F0R1	..\..\inc\stm8s.h	1999;"	member	struct:__anon250::__anon251::__anon254
@@ -1826,7 +1826,7 @@ FR16	..\..\inc\stm8s.h	1992;"	member	struct:__anon250::__anon251::__anon253
 FREQR	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	1345;"	member	struct:I2C_struct
 FREQR	..\..\inc\stm8s.h	1195;"	member	struct:I2C_struct
 FeedDog	..\..\inc\main.h	152;"	prototype	signature:(void)
-FeedDog	..\..\src\main.c	370;"	function	file:	signature:(void)
+FeedDog	..\..\src\main.c	375;"	function	file:	signature:(void)
 Filter	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	2239;"	member	union:__anon6::__anon7	typeref:struct:__anon6::__anon7::__anon9
 Filter	..\..\inc\stm8s.h	1994;"	member	union:__anon250::__anon251	typeref:struct:__anon250::__anon251::__anon253
 Filter01	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	2260;"	member	union:__anon6::__anon7	typeref:struct:__anon6::__anon7::__anon10
@@ -1886,7 +1886,7 @@ GPIO_CR1_RESET_VALUE	..\..\inc\stm8s.h	123;"	macro
 GPIO_CR2_RESET_VALUE	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	299;"	macro
 GPIO_CR2_RESET_VALUE	..\..\inc\stm8s.h	124;"	macro
 GPIO_Config	..\..\inc\main.h	136;"	prototype	signature:(void)
-GPIO_Config	..\..\src\main.c	241;"	function	file:	signature:(void)
+GPIO_Config	..\..\src\main.c	246;"	function	file:	signature:(void)
 GPIO_DDR_RESET_VALUE	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	297;"	macro
 GPIO_DDR_RESET_VALUE	..\..\inc\stm8s.h	122;"	macro
 GPIO_DeInit	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s_gpio.h	139;"	prototype	signature:(GPIO_TypeDef* GPIOx)
@@ -2178,15 +2178,15 @@ I2C_TRISER_TRISE	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	1437;"	ma
 I2C_TRISER_TRISE	..\..\inc\stm8s.h	1287;"	macro
 I2C_TypeDef	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	1359;"	typedef	typeref:struct:I2C_struct
 I2C_TypeDef	..\..\inc\stm8s.h	1209;"	typedef	typeref:struct:I2C_struct
-I2C_byte_received	..\..\src\i2c_slave_interrupt.c	216;"	function	signature:(uint8_t RxData)
-I2C_byte_write	..\..\src\i2c_slave_interrupt.c	224;"	function	signature:(void)
-I2C_receive_begin	..\..\src\i2c_slave_interrupt.c	70;"	function	signature:(void)
+I2C_byte_received	..\..\src\i2c_slave_interrupt.c	217;"	function	signature:(uint8_t RxData)
+I2C_byte_write	..\..\src\i2c_slave_interrupt.c	225;"	function	signature:(void)
+I2C_receive_begin	..\..\src\i2c_slave_interrupt.c	71;"	function	signature:(void)
 I2C_slave_7Bits_Address	..\..\inc\i2c_slave_interrupt.h	65;"	macro
 I2C_struct	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	1341;"	struct
 I2C_struct	..\..\inc\stm8s.h	1191;"	struct
-I2C_transaction_begin	..\..\src\i2c_slave_interrupt.c	75;"	function	signature:(void)
-I2C_transaction_end	..\..\src\i2c_slave_interrupt.c	204;"	function	signature:(void)
-I2C_transaction_receive	..\..\src\i2c_slave_interrupt.c	211;"	function	signature:(void)
+I2C_transaction_begin	..\..\src\i2c_slave_interrupt.c	76;"	function	signature:(void)
+I2C_transaction_end	..\..\src\i2c_slave_interrupt.c	205;"	function	signature:(void)
+I2C_transaction_receive	..\..\src\i2c_slave_interrupt.c	212;"	function	signature:(void)
 IAPSR	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	1534;"	member	struct:FLASH_struct
 IAPSR	..\..\inc\stm8s.h	1384;"	member	struct:FLASH_struct
 ICKR	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	523;"	member	struct:CLK_struct
@@ -2215,7 +2215,7 @@ IIC_STATE_END	..\..\inc\i2c_slave_interrupt.h	8;"	macro
 IIC_STATE_RECEIVEING	..\..\inc\i2c_slave_interrupt.h	7;"	macro
 IIC_STATE_UNKNOWN	..\..\inc\i2c_slave_interrupt.h	5;"	macro
 IIC_SlaveConfig	..\..\inc\i2c_slave_interrupt.h	51;"	prototype	signature:(void)
-IIC_SlaveConfig	..\..\src\i2c_slave_interrupt.c	300;"	function	signature:(void)
+IIC_SlaveConfig	..\..\src\i2c_slave_interrupt.c	301;"	function	signature:(void)
 IIC_TxBuffer	..\..\src\i2c_slave_interrupt.c	10;"	variable
 INTERRUPT	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	2787;"	macro
 INTERRUPT	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	2789;"	macro
@@ -2561,9 +2561,13 @@ ITC	..\..\inc\stm8s.h	2472;"	macro
 ITC_BaseAddress	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	2607;"	macro
 ITC_BaseAddress	..\..\inc\stm8s.h	2376;"	macro
 ITC_DeInit	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s_itc.h	174;"	prototype	signature:(void)
+ITC_DeInit	..\..\..\libraries\stm8s_stdperiph_driver\src\stm8s_itc.c	80;"	function	signature:(void)
 ITC_GetCPUCC	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s_itc.h	173;"	prototype	signature:(void)
+ITC_GetCPUCC	..\..\..\libraries\stm8s_stdperiph_driver\src\stm8s_itc.c	50;"	function	signature:(void)
 ITC_GetSoftIntStatus	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s_itc.h	175;"	prototype	signature:(void)
+ITC_GetSoftIntStatus	..\..\..\libraries\stm8s_stdperiph_driver\src\stm8s_itc.c	97;"	function	signature:(void)
 ITC_GetSoftwarePriority	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s_itc.h	177;"	prototype	signature:(ITC_Irq_TypeDef IrqNum)
+ITC_GetSoftwarePriority	..\..\..\libraries\stm8s_stdperiph_driver\src\stm8s_itc.c	107;"	function	signature:(ITC_Irq_TypeDef IrqNum)
 ITC_IRQ_ADC1	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s_itc.h	104;"	enumerator	enum:__anon84
 ITC_IRQ_ADC2	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s_itc.h	100;"	enumerator	enum:__anon84
 ITC_IRQ_AWU	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s_itc.h	46;"	enumerator	enum:__anon84
@@ -2604,6 +2608,7 @@ ITC_PriorityLevel_TypeDef	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s_it
 ITC_SPRX_RESET_VALUE	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	1465;"	macro
 ITC_SPRX_RESET_VALUE	..\..\inc\stm8s.h	1315;"	macro
 ITC_SetSoftwarePriority	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s_itc.h	176;"	prototype	signature:(ITC_Irq_TypeDef IrqNum, ITC_PriorityLevel_TypeDef PriorityValue)
+ITC_SetSoftwarePriority	..\..\..\libraries\stm8s_stdperiph_driver\src\stm8s_itc.c	220;"	function	signature:(ITC_Irq_TypeDef IrqNum, ITC_PriorityLevel_TypeDef PriorityValue)
 ITC_TypeDef	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	1459;"	typedef	typeref:struct:ITC_struct
 ITC_TypeDef	..\..\inc\stm8s.h	1309;"	typedef	typeref:struct:ITC_struct
 ITC_struct	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	1448;"	struct
@@ -2671,7 +2676,7 @@ LTRH	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	344;"	member	struct:A
 LTRH	..\..\inc\stm8s.h	168;"	member	struct:ADC1_struct
 LTRL	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	345;"	member	struct:ADC1_struct
 LTRL	..\..\inc\stm8s.h	169;"	member	struct:ADC1_struct
-Linear	..\..\src\main.c	472;"	function	signature:(float t)
+Linear	..\..\src\main.c	477;"	function	signature:(float t)
 MAX_BRIGHTNESS	..\..\inc\main.h	47;"	macro
 MAX_BUFFER	..\..\src\i2c_slave_interrupt.c	4;"	macro	file:
 MCR	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	2189;"	member	struct:__anon6
@@ -3147,9 +3152,9 @@ SWR	..\..\inc\stm8s.h	363;"	member	struct:CLK_struct
 SendDataIndex	..\..\src\i2c_slave_interrupt.c	13;"	variable
 SetBit	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	2806;"	macro
 SetBit	..\..\inc\stm8s.h	2523;"	macro
-Swing	..\..\src\main.c	493;"	function	signature:(float t)
+Swing	..\..\src\main.c	498;"	function	signature:(float t)
 Sys_Init	..\..\inc\main.h	135;"	prototype	signature:(void)
-Sys_Init	..\..\src\main.c	252;"	function	file:	signature:(void)
+Sys_Init	..\..\src\main.c	257;"	function	file:	signature:(void)
 Sys_TypeDef	..\..\inc\main.h	130;"	typedef	typeref:struct:__anon249
 TBR	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	457;"	member	struct:AWU_struct
 TBR	..\..\inc\stm8s.h	286;"	member	struct:AWU_struct
@@ -4721,10 +4726,10 @@ TIM6_struct	..\..\inc\stm8s.h	1119;"	struct
 TIMER2_INT_TIME_50HZ	..\..\inc\main.h	54;"	macro
 TIMER2_INT_TIME_60HZ	..\..\inc\main.h	55;"	macro
 TIMER2_Init	..\..\inc\main.h	155;"	prototype	signature:(void)
-TIMER2_Init	..\..\src\main.c	431;"	function	file:	signature:(void)
+TIMER2_Init	..\..\src\main.c	436;"	function	file:	signature:(void)
 TIMER4_INT_TIME	..\..\inc\main.h	60;"	macro
 TIMER4_Init	..\..\inc\main.h	164;"	prototype	signature:(void)
-TIMER4_Init	..\..\src\main.c	376;"	function	file:	signature:(void)
+TIMER4_Init	..\..\src\main.c	381;"	function	file:	signature:(void)
 TINY	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	123;"	macro
 TINY	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	129;"	macro
 TINY	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	143;"	macro
@@ -5578,7 +5583,7 @@ WWDG_WR_W	..\..\inc\stm8s.h	1523;"	macro
 WWDG_struct	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	1646;"	struct
 WWDG_struct	..\..\inc\stm8s.h	1496;"	struct
 Wdt_Init	..\..\inc\main.h	151;"	prototype	signature:(void)
-Wdt_Init	..\..\src\main.c	361;"	function	file:	signature:(void)
+Wdt_Init	..\..\src\main.c	366;"	function	file:	signature:(void)
 ZD_PIN	..\..\inc\main.h	29;"	macro
 ZD_PIN_PORT	..\..\inc\main.h	28;"	macro
 ZD_STATUS	..\..\inc\main.h	30;"	macro
@@ -5644,11 +5649,11 @@ _vectab	stm8_interrupt_vector.c	23;"	variable
 acErrFlag	..\..\inc\main.h	123;"	member	struct:__anon249
 acOkFlag	..\..\inc\main.h	124;"	member	struct:__anon249
 action_done	..\..\src\i2c_slave_interrupt.c	8;"	variable
-action_flag	..\..\src\i2c_slave_interrupt.c	26;"	variable	typeref:union:FLAG
-aim_bright1	..\..\src\i2c_slave_interrupt.c	19;"	variable
-aim_bright2	..\..\src\i2c_slave_interrupt.c	20;"	variable
+action_flag	..\..\src\i2c_slave_interrupt.c	27;"	variable	typeref:union:FLAG
+aim_bright1	..\..\src\i2c_slave_interrupt.c	20;"	variable
+aim_bright2	..\..\src\i2c_slave_interrupt.c	21;"	variable
 assert_failed	..\..\inc\stm8s_conf.h	105;"	prototype	signature:(uint8_t* file, uint32_t line)
-assert_failed	..\..\src\main.c	229;"	function	signature:(uint8_t* file, uint32_t line)
+assert_failed	..\..\src\main.c	234;"	function	signature:(uint8_t* file, uint32_t line)
 assert_param	..\..\inc\stm8s_conf.h	103;"	macro
 assert_param	..\..\inc\stm8s_conf.h	107;"	macro
 bit0	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	236;"	member	struct:FLAG::__anon1
@@ -5670,10 +5675,10 @@ ch1_status	..\..\inc\i2c_slave_interrupt.h	37;"	member	struct:__anon247
 ch2_status	..\..\inc\i2c_slave_interrupt.h	38;"	member	struct:__anon247
 ch3_status	..\..\inc\i2c_slave_interrupt.h	39;"	member	struct:__anon247
 ch4_status	..\..\inc\i2c_slave_interrupt.h	40;"	member	struct:__anon247
-change_step1	..\..\src\i2c_slave_interrupt.c	22;"	variable
-change_step2	..\..\src\i2c_slave_interrupt.c	23;"	variable
-change_time	..\..\src\i2c_slave_interrupt.c	21;"	variable
-channel	..\..\src\i2c_slave_interrupt.c	17;"	variable
+change_step1	..\..\src\i2c_slave_interrupt.c	23;"	variable
+change_step2	..\..\src\i2c_slave_interrupt.c	24;"	variable
+change_time	..\..\src\i2c_slave_interrupt.c	22;"	variable
+channel	..\..\src\i2c_slave_interrupt.c	18;"	variable
 checkAcCnt	..\..\inc\main.h	122;"	member	struct:__anon249
 cnt1s	..\..\inc\main.h	129;"	member	struct:__anon249
 coord	..\..\inc\i2c_slave_interrupt.h	35;"	member	struct:__anon247
@@ -5707,9 +5712,9 @@ halt	..\..\inc\stm8s.h	2497;"	macro
 halt	..\..\inc\stm8s.h	2506;"	macro
 hz50Flag	..\..\inc\main.h	119;"	member	struct:__anon249
 hzCnt	..\..\inc\main.h	121;"	member	struct:__anon249
-i2c_init_message	..\..\src\i2c_slave_interrupt.c	59;"	function	signature:(I2C_Message *tx,u8 payload_len)
+i2c_init_message	..\..\src\i2c_slave_interrupt.c	60;"	function	signature:(I2C_Message *tx,u8 payload_len)
 init_device_info	..\..\inc\i2c_slave_interrupt.h	59;"	prototype	signature:(void)
-init_device_info	..\..\src\i2c_slave_interrupt.c	140;"	function	signature:(void)
+init_device_info	..\..\src\i2c_slave_interrupt.c	141;"	function	signature:(void)
 int16_t	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	211;"	typedef
 int32_t	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	212;"	typedef
 int8_t	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	210;"	typedef
@@ -5722,7 +5727,7 @@ last_bright2	..\..\src\main.c	41;"	variable
 light1	..\..\inc\main.h	115;"	member	struct:__anon249
 light2	..\..\inc\main.h	116;"	member	struct:__anon249
 lightCtrl100ms	..\..\inc\main.h	138;"	prototype	signature:(void)
-lightCtrl100ms	..\..\src\main.c	505;"	function	signature:(void)
+lightCtrl100ms	..\..\src\main.c	510;"	function	signature:(void)
 linear1_begin	..\..\inc\i2c_slave_interrupt.h	10;"	macro
 linear2_begin	..\..\inc\i2c_slave_interrupt.h	11;"	macro
 main	..\..\src\main.c	80;"	function	signature:(void)
@@ -5734,7 +5739,7 @@ memset	..\..\..\..\..\..\program files (x86)\cosmic\cxstm8\hstm8\string.h	29;"	p
 meshid	..\..\inc\i2c_slave_interrupt.h	30;"	member	struct:__anon247
 message_id	..\..\inc\i2c_slave_interrupt.h	24;"	member	struct:__anon246
 model	..\..\inc\i2c_slave_interrupt.h	34;"	member	struct:__anon247
-mymemcpy	..\..\src\i2c_slave_interrupt.c	36;"	function	signature:(void *des,void *src,u32 n)
+mymemcpy	..\..\src\i2c_slave_interrupt.c	37;"	function	signature:(void *des,void *src,u32 n)
 nop	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	2737;"	macro
 nop	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	2746;"	macro
 nop	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	2756;"	macro
@@ -5749,11 +5754,11 @@ realtime_bright1	..\..\src\main.c	42;"	variable
 realtime_bright2	..\..\src\main.c	43;"	variable
 reqCalHzFlag	..\..\inc\main.h	117;"	member	struct:__anon249
 rev_action_dimmer_OK	..\..\inc\i2c_slave_interrupt.h	61;"	prototype	signature:(void)
-rev_action_dimmer_OK	..\..\src\i2c_slave_interrupt.c	173;"	function	signature:(void)
+rev_action_dimmer_OK	..\..\src\i2c_slave_interrupt.c	174;"	function	signature:(void)
 rev_action_dimmer_done	..\..\inc\i2c_slave_interrupt.h	62;"	prototype	signature:(void)
-rev_action_dimmer_done	..\..\src\i2c_slave_interrupt.c	186;"	function	signature:(void)
+rev_action_dimmer_done	..\..\src\i2c_slave_interrupt.c	187;"	function	signature:(void)
 rev_heart_breat	..\..\inc\i2c_slave_interrupt.h	60;"	prototype	signature:(void)
-rev_heart_breat	..\..\src\i2c_slave_interrupt.c	158;"	function	signature:(void)
+rev_heart_breat	..\..\src\i2c_slave_interrupt.c	159;"	function	signature:(void)
 rim	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	2735;"	macro
 rim	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	2744;"	macro
 rim	..\..\..\libraries\stm8s_stdperiph_driver\inc\stm8s.h	2754;"	macro
