@@ -47,5 +47,18 @@ stm8_interrupt_vector.c
 ..\..\inc\stm8s_type.h
 ..\..\inc\uart_printf.h
 ..\..\..\..\..\..\program files (x86)\cosmic\cxstm8\hstm8\mods0.h
+..\..\..\..\..\..\program files (x86)\cosmic\cxstm8\hstm8\modsl0.h
 ..\..\..\..\..\..\program files (x86)\cosmic\cxstm8\hstm8\stdio.h
+..\..\..\..\..\..\program files (x86)\cosmic\cxstm8\hstm8\stdlib.h
 ..\..\..\..\..\..\program files (x86)\cosmic\cxstm8\hstm8\string.h
+..\..\..\libraries\stm8s_stdperiph_driver\src\stm8s_rst.c
+..\..\..\libraries\stm8s_stdperiph_driver\src\stm8s_tim1.c
+..\..\..\libraries\stm8s_stdperiph_driver\src\stm8s_uart2.c
+..\..\inc\i2c.h
+..\..\inc\i2c_master_poll.h
+..\..\inc\timer.h
+..\..\inc\uart.h
+..\..\src\i2c.c
+..\..\src\i2c_master_poll.c
+..\..\src\timer.c
+..\..\src\uart.c

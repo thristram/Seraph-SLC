@@ -400,17 +400,17 @@
  866                     ; 147 		di.payload[0] = 0xB2;
  868  000e a6b2          	ld	a,#178
  869  0010 6b04          	ld	(OFST-29,sp),a
- 870                     ; 148 		di.payload[1] = 0x01;
- 872  0012 a601          	ld	a,#1
+ 870                     ; 148 		di.payload[1] = 0xAA;
+ 872  0012 a6aa          	ld	a,#170
  873  0014 6b05          	ld	(OFST-28,sp),a
- 874                     ; 149 		di.payload[2] = 0x01;
- 876  0016 a601          	ld	a,#1
+ 874                     ; 149 		di.payload[2] = 0x55;
+ 876  0016 a655          	ld	a,#85
  877  0018 6b06          	ld	(OFST-27,sp),a
- 878                     ; 150 		di.payload[3] = 0x01;
- 880  001a a601          	ld	a,#1
+ 878                     ; 150 		di.payload[3] = 0xAB;
+ 880  001a a6ab          	ld	a,#171
  881  001c 6b07          	ld	(OFST-26,sp),a
- 882                     ; 151 		di.payload[4] = 0x01;
- 884  001e a601          	ld	a,#1
+ 882                     ; 151 		di.payload[4] = 0x57;
+ 884  001e a657          	ld	a,#87
  885  0020 6b08          	ld	(OFST-25,sp),a
  886                     ; 152 		di.payload[5] = 0x63;
  888  0022 a663          	ld	a,#99

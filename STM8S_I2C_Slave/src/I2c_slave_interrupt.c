@@ -145,10 +145,10 @@ u8 i2c_init_message(I2C_Message *tx,u8 payload_len)
 		di.frame_h2 = 0x7E;
 		di.message_id = IIC_RxBuffer[2];
 		di.payload[0] = 0xB2;
-		di.payload[1] = 0x01;
-		di.payload[2] = 0x01;
-		di.payload[3] = 0x01;
-		di.payload[4] = 0x01;
+		di.payload[1] = 0xAA;
+		di.payload[2] = 0x55;
+		di.payload[3] = 0xAB;
+		di.payload[4] = 0x57;
 		di.payload[5] = 0x63;
 		di.payload[6] = 0x00;
 		di.payload[7] = 0xc0;
