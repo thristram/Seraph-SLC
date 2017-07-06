@@ -117,7 +117,7 @@ void main(void)
 	disableInterrupts();
 	//中断优先级设置
 	ITC_DeInit();
-	ITC_SetSoftwarePriority(ITC_IRQ_PORTD,ITC_PRIORITYLEVEL_1);
+	ITC_SetSoftwarePriority(ITC_IRQ_PORTD,ITC_PRIORITYLEVEL_2);
 	ITC_SetSoftwarePriority(ITC_IRQ_TIM2_OVF,ITC_PRIORITYLEVEL_2);
 	ITC_SetSoftwarePriority(ITC_IRQ_TIM4_OVF,ITC_PRIORITYLEVEL_2);
 	ITC_SetSoftwarePriority(ITC_IRQ_I2C,ITC_PRIORITYLEVEL_3);
@@ -164,7 +164,7 @@ void main(void)
 	/*Main Loop */
   while(1)
 	{		
-		/*if(ReceiveState == IIC_STATE_END)
+		if(ReceiveState == IIC_STATE_END)
 		{
 			//for(i=0;i<GetDataIndex;i++){
 				//printf("%02X ",IIC_RxBuffer[i]&0xFF);
@@ -172,7 +172,7 @@ void main(void)
 			//printf("\n");
 			ReceiveState = IIC_STATE_UNKNOWN;
 			GetDataIndex = 0;
-		}*/
+		}
 		/*monitor main AC*/
 		if (sys.checkAcCnt == 0 && sys.acErrFlag == FALSE)
 		{

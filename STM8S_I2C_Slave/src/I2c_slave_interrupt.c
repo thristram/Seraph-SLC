@@ -205,8 +205,8 @@ u8 i2c_init_message(I2C_Message *tx,u8 payload_len)
 	void I2C_transaction_end(void)
 	{
 		ReceiveState = IIC_STATE_END;
-		ReceiveState = IIC_STATE_UNKNOWN;
-			GetDataIndex = 0;
+		//ReceiveState = IIC_STATE_UNKNOWN;
+			//GetDataIndex = 0;
 	}	
 	
 	void I2C_transaction_receive(void)
