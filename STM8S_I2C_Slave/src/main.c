@@ -193,26 +193,25 @@ void main(void)
 		if(f_100ms){
 			f_100ms = 0;
 			lightCtrl100ms();
-		
-			
-			/*
-			tick1s++;
+			/*tick1s++;
 			if(tick1s >= 10){
 				tick1s = 0;
 				printf("last_bright = %02X, aim_bright = %02X\n",last_bright1&0xFF,aim_bright1&0xFF);
 				printf("slc.ch1_status = %02X, slc.ch2_status = %02X\n",slc.ch1_status&0xFF,slc.ch2_status&0xFF);
-			}
-			*/
+			}*/
+			
 		}
 		if((channel & 0x01)==0x01)//调节Dimmer1
 		{
 			sys.light1.briVal = realtime_bright1;
-			slc.ch1_status = (u8)(last_bright1*100);
+			//slc.ch1_status = (u8)(last_bright1*100);
+			slc.ch1_status = (u8)(realtime_bright1*0.4);
 		}
 		if((channel & 0x02)==0x02)//调节Dimmer2
 		{
 			sys.light2.briVal = realtime_bright2;
-			slc.ch2_status = (u8)(last_bright2*100);
+			//slc.ch2_status = (u8)(last_bright2*100);
+			slc.ch2_status = (u8)(realtime_bright2*0.4);
 		}
 		if (sys.acOkFlag && sys.cnt1s == 0)
 		{
@@ -511,6 +510,7 @@ u8 Swing(float t)
 
 void lightCtrl100ms(void)
 {
+	if((channel & 0x01) == 0x01){
 	if(linear1_begin){//channel1 Linear调光开始
 		last_bright1 += change_step1;
 		realtime_bright1 = Linear(last_bright1);
@@ -523,6 +523,8 @@ void lightCtrl100ms(void)
 				linear1_begin = 0;
 		}
 	}
+	}
+	if((channel & 0x02) == 0x02){
 	if(linear2_begin){//channel2 Linear调光开始
 		last_bright2 += change_step2;
 		realtime_bright2 = Linear(last_bright2);
@@ -535,16 +537,17 @@ void lightCtrl100ms(void)
 				linear2_begin = 0;
 		}
 	}
+	}
 	if(eraseIn1_begin){//channel1 EraseIn调光开始
 		last_bright1 += change_step1;
 		realtime_bright1 = EraseIn(last_bright1);	
 		if(last_bright1 > aim_bright1){
 			if(((u8)((last_bright1 - aim_bright1)*250) <= 1))
-				eraseIn1_begin = 0;
+				eraseIn1_begin = 0;channel &= ~(0x01);
 		}
 		else{
 			if(((u8)((aim_bright1- last_bright1)*250) <= 1))
-				eraseIn1_begin = 0;
+				eraseIn1_begin = 0;channel &= ~(0x01);
 		}
 	}
 	if(eraseIn2_begin){//channel2 EraseIn调光开始
@@ -552,11 +555,11 @@ void lightCtrl100ms(void)
 		realtime_bright2 = EraseIn(last_bright2);
 		if(last_bright2 > aim_bright2){
 			if(((u8)((last_bright2 - aim_bright2)*250)	<= 1))
-				eraseIn2_begin = 0;
+				eraseIn2_begin = 0;channel &= ~(0x02);
 		}
 		else{
 			if(((u8)((aim_bright2- last_bright2)*250) <= 1))
-				eraseIn2_begin = 0;
+				eraseIn2_begin = 0;channel &= ~(0x02);
 		}
 	}
 	if(eraseOut1_begin){//channel1 EraseOut调光开始
@@ -564,11 +567,11 @@ void lightCtrl100ms(void)
 		realtime_bright1 = EraseOut(last_bright1);	
 		if(last_bright1 > aim_bright1){
 			if(((u8)((last_bright1 - aim_bright1)*250) <= 1))
-				eraseOut1_begin = 0;
+				eraseOut1_begin = 0;channel &= ~(0x01);
 		}
 		else{
 			if(((u8)((aim_bright1- last_bright1)*250) <= 1))
-				eraseOut1_begin = 0;
+				eraseOut1_begin = 0;channel &= ~(0x01);
 		}
 	}
 	if(eraseOut2_begin){//channel2 EraseOut调光开始
@@ -576,11 +579,11 @@ void lightCtrl100ms(void)
 		realtime_bright2 = EraseOut(last_bright2);
 		if(last_bright2 > aim_bright2){
 			if(((u8)((last_bright2 - aim_bright2)*250)	<= 1))
-				eraseOut2_begin = 0;
+				eraseOut2_begin = 0;channel &= ~(0x02);
 		}
 		else{
 			if(((u8)((aim_bright2- last_bright2)*250) <= 1))
-				eraseOut2_begin = 0;
+				eraseOut2_begin = 0;channel &= ~(0x02);
 		}
 	}
 	if(swing1_begin){//channel1 Swing调光开始
@@ -588,11 +591,11 @@ void lightCtrl100ms(void)
 		realtime_bright1 = Swing(last_bright1);	
 		if(last_bright1 > aim_bright1){
 			if(((u8)((last_bright1 - aim_bright1)*250) <= 1))
-				swing1_begin = 0;
+				swing1_begin = 0;channel &= ~(0x01);
 		}
 		else{
 			if(((u8)((aim_bright1- last_bright1)*250) <= 1))
-				swing1_begin = 0;
+				swing1_begin = 0;channel &= ~(0x01);
 		}
 	}
 	if(swing2_begin){//channel2 Swing调光开始
@@ -600,11 +603,11 @@ void lightCtrl100ms(void)
 		realtime_bright2 = Swing(last_bright2);
 		if(last_bright2 > aim_bright2){
 			if(((u8)((last_bright2 - aim_bright2)*250)	<= 1))
-				swing2_begin = 0;
+				swing2_begin = 0;channel &= ~(0x02);
 		}
 		else{
 			if(((u8)((aim_bright2- last_bright2)*250) <= 1))
-				swing2_begin = 0;
+				swing2_begin = 0;channel &= ~(0x02);
 		}
 	}
 }

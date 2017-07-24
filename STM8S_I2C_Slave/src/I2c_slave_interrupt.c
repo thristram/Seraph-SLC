@@ -127,9 +127,9 @@ u8 i2c_init_message(I2C_Message *tx,u8 payload_len)
 					}
 				break;
 				case 0x59://调光时间结束后SC发送查询ch状态
-					//if(IIC_RxBuffer[5] == slave_address){//查询action dimmer执行后SLC状态
+					if(IIC_RxBuffer[5] == slave_address){//查询action dimmer执行后SLC状态
 						rev_action_dimmer_done();
-					//}
+					}
 				break;
 				default:
 				break;

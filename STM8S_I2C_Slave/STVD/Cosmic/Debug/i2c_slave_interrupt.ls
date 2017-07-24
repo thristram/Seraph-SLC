@@ -170,29 +170,29 @@
  522  0022               L61:
  523  0022 a0a5          	sub	a,#165
  524  0024 2703          	jreq	L02
- 525  0026 cc018a        	jp	L522
+ 525  0026 cc0190        	jp	L522
  526  0029               L02:
  527                     ; 86 				case 0xFE:
  527                     ; 87 					if(IIC_RxBuffer[5] == 0x01)	init_device_info();
  529  0029 b63b          	ld	a,_IIC_RxBuffer+5
  530  002b a101          	cp	a,#1
  531  002d 2703          	jreq	L22
- 532  002f cc018a        	jp	L522
+ 532  002f cc0190        	jp	L522
  533  0032               L22:
  536  0032 cd0000        	call	_init_device_info
- 538  0035 ac8a018a      	jpf	L522
+ 538  0035 ac900190      	jpf	L522
  539  0039               L571:
  540                     ; 89 				case 0x03:
  540                     ; 90 					if((IIC_RxBuffer[5] == 0x03)&&(IIC_RxBuffer[6] == slave_address)){
  542  0039 b63b          	ld	a,_IIC_RxBuffer+5
  543  003b a103          	cp	a,#3
  544  003d 2703          	jreq	L42
- 545  003f cc018a        	jp	L522
+ 545  003f cc0190        	jp	L522
  546  0042               L42:
  548  0042 b63c          	ld	a,_IIC_RxBuffer+6
  549  0044 b157          	cp	a,_slave_address
  550  0046 2703          	jreq	L62
- 551  0048 cc018a        	jp	L522
+ 551  0048 cc0190        	jp	L522
  552  004b               L62:
  553                     ; 92 						if(Check_Sum(&IIC_RxBuffer[2],IIC_RxBuffer[3]) == IIC_RxBuffer[7]){
  555  004b 3b0039        	push	_IIC_RxBuffer+3
@@ -201,11 +201,11 @@
  559  0054 5b01          	addw	sp,#1
  560  0056 b13d          	cp	a,_IIC_RxBuffer+7
  561  0058 2703          	jreq	L03
- 562  005a cc018a        	jp	L522
+ 562  005a cc0190        	jp	L522
  563  005d               L03:
  564                     ; 93 							rev_heart_breat();
  566  005d cd0000        	call	_rev_heart_breat
- 568  0060 ac8a018a      	jpf	L522
+ 568  0060 ac900190      	jpf	L522
  569  0064               L771:
  570                     ; 97 				case 0x51://Linear
  570                     ; 98 				case 0x52://Erase in
@@ -224,7 +224,7 @@
  581  0073 90bf01        	ldw	c_y+1,y
  582  0076 b301          	cpw	x,c_y+1
  583  0078 2703          	jreq	L23
- 584  007a cc018a        	jp	L522
+ 584  007a cc0190        	jp	L522
  585  007d               L23:
  586                     ; 103 						channel = (IIC_RxBuffer[5]&0x0f);
  588  007d b63b          	ld	a,_IIC_RxBuffer+5
@@ -368,440 +368,442 @@
  787  0182               L172:
  788                     ; 126 						rev_action_dimmer_OK();
  790  0182 cd0000        	call	_rev_action_dimmer_OK
- 792  0185 2003          	jra	L522
+ 792  0185 2009          	jra	L522
  793  0187               L102:
  794                     ; 129 				case 0x59://调光时间结束后SC发送查询ch状态
- 794                     ; 130 					//if(IIC_RxBuffer[5] == slave_address){//查询action dimmer执行后SLC状态
- 794                     ; 131 						rev_action_dimmer_done();
- 796  0187 cd0000        	call	_rev_action_dimmer_done
- 798                     ; 133 				break;
- 800  018a               L302:
- 801                     ; 134 				default:
- 801                     ; 135 				break;
- 803  018a               L522:
- 804                     ; 139 	}
- 807  018a 5b05          	addw	sp,#5
- 808  018c 81            	ret
- 846                     ; 141 	void init_device_info(void)
- 846                     ; 142 	{
- 847                     .text:	section	.text,new
- 848  0000               _init_device_info:
- 850  0000 5221          	subw	sp,#33
- 851       00000021      OFST:	set	33
- 854                     ; 144 		di.frame_h1 = 0x7E;
- 856  0002 a67e          	ld	a,#126
- 857  0004 6b01          	ld	(OFST-32,sp),a
- 858                     ; 145 		di.frame_h2 = 0x7E;
- 860  0006 a67e          	ld	a,#126
- 861  0008 6b02          	ld	(OFST-31,sp),a
- 862                     ; 146 		di.message_id = IIC_RxBuffer[2];
- 864  000a b638          	ld	a,_IIC_RxBuffer+2
- 865  000c 6b03          	ld	(OFST-30,sp),a
- 866                     ; 147 		di.payload[0] = 0xB2;
- 868  000e a6b2          	ld	a,#178
- 869  0010 6b04          	ld	(OFST-29,sp),a
- 870                     ; 148 		di.payload[1] = 0xAA;
- 872  0012 a6aa          	ld	a,#170
- 873  0014 6b05          	ld	(OFST-28,sp),a
- 874                     ; 149 		di.payload[2] = 0x55;
- 876  0016 a655          	ld	a,#85
- 877  0018 6b06          	ld	(OFST-27,sp),a
- 878                     ; 150 		di.payload[3] = 0xAB;
- 880  001a a6ab          	ld	a,#171
- 881  001c 6b07          	ld	(OFST-26,sp),a
- 882                     ; 151 		di.payload[4] = 0x57;
- 884  001e a657          	ld	a,#87
- 885  0020 6b08          	ld	(OFST-25,sp),a
- 886                     ; 152 		di.payload[5] = 0x63;
- 888  0022 a663          	ld	a,#99
- 889  0024 6b09          	ld	(OFST-24,sp),a
- 890                     ; 153 		di.payload[6] = 0x00;
- 892  0026 0f0a          	clr	(OFST-23,sp)
- 893                     ; 154 		di.payload[7] = 0xc0;
- 895  0028 a6c0          	ld	a,#192
- 896  002a 6b0b          	ld	(OFST-22,sp),a
- 897                     ; 155 		di.payload[8] = slave_address;
- 899  002c b657          	ld	a,_slave_address
- 900  002e 6b0c          	ld	(OFST-21,sp),a
- 901                     ; 156 		i2c_init_message(&di,9);
- 903  0030 4b09          	push	#9
- 904  0032 96            	ldw	x,sp
- 905  0033 1c0002        	addw	x,#OFST-31
- 906  0036 cd0000        	call	_i2c_init_message
- 908  0039 84            	pop	a
- 909                     ; 157 	}
- 912  003a 5b21          	addw	sp,#33
- 913  003c 81            	ret
- 951                     ; 159 	void rev_heart_breat(void)
- 951                     ; 160 	{
- 952                     .text:	section	.text,new
- 953  0000               _rev_heart_breat:
- 955  0000 5221          	subw	sp,#33
- 956       00000021      OFST:	set	33
- 959                     ; 162 		hb.frame_h1 = 0x7E;
- 961  0002 a67e          	ld	a,#126
- 962  0004 6b01          	ld	(OFST-32,sp),a
- 963                     ; 163 		hb.frame_h2 = 0x7E;
- 965  0006 a67e          	ld	a,#126
- 966  0008 6b02          	ld	(OFST-31,sp),a
- 967                     ; 164 		hb.message_id = IIC_RxBuffer[2];
- 969  000a b638          	ld	a,_IIC_RxBuffer+2
- 970  000c 6b03          	ld	(OFST-30,sp),a
- 971                     ; 165 		hb.payload[0] = 0x06;
- 973  000e a606          	ld	a,#6
- 974  0010 6b04          	ld	(OFST-29,sp),a
- 975                     ; 166 		hb.payload[1] = slc.MDID;
- 977  0012 b66c          	ld	a,_slc+20
- 978  0014 6b05          	ld	(OFST-28,sp),a
- 979                     ; 167 		hb.payload[2] = slc.ch1_status;
- 981  0016 b66d          	ld	a,_slc+21
- 982  0018 6b06          	ld	(OFST-27,sp),a
- 983                     ; 168 		hb.payload[3] = slc.ch2_status;
- 985  001a b66e          	ld	a,_slc+22
- 986  001c 6b07          	ld	(OFST-26,sp),a
- 987                     ; 169 		hb.payload[4] = slc.ch3_status;
- 989  001e b66f          	ld	a,_slc+23
- 990  0020 6b08          	ld	(OFST-25,sp),a
- 991                     ; 170 		hb.payload[5] = slc.ch4_status;
- 993  0022 b670          	ld	a,_slc+24
- 994  0024 6b09          	ld	(OFST-24,sp),a
- 995                     ; 171 		i2c_init_message(&hb,6);
- 997  0026 4b06          	push	#6
- 998  0028 96            	ldw	x,sp
- 999  0029 1c0002        	addw	x,#OFST-31
-1000  002c cd0000        	call	_i2c_init_message
-1002  002f 84            	pop	a
-1003                     ; 172 	}
-1006  0030 5b21          	addw	sp,#33
-1007  0032 81            	ret
-1046                     ; 174 	void rev_action_dimmer_OK(void)
-1046                     ; 175 	{
-1047                     .text:	section	.text,new
-1048  0000               _rev_action_dimmer_OK:
-1050  0000 5221          	subw	sp,#33
-1051       00000021      OFST:	set	33
-1054                     ; 177 		ad.frame_h1 = 0x7E;
-1056  0002 a67e          	ld	a,#126
-1057  0004 6b01          	ld	(OFST-32,sp),a
-1058                     ; 178 		ad.frame_h2 = 0x7E;
-1060  0006 a67e          	ld	a,#126
-1061  0008 6b02          	ld	(OFST-31,sp),a
-1062                     ; 179 		ad.message_id = IIC_RxBuffer[2];
-1064  000a b638          	ld	a,_IIC_RxBuffer+2
-1065  000c 6b03          	ld	(OFST-30,sp),a
-1066                     ; 180 		ad.payload[0] = 0xAA;
-1068  000e a6aa          	ld	a,#170
-1069  0010 6b04          	ld	(OFST-29,sp),a
-1070                     ; 181 		ad.payload[1] = 0x02;
-1072  0012 a602          	ld	a,#2
-1073  0014 6b05          	ld	(OFST-28,sp),a
-1074                     ; 182 		ad.payload[2] = slc.MDID;
-1076  0016 b66c          	ld	a,_slc+20
-1077  0018 6b06          	ld	(OFST-27,sp),a
-1078                     ; 183 		i2c_init_message(&ad,3);
-1080  001a 4b03          	push	#3
-1081  001c 96            	ldw	x,sp
-1082  001d 1c0002        	addw	x,#OFST-31
-1083  0020 cd0000        	call	_i2c_init_message
-1085  0023 84            	pop	a
-1086                     ; 184 	}
-1089  0024 5b21          	addw	sp,#33
-1090  0026 81            	ret
-1128                     ; 187 	void rev_action_dimmer_done(void)
-1128                     ; 188 	{
-1129                     .text:	section	.text,new
-1130  0000               _rev_action_dimmer_done:
-1132  0000 5221          	subw	sp,#33
-1133       00000021      OFST:	set	33
-1136                     ; 190 		ad.frame_h1 = 0x7E;
-1138  0002 a67e          	ld	a,#126
-1139  0004 6b01          	ld	(OFST-32,sp),a
-1140                     ; 191 		ad.frame_h2 = 0x7E;
-1142  0006 a67e          	ld	a,#126
-1143  0008 6b02          	ld	(OFST-31,sp),a
-1144                     ; 192 		ad.message_id = 66;
-1146  000a a642          	ld	a,#66
-1147  000c 6b03          	ld	(OFST-30,sp),a
-1148                     ; 193 		ad.payload[0] = 0xAA;
-1150  000e a6aa          	ld	a,#170
-1151  0010 6b04          	ld	(OFST-29,sp),a
-1152                     ; 194 		ad.payload[1] = 0x05;
-1154  0012 a605          	ld	a,#5
-1155  0014 6b05          	ld	(OFST-28,sp),a
-1156                     ; 195 		ad.payload[2] = slc.MDID;
-1158  0016 b66c          	ld	a,_slc+20
-1159  0018 6b06          	ld	(OFST-27,sp),a
-1160                     ; 196 		ad.payload[3] = slc.ch1_status;
-1162  001a b66d          	ld	a,_slc+21
-1163  001c 6b07          	ld	(OFST-26,sp),a
-1164                     ; 197 		ad.payload[4] = slc.ch2_status;
-1166  001e b66e          	ld	a,_slc+22
-1167  0020 6b08          	ld	(OFST-25,sp),a
-1168                     ; 198 		ad.payload[5] = slc.ch3_status;
-1170  0022 b66f          	ld	a,_slc+23
-1171  0024 6b09          	ld	(OFST-24,sp),a
-1172                     ; 199 		ad.payload[6] = slc.ch4_status;
-1174  0026 b670          	ld	a,_slc+24
-1175  0028 6b0a          	ld	(OFST-23,sp),a
-1176                     ; 200 		i2c_init_message(&ad,7);
-1178  002a 4b07          	push	#7
-1179  002c 96            	ldw	x,sp
-1180  002d 1c0002        	addw	x,#OFST-31
-1181  0030 cd0000        	call	_i2c_init_message
-1183  0033 84            	pop	a
-1184                     ; 201 	}
-1187  0034 5b21          	addw	sp,#33
-1188  0036 81            	ret
-1213                     ; 205 	void I2C_transaction_end(void)
-1213                     ; 206 	{
-1214                     .text:	section	.text,new
-1215  0000               _I2C_transaction_end:
-1219                     ; 207 		ReceiveState = IIC_STATE_END;
-1221  0000 35030001      	mov	_ReceiveState,#3
-1222                     ; 210 	}	
-1225  0004 81            	ret
-1250                     ; 212 	void I2C_transaction_receive(void)
-1250                     ; 213 	{
-1251                     .text:	section	.text,new
-1252  0000               _I2C_transaction_receive:
-1256                     ; 214 		ReceiveState = IIC_STATE_RECEIVEING;
-1258  0000 35020001      	mov	_ReceiveState,#2
-1259                     ; 215 	}
-1262  0004 81            	ret
-1299                     ; 217 	void I2C_byte_received(uint8_t RxData)
-1299                     ; 218 	{
-1300                     .text:	section	.text,new
-1301  0000               _I2C_byte_received:
-1303  0000 88            	push	a
-1304       00000000      OFST:	set	0
-1307                     ; 219 		if(GetDataIndex < MAX_BUFFER) {
-1309  0001 b600          	ld	a,_GetDataIndex
-1310  0003 a120          	cp	a,#32
-1311  0005 2410          	jruge	L144
-1312                     ; 220 			IIC_RxBuffer[GetDataIndex++] = RxData;
-1314  0007 b600          	ld	a,_GetDataIndex
-1315  0009 97            	ld	xl,a
-1316  000a 3c00          	inc	_GetDataIndex
-1317  000c 9f            	ld	a,xl
-1318  000d 5f            	clrw	x
-1319  000e 97            	ld	xl,a
-1320  000f 7b01          	ld	a,(OFST+1,sp)
-1321  0011 e736          	ld	(_IIC_RxBuffer,x),a
-1322                     ; 221 			ReceiveState = IIC_STATE_RECEIVEING;
-1324  0013 35020001      	mov	_ReceiveState,#2
-1325  0017               L144:
-1326                     ; 223 	}
-1329  0017 84            	pop	a
-1330  0018 81            	ret
-1355                     ; 225 	uint8_t I2C_byte_write(void)
-1355                     ; 226 	{
-1356                     .text:	section	.text,new
-1357  0000               _I2C_byte_write:
-1361                     ; 227 			return IIC_TxBuffer[SendDataIndex++];
-1363  0000 b602          	ld	a,_SendDataIndex
-1364  0002 97            	ld	xl,a
-1365  0003 3c02          	inc	_SendDataIndex
-1366  0005 9f            	ld	a,xl
-1367  0006 5f            	clrw	x
-1368  0007 97            	ld	xl,a
-1369  0008 e616          	ld	a,(_IIC_TxBuffer,x)
-1372  000a 81            	ret
-1375                     	switch	.ubsct
-1376  0000               L354_sr1:
-1377  0000 00            	ds.b	1
-1378  0001               L554_sr2:
-1379  0001 00            	ds.b	1
-1380  0002               L754_sr3:
-1381  0002 00            	ds.b	1
-1437                     ; 237 @far @interrupt void I2C_Slave_check_event(void) {
-1439                     .text:	section	.text,new
-1440  0000               f_I2C_Slave_check_event:
-1443  0000 3b0002        	push	c_x+2
-1444  0003 be00          	ldw	x,c_x
-1445  0005 89            	pushw	x
-1446  0006 3b0002        	push	c_y+2
-1447  0009 be00          	ldw	x,c_y
-1448  000b 89            	pushw	x
-1451                     ; 244 	sr1 = I2C->SR1;
-1453  000c 5552170000    	mov	L354_sr1,21015
-1454                     ; 245 	sr2 = I2C->SR2;
-1456  0011 5552180001    	mov	L554_sr2,21016
-1457                     ; 246 	sr3 = I2C->SR3;
-1459  0016 5552190002    	mov	L754_sr3,21017
-1460                     ; 249   if (sr2 & (I2C_SR2_WUFH | I2C_SR2_OVR |I2C_SR2_ARLO |I2C_SR2_BERR))
-1462  001b b601          	ld	a,L554_sr2
-1463  001d a52b          	bcp	a,#43
-1464  001f 2708          	jreq	L705
-1465                     ; 251     I2C->CR2|= I2C_CR2_STOP;  // stop communication - release the lines
-1467  0021 72125211      	bset	21009,#1
-1468                     ; 252     I2C->SR2= 0;					    // clear all error flags
-1470  0025 725f5218      	clr	21016
-1471  0029               L705:
-1472                     ; 255   if ((sr1 & (I2C_SR1_RXNE | I2C_SR1_BTF)) == (I2C_SR1_RXNE | I2C_SR1_BTF))
-1474  0029 b600          	ld	a,L354_sr1
-1475  002b a444          	and	a,#68
-1476  002d a144          	cp	a,#68
-1477  002f 2606          	jrne	L115
-1478                     ; 257     I2C_byte_received(I2C->DR);
-1480  0031 c65216        	ld	a,21014
-1481  0034 cd0000        	call	_I2C_byte_received
-1483  0037               L115:
-1484                     ; 260   if (sr1 & I2C_SR1_RXNE)
-1486  0037 b600          	ld	a,L354_sr1
-1487  0039 a540          	bcp	a,#64
-1488  003b 2706          	jreq	L315
-1489                     ; 262     I2C_byte_received(I2C->DR);
-1491  003d c65216        	ld	a,21014
-1492  0040 cd0000        	call	_I2C_byte_received
-1494  0043               L315:
-1495                     ; 265   if (sr2 & I2C_SR2_AF)
-1497  0043 b601          	ld	a,L554_sr2
-1498  0045 a504          	bcp	a,#4
-1499  0047 2707          	jreq	L515
-1500                     ; 267     I2C->SR2 &= ~I2C_SR2_AF;	  // clear AF
-1502  0049 72155218      	bres	21016,#2
-1503                     ; 268 		I2C_transaction_end();
-1505  004d cd0000        	call	_I2C_transaction_end
-1507  0050               L515:
-1508                     ; 271   if (sr1 & I2C_SR1_STOPF) 
-1510  0050 b600          	ld	a,L354_sr1
-1511  0052 a510          	bcp	a,#16
-1512  0054 2707          	jreq	L715
-1513                     ; 273     I2C->CR2 |= I2C_CR2_ACK;	  // CR2 write to clear STOPF
-1515  0056 72145211      	bset	21009,#2
-1516                     ; 274 		I2C_transaction_end();
-1518  005a cd0000        	call	_I2C_transaction_end
-1520  005d               L715:
-1521                     ; 277   if (sr1 & I2C_SR1_ADDR)
-1523  005d b600          	ld	a,L354_sr1
-1524  005f a502          	bcp	a,#2
-1525  0061 270e          	jreq	L125
-1526                     ; 279 		if(sr3 & I2C_SR3_TRA){//从机发送数据
-1528  0063 b602          	ld	a,L754_sr3
-1529  0065 a504          	bcp	a,#4
-1530  0067 2705          	jreq	L325
-1531                     ; 280 			I2C_transaction_begin();
-1533  0069 cd0000        	call	_I2C_transaction_begin
-1536  006c 2003          	jra	L125
-1537  006e               L325:
-1538                     ; 282 			I2C_receive_begin();//从机接收数据
-1540  006e cd0000        	call	_I2C_receive_begin
-1542  0071               L125:
-1543                     ; 286   if ((sr1 & (I2C_SR1_TXE | I2C_SR1_BTF)) == (I2C_SR1_TXE | I2C_SR1_BTF))
-1545  0071 b600          	ld	a,L354_sr1
-1546  0073 a484          	and	a,#132
-1547  0075 a184          	cp	a,#132
-1548  0077 2606          	jrne	L725
-1549                     ; 288 		I2C->DR = I2C_byte_write();
-1551  0079 cd0000        	call	_I2C_byte_write
-1553  007c c75216        	ld	21014,a
-1554  007f               L725:
-1555                     ; 291   if (sr1 & I2C_SR1_TXE)
-1557  007f b600          	ld	a,L354_sr1
-1558  0081 a580          	bcp	a,#128
-1559  0083 2706          	jreq	L135
-1560                     ; 293 		I2C->DR = I2C_byte_write();
-1562  0085 cd0000        	call	_I2C_byte_write
-1564  0088 c75216        	ld	21014,a
-1565  008b               L135:
-1566                     ; 296 }
-1569  008b 85            	popw	x
-1570  008c bf00          	ldw	c_y,x
-1571  008e 320002        	pop	c_y+2
-1572  0091 85            	popw	x
-1573  0092 bf00          	ldw	c_x,x
-1574  0094 320002        	pop	c_x+2
-1575  0097 80            	iret
-1598                     ; 301 void IIC_SlaveConfig (void)
-1598                     ; 302 {
-1600                     .text:	section	.text,new
-1601  0000               _IIC_SlaveConfig:
-1605                     ; 313 		I2C->CR1 |= 0x01;				        	// Enable I2C peripheral
-1607  0000 72105210      	bset	21008,#0
-1608                     ; 314 		I2C->CR2 = 0x04;					      		// Enable I2C acknowledgement
-1610  0004 35045211      	mov	21009,#4
-1611                     ; 315 		I2C->FREQR = 16; 					      	// Set I2C Freq value (16MHz)
-1613  0008 35105212      	mov	21010,#16
-1614                     ; 317 		I2C->OARL = (SLAVE_ADDRESS << 1) ;	// set slave address to 0x51 (put 0xA2 for the register dues to7bit address) 
-1616  000c b657          	ld	a,_slave_address
-1617  000e 48            	sll	a
-1618  000f c75213        	ld	21011,a
-1619                     ; 318 		I2C->OARH = 0x40;					      	// Set 7bit address mode
-1621  0012 35405214      	mov	21012,#64
-1622                     ; 331 	I2C->ITR	= 0x07;					      // all I2C interrupt enable  
-1624  0016 3507521a      	mov	21018,#7
-1625                     ; 332 }
-1628  001a 81            	ret
-1983                     	xdef	_I2C_byte_write
-1984                     	xdef	_I2C_byte_received
-1985                     	xdef	_I2C_transaction_receive
-1986                     	xdef	_I2C_transaction_end
-1987                     	xdef	_I2C_transaction_begin
-1988                     	xdef	_I2C_receive_begin
-1989                     	xdef	_i2c_init_message
-1990                     	xdef	_Check_Sum
-1991                     	xdef	_mymemcpy
-1992                     	switch	.ubsct
-1993  0003               _action_flag:
-1994  0003 00            	ds.b	1
-1995                     	xdef	_action_flag
-1996  0004               _change_step2:
-1997  0004 00000000      	ds.b	4
-1998                     	xdef	_change_step2
-1999  0008               _change_step1:
-2000  0008 00000000      	ds.b	4
-2001                     	xdef	_change_step1
-2002  000c               _change_time:
-2003  000c 00            	ds.b	1
-2004                     	xdef	_change_time
-2005  000d               _aim_bright2:
-2006  000d 00000000      	ds.b	4
-2007                     	xdef	_aim_bright2
-2008  0011               _aim_bright1:
-2009  0011 00000000      	ds.b	4
-2010                     	xdef	_aim_bright1
-2011  0015               _channel:
-2012  0015 00            	ds.b	1
-2013                     	xdef	_channel
-2014                     	xref.b	_last_bright2
-2015                     	xref.b	_last_bright1
-2016                     	xref.b	_realtime_bright2
-2017                     	xref.b	_realtime_bright1
-2018                     	xdef	_SendDataIndex
-2019                     	xdef	_ReceiveState
-2020                     	xdef	_GetDataIndex
-2021  0016               _IIC_TxBuffer:
-2022  0016 000000000000  	ds.b	32
-2023                     	xdef	_IIC_TxBuffer
-2024  0036               _IIC_RxBuffer:
-2025  0036 000000000000  	ds.b	32
-2026                     	xdef	_IIC_RxBuffer
-2027  0056               _action_done:
-2028  0056 00            	ds.b	1
-2029                     	xdef	_action_done
-2030  0057               _slave_address:
-2031  0057 00            	ds.b	1
-2032                     	xdef	_slave_address
-2033  0058               _slc:
-2034  0058 000000000000  	ds.b	25
-2035                     	xdef	_slc
-2036                     	xdef	_rev_action_dimmer_done
-2037                     	xdef	_rev_action_dimmer_OK
-2038                     	xdef	_rev_heart_breat
-2039                     	xdef	_init_device_info
-2040                     	xdef	f_I2C_Slave_check_event
-2041                     	xdef	_IIC_SlaveConfig
-2042                     .const:	section	.text
-2043  0000               L562:
-2044  0000 42c80000      	dc.w	17096,0
-2045                     	xref.b	c_lreg
-2046                     	xref.b	c_x
-2047                     	xref.b	c_y
-2067                     	xref	c_fsub
-2068                     	xref	c_rtol
-2069                     	xref	c_fdiv
-2070                     	xref	c_itof
-2071                     	xref	c_lrzmp
-2072                     	xref	c_lgsbc
-2073                     	xref	c_ltor
-2074                     	end
+ 794                     ; 130 					if(IIC_RxBuffer[5] == slave_address){//查询action dimmer执行后SLC状态
+ 796  0187 b63b          	ld	a,_IIC_RxBuffer+5
+ 797  0189 b157          	cp	a,_slave_address
+ 798  018b 2603          	jrne	L522
+ 799                     ; 131 						rev_action_dimmer_done();
+ 801  018d cd0000        	call	_rev_action_dimmer_done
+ 803  0190               L302:
+ 804                     ; 134 				default:
+ 804                     ; 135 				break;
+ 806  0190               L522:
+ 807                     ; 139 	}
+ 810  0190 5b05          	addw	sp,#5
+ 811  0192 81            	ret
+ 849                     ; 141 	void init_device_info(void)
+ 849                     ; 142 	{
+ 850                     .text:	section	.text,new
+ 851  0000               _init_device_info:
+ 853  0000 5221          	subw	sp,#33
+ 854       00000021      OFST:	set	33
+ 857                     ; 144 		di.frame_h1 = 0x7E;
+ 859  0002 a67e          	ld	a,#126
+ 860  0004 6b01          	ld	(OFST-32,sp),a
+ 861                     ; 145 		di.frame_h2 = 0x7E;
+ 863  0006 a67e          	ld	a,#126
+ 864  0008 6b02          	ld	(OFST-31,sp),a
+ 865                     ; 146 		di.message_id = IIC_RxBuffer[2];
+ 867  000a b638          	ld	a,_IIC_RxBuffer+2
+ 868  000c 6b03          	ld	(OFST-30,sp),a
+ 869                     ; 147 		di.payload[0] = 0xB2;
+ 871  000e a6b2          	ld	a,#178
+ 872  0010 6b04          	ld	(OFST-29,sp),a
+ 873                     ; 148 		di.payload[1] = 0xAA;
+ 875  0012 a6aa          	ld	a,#170
+ 876  0014 6b05          	ld	(OFST-28,sp),a
+ 877                     ; 149 		di.payload[2] = 0x55;
+ 879  0016 a655          	ld	a,#85
+ 880  0018 6b06          	ld	(OFST-27,sp),a
+ 881                     ; 150 		di.payload[3] = 0xAB;
+ 883  001a a6ab          	ld	a,#171
+ 884  001c 6b07          	ld	(OFST-26,sp),a
+ 885                     ; 151 		di.payload[4] = 0x57;
+ 887  001e a657          	ld	a,#87
+ 888  0020 6b08          	ld	(OFST-25,sp),a
+ 889                     ; 152 		di.payload[5] = 0x63;
+ 891  0022 a663          	ld	a,#99
+ 892  0024 6b09          	ld	(OFST-24,sp),a
+ 893                     ; 153 		di.payload[6] = 0x00;
+ 895  0026 0f0a          	clr	(OFST-23,sp)
+ 896                     ; 154 		di.payload[7] = 0xc0;
+ 898  0028 a6c0          	ld	a,#192
+ 899  002a 6b0b          	ld	(OFST-22,sp),a
+ 900                     ; 155 		di.payload[8] = slave_address;
+ 902  002c b657          	ld	a,_slave_address
+ 903  002e 6b0c          	ld	(OFST-21,sp),a
+ 904                     ; 156 		i2c_init_message(&di,9);
+ 906  0030 4b09          	push	#9
+ 907  0032 96            	ldw	x,sp
+ 908  0033 1c0002        	addw	x,#OFST-31
+ 909  0036 cd0000        	call	_i2c_init_message
+ 911  0039 84            	pop	a
+ 912                     ; 157 	}
+ 915  003a 5b21          	addw	sp,#33
+ 916  003c 81            	ret
+ 954                     ; 159 	void rev_heart_breat(void)
+ 954                     ; 160 	{
+ 955                     .text:	section	.text,new
+ 956  0000               _rev_heart_breat:
+ 958  0000 5221          	subw	sp,#33
+ 959       00000021      OFST:	set	33
+ 962                     ; 162 		hb.frame_h1 = 0x7E;
+ 964  0002 a67e          	ld	a,#126
+ 965  0004 6b01          	ld	(OFST-32,sp),a
+ 966                     ; 163 		hb.frame_h2 = 0x7E;
+ 968  0006 a67e          	ld	a,#126
+ 969  0008 6b02          	ld	(OFST-31,sp),a
+ 970                     ; 164 		hb.message_id = IIC_RxBuffer[2];
+ 972  000a b638          	ld	a,_IIC_RxBuffer+2
+ 973  000c 6b03          	ld	(OFST-30,sp),a
+ 974                     ; 165 		hb.payload[0] = 0x06;
+ 976  000e a606          	ld	a,#6
+ 977  0010 6b04          	ld	(OFST-29,sp),a
+ 978                     ; 166 		hb.payload[1] = slc.MDID;
+ 980  0012 b66c          	ld	a,_slc+20
+ 981  0014 6b05          	ld	(OFST-28,sp),a
+ 982                     ; 167 		hb.payload[2] = slc.ch1_status;
+ 984  0016 b66d          	ld	a,_slc+21
+ 985  0018 6b06          	ld	(OFST-27,sp),a
+ 986                     ; 168 		hb.payload[3] = slc.ch2_status;
+ 988  001a b66e          	ld	a,_slc+22
+ 989  001c 6b07          	ld	(OFST-26,sp),a
+ 990                     ; 169 		hb.payload[4] = slc.ch3_status;
+ 992  001e b66f          	ld	a,_slc+23
+ 993  0020 6b08          	ld	(OFST-25,sp),a
+ 994                     ; 170 		hb.payload[5] = slc.ch4_status;
+ 996  0022 b670          	ld	a,_slc+24
+ 997  0024 6b09          	ld	(OFST-24,sp),a
+ 998                     ; 171 		i2c_init_message(&hb,6);
+1000  0026 4b06          	push	#6
+1001  0028 96            	ldw	x,sp
+1002  0029 1c0002        	addw	x,#OFST-31
+1003  002c cd0000        	call	_i2c_init_message
+1005  002f 84            	pop	a
+1006                     ; 172 	}
+1009  0030 5b21          	addw	sp,#33
+1010  0032 81            	ret
+1049                     ; 174 	void rev_action_dimmer_OK(void)
+1049                     ; 175 	{
+1050                     .text:	section	.text,new
+1051  0000               _rev_action_dimmer_OK:
+1053  0000 5221          	subw	sp,#33
+1054       00000021      OFST:	set	33
+1057                     ; 177 		ad.frame_h1 = 0x7E;
+1059  0002 a67e          	ld	a,#126
+1060  0004 6b01          	ld	(OFST-32,sp),a
+1061                     ; 178 		ad.frame_h2 = 0x7E;
+1063  0006 a67e          	ld	a,#126
+1064  0008 6b02          	ld	(OFST-31,sp),a
+1065                     ; 179 		ad.message_id = IIC_RxBuffer[2];
+1067  000a b638          	ld	a,_IIC_RxBuffer+2
+1068  000c 6b03          	ld	(OFST-30,sp),a
+1069                     ; 180 		ad.payload[0] = 0xAA;
+1071  000e a6aa          	ld	a,#170
+1072  0010 6b04          	ld	(OFST-29,sp),a
+1073                     ; 181 		ad.payload[1] = 0x02;
+1075  0012 a602          	ld	a,#2
+1076  0014 6b05          	ld	(OFST-28,sp),a
+1077                     ; 182 		ad.payload[2] = slc.MDID;
+1079  0016 b66c          	ld	a,_slc+20
+1080  0018 6b06          	ld	(OFST-27,sp),a
+1081                     ; 183 		i2c_init_message(&ad,3);
+1083  001a 4b03          	push	#3
+1084  001c 96            	ldw	x,sp
+1085  001d 1c0002        	addw	x,#OFST-31
+1086  0020 cd0000        	call	_i2c_init_message
+1088  0023 84            	pop	a
+1089                     ; 184 	}
+1092  0024 5b21          	addw	sp,#33
+1093  0026 81            	ret
+1131                     ; 187 	void rev_action_dimmer_done(void)
+1131                     ; 188 	{
+1132                     .text:	section	.text,new
+1133  0000               _rev_action_dimmer_done:
+1135  0000 5221          	subw	sp,#33
+1136       00000021      OFST:	set	33
+1139                     ; 190 		ad.frame_h1 = 0x7E;
+1141  0002 a67e          	ld	a,#126
+1142  0004 6b01          	ld	(OFST-32,sp),a
+1143                     ; 191 		ad.frame_h2 = 0x7E;
+1145  0006 a67e          	ld	a,#126
+1146  0008 6b02          	ld	(OFST-31,sp),a
+1147                     ; 192 		ad.message_id = 66;
+1149  000a a642          	ld	a,#66
+1150  000c 6b03          	ld	(OFST-30,sp),a
+1151                     ; 193 		ad.payload[0] = 0xAA;
+1153  000e a6aa          	ld	a,#170
+1154  0010 6b04          	ld	(OFST-29,sp),a
+1155                     ; 194 		ad.payload[1] = 0x05;
+1157  0012 a605          	ld	a,#5
+1158  0014 6b05          	ld	(OFST-28,sp),a
+1159                     ; 195 		ad.payload[2] = slc.MDID;
+1161  0016 b66c          	ld	a,_slc+20
+1162  0018 6b06          	ld	(OFST-27,sp),a
+1163                     ; 196 		ad.payload[3] = slc.ch1_status;
+1165  001a b66d          	ld	a,_slc+21
+1166  001c 6b07          	ld	(OFST-26,sp),a
+1167                     ; 197 		ad.payload[4] = slc.ch2_status;
+1169  001e b66e          	ld	a,_slc+22
+1170  0020 6b08          	ld	(OFST-25,sp),a
+1171                     ; 198 		ad.payload[5] = slc.ch3_status;
+1173  0022 b66f          	ld	a,_slc+23
+1174  0024 6b09          	ld	(OFST-24,sp),a
+1175                     ; 199 		ad.payload[6] = slc.ch4_status;
+1177  0026 b670          	ld	a,_slc+24
+1178  0028 6b0a          	ld	(OFST-23,sp),a
+1179                     ; 200 		i2c_init_message(&ad,7);
+1181  002a 4b07          	push	#7
+1182  002c 96            	ldw	x,sp
+1183  002d 1c0002        	addw	x,#OFST-31
+1184  0030 cd0000        	call	_i2c_init_message
+1186  0033 84            	pop	a
+1187                     ; 201 	}
+1190  0034 5b21          	addw	sp,#33
+1191  0036 81            	ret
+1216                     ; 205 	void I2C_transaction_end(void)
+1216                     ; 206 	{
+1217                     .text:	section	.text,new
+1218  0000               _I2C_transaction_end:
+1222                     ; 207 		ReceiveState = IIC_STATE_END;
+1224  0000 35030001      	mov	_ReceiveState,#3
+1225                     ; 210 	}	
+1228  0004 81            	ret
+1253                     ; 212 	void I2C_transaction_receive(void)
+1253                     ; 213 	{
+1254                     .text:	section	.text,new
+1255  0000               _I2C_transaction_receive:
+1259                     ; 214 		ReceiveState = IIC_STATE_RECEIVEING;
+1261  0000 35020001      	mov	_ReceiveState,#2
+1262                     ; 215 	}
+1265  0004 81            	ret
+1302                     ; 217 	void I2C_byte_received(uint8_t RxData)
+1302                     ; 218 	{
+1303                     .text:	section	.text,new
+1304  0000               _I2C_byte_received:
+1306  0000 88            	push	a
+1307       00000000      OFST:	set	0
+1310                     ; 219 		if(GetDataIndex < MAX_BUFFER) {
+1312  0001 b600          	ld	a,_GetDataIndex
+1313  0003 a120          	cp	a,#32
+1314  0005 2410          	jruge	L344
+1315                     ; 220 			IIC_RxBuffer[GetDataIndex++] = RxData;
+1317  0007 b600          	ld	a,_GetDataIndex
+1318  0009 97            	ld	xl,a
+1319  000a 3c00          	inc	_GetDataIndex
+1320  000c 9f            	ld	a,xl
+1321  000d 5f            	clrw	x
+1322  000e 97            	ld	xl,a
+1323  000f 7b01          	ld	a,(OFST+1,sp)
+1324  0011 e736          	ld	(_IIC_RxBuffer,x),a
+1325                     ; 221 			ReceiveState = IIC_STATE_RECEIVEING;
+1327  0013 35020001      	mov	_ReceiveState,#2
+1328  0017               L344:
+1329                     ; 223 	}
+1332  0017 84            	pop	a
+1333  0018 81            	ret
+1358                     ; 225 	uint8_t I2C_byte_write(void)
+1358                     ; 226 	{
+1359                     .text:	section	.text,new
+1360  0000               _I2C_byte_write:
+1364                     ; 227 			return IIC_TxBuffer[SendDataIndex++];
+1366  0000 b602          	ld	a,_SendDataIndex
+1367  0002 97            	ld	xl,a
+1368  0003 3c02          	inc	_SendDataIndex
+1369  0005 9f            	ld	a,xl
+1370  0006 5f            	clrw	x
+1371  0007 97            	ld	xl,a
+1372  0008 e616          	ld	a,(_IIC_TxBuffer,x)
+1375  000a 81            	ret
+1378                     	switch	.ubsct
+1379  0000               L554_sr1:
+1380  0000 00            	ds.b	1
+1381  0001               L754_sr2:
+1382  0001 00            	ds.b	1
+1383  0002               L164_sr3:
+1384  0002 00            	ds.b	1
+1440                     ; 237 @far @interrupt void I2C_Slave_check_event(void) {
+1442                     .text:	section	.text,new
+1443  0000               f_I2C_Slave_check_event:
+1446  0000 3b0002        	push	c_x+2
+1447  0003 be00          	ldw	x,c_x
+1448  0005 89            	pushw	x
+1449  0006 3b0002        	push	c_y+2
+1450  0009 be00          	ldw	x,c_y
+1451  000b 89            	pushw	x
+1454                     ; 244 	sr1 = I2C->SR1;
+1456  000c 5552170000    	mov	L554_sr1,21015
+1457                     ; 245 	sr2 = I2C->SR2;
+1459  0011 5552180001    	mov	L754_sr2,21016
+1460                     ; 246 	sr3 = I2C->SR3;
+1462  0016 5552190002    	mov	L164_sr3,21017
+1463                     ; 249   if (sr2 & (I2C_SR2_WUFH | I2C_SR2_OVR |I2C_SR2_ARLO |I2C_SR2_BERR))
+1465  001b b601          	ld	a,L754_sr2
+1466  001d a52b          	bcp	a,#43
+1467  001f 2708          	jreq	L115
+1468                     ; 251     I2C->CR2|= I2C_CR2_STOP;  // stop communication - release the lines
+1470  0021 72125211      	bset	21009,#1
+1471                     ; 252     I2C->SR2= 0;					    // clear all error flags
+1473  0025 725f5218      	clr	21016
+1474  0029               L115:
+1475                     ; 255   if ((sr1 & (I2C_SR1_RXNE | I2C_SR1_BTF)) == (I2C_SR1_RXNE | I2C_SR1_BTF))
+1477  0029 b600          	ld	a,L554_sr1
+1478  002b a444          	and	a,#68
+1479  002d a144          	cp	a,#68
+1480  002f 2606          	jrne	L315
+1481                     ; 257     I2C_byte_received(I2C->DR);
+1483  0031 c65216        	ld	a,21014
+1484  0034 cd0000        	call	_I2C_byte_received
+1486  0037               L315:
+1487                     ; 260   if (sr1 & I2C_SR1_RXNE)
+1489  0037 b600          	ld	a,L554_sr1
+1490  0039 a540          	bcp	a,#64
+1491  003b 2706          	jreq	L515
+1492                     ; 262     I2C_byte_received(I2C->DR);
+1494  003d c65216        	ld	a,21014
+1495  0040 cd0000        	call	_I2C_byte_received
+1497  0043               L515:
+1498                     ; 265   if (sr2 & I2C_SR2_AF)
+1500  0043 b601          	ld	a,L754_sr2
+1501  0045 a504          	bcp	a,#4
+1502  0047 2707          	jreq	L715
+1503                     ; 267     I2C->SR2 &= ~I2C_SR2_AF;	  // clear AF
+1505  0049 72155218      	bres	21016,#2
+1506                     ; 268 		I2C_transaction_end();
+1508  004d cd0000        	call	_I2C_transaction_end
+1510  0050               L715:
+1511                     ; 271   if (sr1 & I2C_SR1_STOPF) 
+1513  0050 b600          	ld	a,L554_sr1
+1514  0052 a510          	bcp	a,#16
+1515  0054 2707          	jreq	L125
+1516                     ; 273     I2C->CR2 |= I2C_CR2_ACK;	  // CR2 write to clear STOPF
+1518  0056 72145211      	bset	21009,#2
+1519                     ; 274 		I2C_transaction_end();
+1521  005a cd0000        	call	_I2C_transaction_end
+1523  005d               L125:
+1524                     ; 277   if (sr1 & I2C_SR1_ADDR)
+1526  005d b600          	ld	a,L554_sr1
+1527  005f a502          	bcp	a,#2
+1528  0061 270e          	jreq	L325
+1529                     ; 279 		if(sr3 & I2C_SR3_TRA){//从机发送数据
+1531  0063 b602          	ld	a,L164_sr3
+1532  0065 a504          	bcp	a,#4
+1533  0067 2705          	jreq	L525
+1534                     ; 280 			I2C_transaction_begin();
+1536  0069 cd0000        	call	_I2C_transaction_begin
+1539  006c 2003          	jra	L325
+1540  006e               L525:
+1541                     ; 282 			I2C_receive_begin();//从机接收数据
+1543  006e cd0000        	call	_I2C_receive_begin
+1545  0071               L325:
+1546                     ; 286   if ((sr1 & (I2C_SR1_TXE | I2C_SR1_BTF)) == (I2C_SR1_TXE | I2C_SR1_BTF))
+1548  0071 b600          	ld	a,L554_sr1
+1549  0073 a484          	and	a,#132
+1550  0075 a184          	cp	a,#132
+1551  0077 2606          	jrne	L135
+1552                     ; 288 		I2C->DR = I2C_byte_write();
+1554  0079 cd0000        	call	_I2C_byte_write
+1556  007c c75216        	ld	21014,a
+1557  007f               L135:
+1558                     ; 291   if (sr1 & I2C_SR1_TXE)
+1560  007f b600          	ld	a,L554_sr1
+1561  0081 a580          	bcp	a,#128
+1562  0083 2706          	jreq	L335
+1563                     ; 293 		I2C->DR = I2C_byte_write();
+1565  0085 cd0000        	call	_I2C_byte_write
+1567  0088 c75216        	ld	21014,a
+1568  008b               L335:
+1569                     ; 296 }
+1572  008b 85            	popw	x
+1573  008c bf00          	ldw	c_y,x
+1574  008e 320002        	pop	c_y+2
+1575  0091 85            	popw	x
+1576  0092 bf00          	ldw	c_x,x
+1577  0094 320002        	pop	c_x+2
+1578  0097 80            	iret
+1601                     ; 301 void IIC_SlaveConfig (void)
+1601                     ; 302 {
+1603                     .text:	section	.text,new
+1604  0000               _IIC_SlaveConfig:
+1608                     ; 313 		I2C->CR1 |= 0x01;				        	// Enable I2C peripheral
+1610  0000 72105210      	bset	21008,#0
+1611                     ; 314 		I2C->CR2 = 0x04;					      		// Enable I2C acknowledgement
+1613  0004 35045211      	mov	21009,#4
+1614                     ; 315 		I2C->FREQR = 16; 					      	// Set I2C Freq value (16MHz)
+1616  0008 35105212      	mov	21010,#16
+1617                     ; 317 		I2C->OARL = (SLAVE_ADDRESS << 1) ;	// set slave address to 0x51 (put 0xA2 for the register dues to7bit address) 
+1619  000c b657          	ld	a,_slave_address
+1620  000e 48            	sll	a
+1621  000f c75213        	ld	21011,a
+1622                     ; 318 		I2C->OARH = 0x40;					      	// Set 7bit address mode
+1624  0012 35405214      	mov	21012,#64
+1625                     ; 331 	I2C->ITR	= 0x07;					      // all I2C interrupt enable  
+1627  0016 3507521a      	mov	21018,#7
+1628                     ; 332 }
+1631  001a 81            	ret
+1986                     	xdef	_I2C_byte_write
+1987                     	xdef	_I2C_byte_received
+1988                     	xdef	_I2C_transaction_receive
+1989                     	xdef	_I2C_transaction_end
+1990                     	xdef	_I2C_transaction_begin
+1991                     	xdef	_I2C_receive_begin
+1992                     	xdef	_i2c_init_message
+1993                     	xdef	_Check_Sum
+1994                     	xdef	_mymemcpy
+1995                     	switch	.ubsct
+1996  0003               _action_flag:
+1997  0003 00            	ds.b	1
+1998                     	xdef	_action_flag
+1999  0004               _change_step2:
+2000  0004 00000000      	ds.b	4
+2001                     	xdef	_change_step2
+2002  0008               _change_step1:
+2003  0008 00000000      	ds.b	4
+2004                     	xdef	_change_step1
+2005  000c               _change_time:
+2006  000c 00            	ds.b	1
+2007                     	xdef	_change_time
+2008  000d               _aim_bright2:
+2009  000d 00000000      	ds.b	4
+2010                     	xdef	_aim_bright2
+2011  0011               _aim_bright1:
+2012  0011 00000000      	ds.b	4
+2013                     	xdef	_aim_bright1
+2014  0015               _channel:
+2015  0015 00            	ds.b	1
+2016                     	xdef	_channel
+2017                     	xref.b	_last_bright2
+2018                     	xref.b	_last_bright1
+2019                     	xref.b	_realtime_bright2
+2020                     	xref.b	_realtime_bright1
+2021                     	xdef	_SendDataIndex
+2022                     	xdef	_ReceiveState
+2023                     	xdef	_GetDataIndex
+2024  0016               _IIC_TxBuffer:
+2025  0016 000000000000  	ds.b	32
+2026                     	xdef	_IIC_TxBuffer
+2027  0036               _IIC_RxBuffer:
+2028  0036 000000000000  	ds.b	32
+2029                     	xdef	_IIC_RxBuffer
+2030  0056               _action_done:
+2031  0056 00            	ds.b	1
+2032                     	xdef	_action_done
+2033  0057               _slave_address:
+2034  0057 00            	ds.b	1
+2035                     	xdef	_slave_address
+2036  0058               _slc:
+2037  0058 000000000000  	ds.b	25
+2038                     	xdef	_slc
+2039                     	xdef	_rev_action_dimmer_done
+2040                     	xdef	_rev_action_dimmer_OK
+2041                     	xdef	_rev_heart_breat
+2042                     	xdef	_init_device_info
+2043                     	xdef	f_I2C_Slave_check_event
+2044                     	xdef	_IIC_SlaveConfig
+2045                     .const:	section	.text
+2046  0000               L562:
+2047  0000 42c80000      	dc.w	17096,0
+2048                     	xref.b	c_lreg
+2049                     	xref.b	c_x
+2050                     	xref.b	c_y
+2070                     	xref	c_fsub
+2071                     	xref	c_rtol
+2072                     	xref	c_fdiv
+2073                     	xref	c_itof
+2074                     	xref	c_lrzmp
+2075                     	xref	c_lgsbc
+2076                     	xref	c_ltor
+2077                     	end
