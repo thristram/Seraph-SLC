@@ -1,1511 +1,1910 @@
    1                     ; C Compiler for STM8 (COSMIC Software)
    2                     ; Generator V4.2.4 - 19 Dec 2007
    4                     	bsct
-   5  0000               _sys:
+   5  0000               _channel1:
    6  0000 00            	dc.b	0
-   7  0001 000000        	ds.b	3
-   8  0004 000000000000  	ds.b	25
-  66                     ; 64 void delay(u16 Count)
-  66                     ; 65 {
-  68                     .text:	section	.text,new
-  69  0000               _delay:
-  71  0000 89            	pushw	x
-  72  0001 89            	pushw	x
-  73       00000002      OFST:	set	2
-  76  0002 2014          	jra	L35
-  77  0004               L15:
-  78                     ; 69     for(i=0;i<100;i++)
-  80  0004 0f01          	clr	(OFST-1,sp)
-  81  0006               L75:
-  82                     ; 70     for(j=0;j<50;j++);
-  84  0006 0f02          	clr	(OFST+0,sp)
-  85  0008               L56:
-  89  0008 0c02          	inc	(OFST+0,sp)
-  92  000a 7b02          	ld	a,(OFST+0,sp)
-  93  000c a132          	cp	a,#50
-  94  000e 25f8          	jrult	L56
-  95                     ; 69     for(i=0;i<100;i++)
-  97  0010 0c01          	inc	(OFST-1,sp)
- 100  0012 7b01          	ld	a,(OFST-1,sp)
- 101  0014 a164          	cp	a,#100
- 102  0016 25ee          	jrult	L75
- 103  0018               L35:
- 104                     ; 67   while (Count--)//Count形参控制延时次数
- 106  0018 1e03          	ldw	x,(OFST+1,sp)
- 107  001a 1d0001        	subw	x,#1
- 108  001d 1f03          	ldw	(OFST+1,sp),x
- 109  001f 1c0001        	addw	x,#1
- 110  0022 a30000        	cpw	x,#0
- 111  0025 26dd          	jrne	L15
- 112                     ; 72 }
- 115  0027 5b04          	addw	sp,#4
- 116  0029 81            	ret
- 162                     ; 80 void main(void)
- 162                     ; 81 {
- 163                     .text:	section	.text,new
- 164  0000               _main:
- 168                     ; 86 	CLK->SWCR |= 0x02; //开启切换
- 170  0000 721250c5      	bset	20677,#1
- 171                     ; 87   CLK->SWR   = 0xb4;       //选择时钟为外部8M
- 173  0004 35b450c4      	mov	20676,#180
- 175  0008               L701:
- 176                     ; 88   while((CLK->SWCR & 0x01)==0x01);
- 178  0008 c650c5        	ld	a,20677
- 179  000b a401          	and	a,#1
- 180  000d a101          	cp	a,#1
- 181  000f 27f7          	jreq	L701
- 182                     ; 89   CLK->CKDIVR = 0x80;    //不分频
- 184  0011 358050c6      	mov	20678,#128
- 185                     ; 90   CLK->SWCR  &= ~0x02; //关闭切换
- 187  0015 721350c5      	bres	20677,#1
- 188                     ; 93 	slave_address = 0x00;
- 190  0019 3f00          	clr	_slave_address
- 191                     ; 94 	GPIO_Init(GPIOD, (GPIO_Pin_TypeDef)GPIO_PIN_2, GPIO_MODE_IN_FL_NO_IT);
- 193  001b 4b00          	push	#0
- 194  001d 4b04          	push	#4
- 195  001f ae500f        	ldw	x,#20495
- 196  0022 cd0000        	call	_GPIO_Init
- 198  0025 85            	popw	x
- 199                     ; 95 	GPIO_Init(GPIOC, (GPIO_Pin_TypeDef)GPIO_PIN_7, GPIO_MODE_IN_FL_NO_IT);
- 201  0026 4b00          	push	#0
- 202  0028 4b80          	push	#128
- 203  002a ae500a        	ldw	x,#20490
- 204  002d cd0000        	call	_GPIO_Init
- 206  0030 85            	popw	x
- 207                     ; 96 	GPIO_Init(GPIOC, (GPIO_Pin_TypeDef)GPIO_PIN_6, GPIO_MODE_IN_FL_NO_IT);
- 209  0031 4b00          	push	#0
- 210  0033 4b40          	push	#64
- 211  0035 ae500a        	ldw	x,#20490
- 212  0038 cd0000        	call	_GPIO_Init
- 214  003b 85            	popw	x
- 215                     ; 97 	GPIO_Init(GPIOC, (GPIO_Pin_TypeDef)GPIO_PIN_6, GPIO_MODE_IN_FL_NO_IT);
- 217  003c 4b00          	push	#0
- 218  003e 4b40          	push	#64
- 219  0040 ae500a        	ldw	x,#20490
- 220  0043 cd0000        	call	_GPIO_Init
- 222  0046 85            	popw	x
- 223                     ; 98 	GPIO_Init(GPIOA, (GPIO_Pin_TypeDef)GPIO_PIN_3, GPIO_MODE_IN_FL_NO_IT);
- 225  0047 4b00          	push	#0
- 226  0049 4b08          	push	#8
- 227  004b ae5000        	ldw	x,#20480
- 228  004e cd0000        	call	_GPIO_Init
- 230  0051 85            	popw	x
- 231                     ; 99 	delay(100);
- 233  0052 ae0064        	ldw	x,#100
- 234  0055 cd0000        	call	_delay
- 236                     ; 101 	if(GPIO_ReadInputData(GPIOD) & 0x04)	slave_address |= 0x08;
- 238  0058 ae500f        	ldw	x,#20495
- 239  005b cd0000        	call	_GPIO_ReadInputData
- 241  005e a504          	bcp	a,#4
- 242  0060 2704          	jreq	L311
- 245  0062 72160000      	bset	_slave_address,#3
- 246  0066               L311:
- 247                     ; 102 	if(GPIO_ReadInputData(GPIOC) & 0x20)	slave_address |= 0x04;
- 249  0066 ae500a        	ldw	x,#20490
- 250  0069 cd0000        	call	_GPIO_ReadInputData
- 252  006c a520          	bcp	a,#32
- 253  006e 2704          	jreq	L511
- 256  0070 72140000      	bset	_slave_address,#2
- 257  0074               L511:
- 258                     ; 103 	if(GPIO_ReadInputData(GPIOC) & 0x40)	slave_address |= 0x02;
- 260  0074 ae500a        	ldw	x,#20490
- 261  0077 cd0000        	call	_GPIO_ReadInputData
- 263  007a a540          	bcp	a,#64
- 264  007c 2704          	jreq	L711
- 267  007e 72120000      	bset	_slave_address,#1
- 268  0082               L711:
- 269                     ; 104 	if(GPIO_ReadInputData(GPIOC) & 0x80)	slave_address |= 0x01;
- 271  0082 ae500a        	ldw	x,#20490
- 272  0085 cd0000        	call	_GPIO_ReadInputData
- 274  0088 a580          	bcp	a,#128
- 275  008a 2704          	jreq	L121
- 278  008c 72100000      	bset	_slave_address,#0
- 279  0090               L121:
- 280                     ; 105 	slc.MDID = slave_address;
- 282  0090 b600          	ld	a,_slave_address
- 283  0092 5f            	clrw	x
- 284  0093 97            	ld	xl,a
- 285  0094 bf13          	ldw	_slc+19,x
- 286                     ; 106 	GPIO_Config();
- 288  0096 cd0000        	call	L5_GPIO_Config
- 290                     ; 107 	Sys_Init();
- 292  0099 cd0000        	call	L3_Sys_Init
- 294                     ; 108 	ExtInterrupt_Config();
- 296  009c cd0000        	call	L7_ExtInterrupt_Config
- 298                     ; 109 	TIMER4_Init();
- 300  009f cd0000        	call	L31_TIMER4_Init
- 302                     ; 116 	IIC_SlaveConfig();
- 304  00a2 cd0000        	call	_IIC_SlaveConfig
- 306                     ; 117 	disableInterrupts();
- 309  00a5 9b            sim
- 311                     ; 119 	ITC_DeInit();
- 314  00a6 cd0000        	call	_ITC_DeInit
- 316                     ; 120 	ITC_SetSoftwarePriority(ITC_IRQ_PORTD,ITC_PRIORITYLEVEL_2);
- 318  00a9 5f            	clrw	x
- 319  00aa a606          	ld	a,#6
- 320  00ac 95            	ld	xh,a
- 321  00ad cd0000        	call	_ITC_SetSoftwarePriority
- 323                     ; 121 	ITC_SetSoftwarePriority(ITC_IRQ_TIM2_OVF,ITC_PRIORITYLEVEL_2);
- 325  00b0 5f            	clrw	x
- 326  00b1 a60d          	ld	a,#13
- 327  00b3 95            	ld	xh,a
- 328  00b4 cd0000        	call	_ITC_SetSoftwarePriority
- 330                     ; 122 	ITC_SetSoftwarePriority(ITC_IRQ_TIM4_OVF,ITC_PRIORITYLEVEL_2);
- 332  00b7 5f            	clrw	x
- 333  00b8 a617          	ld	a,#23
- 334  00ba 95            	ld	xh,a
- 335  00bb cd0000        	call	_ITC_SetSoftwarePriority
- 337                     ; 123 	ITC_SetSoftwarePriority(ITC_IRQ_I2C,ITC_PRIORITYLEVEL_3);
- 339  00be ae0003        	ldw	x,#3
- 340  00c1 a613          	ld	a,#19
- 341  00c3 95            	ld	xh,a
- 342  00c4 cd0000        	call	_ITC_SetSoftwarePriority
- 344                     ; 126 	enableInterrupts();
- 347  00c7 9a            rim
- 351  00c8 2016          	jra	L521
- 352  00ca               L321:
- 353                     ; 130 		 if (sys.checkAcCnt == 0)
- 355  00ca be0e          	ldw	x,_sys+14
- 356  00cc 2612          	jrne	L521
- 357                     ; 137 			sys.gotHzFlag = FALSE;    
- 359  00ce 3f09          	clr	_sys+9
- 360                     ; 138 			sys.reqCalHzFlag = FALSE;
- 362  00d0 3f08          	clr	_sys+8
- 363                     ; 139 			sys.calHzIntCnt = GET_AC_FRE_CNT;
- 365  00d2 350a000b      	mov	_sys+11,#10
- 366                     ; 140 			sys.hzCnt = 0;
- 368  00d6 5f            	clrw	x
- 369  00d7 bf0c          	ldw	_sys+12,x
- 370                     ; 141 			sys.checkAcCnt = CHECK_AC_INPUT_CNT;
- 372  00d9 ae07d0        	ldw	x,#2000
- 373  00dc bf0e          	ldw	_sys+14,x
- 374                     ; 142 			break;
- 376  00de 201a          	jra	L531
- 377  00e0               L521:
- 378                     ; 128 	 while(!sys.gotHzFlag)
- 380  00e0 3d09          	tnz	_sys+9
- 381  00e2 27e6          	jreq	L321
- 382  00e4 2014          	jra	L531
- 383  00e6               L331:
- 384                     ; 149 		 if (sys.checkAcCnt == 0)
- 386  00e6 be0e          	ldw	x,_sys+14
- 387  00e8 2610          	jrne	L531
- 388                     ; 152 			sys.gotHzFlag = FALSE;    
- 390  00ea 3f09          	clr	_sys+9
- 391                     ; 153 			sys.reqCalHzFlag = FALSE;
- 393  00ec 3f08          	clr	_sys+8
- 394                     ; 154 			sys.calHzIntCnt = GET_AC_FRE_CNT;
- 396  00ee 350a000b      	mov	_sys+11,#10
- 397                     ; 155 			sys.hzCnt = 0;
- 399  00f2 5f            	clrw	x
- 400  00f3 bf0c          	ldw	_sys+12,x
- 401                     ; 156 			sys.checkAcCnt = CHECK_AC_INPUT_CNT;
- 403  00f5 ae07d0        	ldw	x,#2000
- 404  00f8 bf0e          	ldw	_sys+14,x
- 405  00fa               L531:
- 406                     ; 147 	 while(!sys.gotHzFlag)
- 408  00fa 3d09          	tnz	_sys+9
- 409  00fc 27e8          	jreq	L331
- 410                     ; 159 	 sys.acOkFlag = TRUE;
- 412  00fe 35010011      	mov	_sys+17,#1
- 413                     ; 160 	 TIMER2_Init();
- 415  0102 cd0000        	call	L11_TIMER2_Init
- 417  0105               L341:
- 418                     ; 167 		if(ReceiveState == IIC_STATE_END)
- 420  0105 b600          	ld	a,_ReceiveState
- 421  0107 a103          	cp	a,#3
- 422  0109 2604          	jrne	L741
- 423                     ; 173 			ReceiveState = IIC_STATE_UNKNOWN;
- 425  010b 3f00          	clr	_ReceiveState
- 426                     ; 174 			GetDataIndex = 0;
- 428  010d 3f00          	clr	_GetDataIndex
- 429  010f               L741:
- 430                     ; 177 		if (sys.checkAcCnt == 0 && sys.acErrFlag == FALSE)
- 432  010f be0e          	ldw	x,_sys+14
- 433  0111 260a          	jrne	L151
- 435  0113 3d10          	tnz	_sys+16
- 436  0115 2606          	jrne	L151
- 437                     ; 181 			 sys.acErrFlag = TRUE;
- 439  0117 35010010      	mov	_sys+16,#1
- 440                     ; 182 			 sys.acOkFlag = FALSE;
- 442  011b 3f11          	clr	_sys+17
- 443  011d               L151:
- 444                     ; 185 		if (sys.acErrFlag == FALSE && sys.acOkFlag == FALSE)
- 446  011d 3d10          	tnz	_sys+16
- 447  011f 260d          	jrne	L351
- 449  0121 3d11          	tnz	_sys+17
- 450  0123 2609          	jrne	L351
- 451                     ; 189 			sys.acOkFlag = TRUE;
- 453  0125 35010011      	mov	_sys+17,#1
- 454                     ; 190 			sys.cnt1s = CNT_1S;
- 456  0129 ae4e20        	ldw	x,#20000
- 457  012c bf1b          	ldw	_sys+27,x
- 458  012e               L351:
- 459                     ; 193 		if(f_100ms){
- 461  012e 3d01          	tnz	_f_100ms
- 462  0130 2705          	jreq	L551
- 463                     ; 194 			f_100ms = 0;
- 465  0132 3f01          	clr	_f_100ms
- 466                     ; 195 			lightCtrl100ms();
- 468  0134 cd0000        	call	_lightCtrl100ms
- 470  0137               L551:
- 471                     ; 204 		if((channel & 0x01)==0x01)//调节Dimmer1
- 473  0137 b600          	ld	a,_channel
- 474  0139 a401          	and	a,#1
- 475  013b a101          	cp	a,#1
- 476  013d 2617          	jrne	L751
- 477                     ; 206 			sys.light1.briVal = realtime_bright1;
- 479  013f 450502        	mov	_sys+2,_realtime_bright1
- 480                     ; 208 			slc.ch1_status = (u8)(realtime_bright1*0.4);
- 482  0142 b605          	ld	a,_realtime_bright1
- 483  0144 5f            	clrw	x
- 484  0145 97            	ld	xl,a
- 485  0146 cd0000        	call	c_itof
- 487  0149 ae0014        	ldw	x,#L561
- 488  014c cd0000        	call	c_fmul
- 490  014f cd0000        	call	c_ftol
- 492  0152 b603          	ld	a,c_lreg+3
- 493  0154 b715          	ld	_slc+21,a
- 494  0156               L751:
- 495                     ; 210 		if((channel & 0x02)==0x02)//调节Dimmer2
- 497  0156 b600          	ld	a,_channel
- 498  0158 a402          	and	a,#2
- 499  015a a102          	cp	a,#2
- 500  015c 2617          	jrne	L171
- 501                     ; 212 			sys.light2.briVal = realtime_bright2;
- 503  015e 450406        	mov	_sys+6,_realtime_bright2
- 504                     ; 214 			slc.ch2_status = (u8)(realtime_bright2*0.4);
- 506  0161 b604          	ld	a,_realtime_bright2
- 507  0163 5f            	clrw	x
- 508  0164 97            	ld	xl,a
- 509  0165 cd0000        	call	c_itof
- 511  0168 ae0014        	ldw	x,#L561
- 512  016b cd0000        	call	c_fmul
- 514  016e cd0000        	call	c_ftol
- 516  0171 b603          	ld	a,c_lreg+3
- 517  0173 b716          	ld	_slc+22,a
- 518  0175               L171:
- 519                     ; 216 		if (sys.acOkFlag && sys.cnt1s == 0)
- 521  0175 3d11          	tnz	_sys+17
- 522  0177 278c          	jreq	L341
- 524  0179 be1b          	ldw	x,_sys+27
- 525  017b 2688          	jrne	L341
- 526                     ; 221 			sys.cnt1s = CNT_1S;
- 528  017d ae4e20        	ldw	x,#20000
- 529  0180 bf1b          	ldw	_sys+27,x
- 530  0182 2081          	jpf	L341
- 565                     ; 235 void assert_failed(uint8_t* file, uint32_t line)
- 565                     ; 236 { 
- 566                     .text:	section	.text,new
- 567  0000               _assert_failed:
- 571  0000               L312:
- 572  0000 20fe          	jra	L312
- 597                     ; 247 static void GPIO_Config(void)
- 597                     ; 248 {
- 598                     .text:	section	.text,new
- 599  0000               L5_GPIO_Config:
- 603                     ; 250     GPIO_Init(L1_EN_PIN_PORT, (GPIO_Pin_TypeDef)L1_EN_PIN, GPIO_MODE_OUT_PP_HIGH_SLOW);
- 605  0000 4bd0          	push	#208
- 606  0002 4b10          	push	#16
- 607  0004 ae500a        	ldw	x,#20490
- 608  0007 cd0000        	call	_GPIO_Init
- 610  000a 85            	popw	x
- 611                     ; 251     GPIO_Init(L2_EN_PIN_PORT, (GPIO_Pin_TypeDef)L2_EN_PIN, GPIO_MODE_OUT_PP_HIGH_SLOW);   
- 613  000b 4bd0          	push	#208
- 614  000d 4b08          	push	#8
- 615  000f ae500a        	ldw	x,#20490
- 616  0012 cd0000        	call	_GPIO_Init
- 618  0015 85            	popw	x
- 619                     ; 252     L1_EN_OFF;
- 621  0016 4b10          	push	#16
- 622  0018 ae500a        	ldw	x,#20490
- 623  001b cd0000        	call	_GPIO_WriteHigh
- 625  001e 84            	pop	a
- 626                     ; 253     L2_EN_OFF;
- 628  001f 4b08          	push	#8
- 629  0021 ae500a        	ldw	x,#20490
- 630  0024 cd0000        	call	_GPIO_WriteHigh
- 632  0027 84            	pop	a
- 633                     ; 254     GPIO_Init(ZD_PIN_PORT, (GPIO_Pin_TypeDef)ZD_PIN, GPIO_MODE_IN_FL_IT);  
- 635  0028 4b20          	push	#32
- 636  002a 4b08          	push	#8
- 637  002c ae500f        	ldw	x,#20495
- 638  002f cd0000        	call	_GPIO_Init
- 640  0032 85            	popw	x
- 641                     ; 256 }
- 644  0033 81            	ret
- 673                     ; 258 static void Sys_Init(void)
- 673                     ; 259 {
- 674                     .text:	section	.text,new
- 675  0000               L3_Sys_Init:
- 679                     ; 260     CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER4, ENABLE);
- 681  0000 ae0001        	ldw	x,#1
- 682  0003 a604          	ld	a,#4
- 683  0005 95            	ld	xh,a
- 684  0006 cd0000        	call	_CLK_PeripheralClockConfig
- 686                     ; 261     CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER2, ENABLE);
- 688  0009 ae0001        	ldw	x,#1
- 689  000c a605          	ld	a,#5
- 690  000e 95            	ld	xh,a
- 691  000f cd0000        	call	_CLK_PeripheralClockConfig
- 693                     ; 263     sys.gotHzFlag = FALSE;    
- 695  0012 3f09          	clr	_sys+9
- 696                     ; 264     sys.reqCalHzFlag = FALSE;
- 698  0014 3f08          	clr	_sys+8
- 699                     ; 265     sys.light1.briVal = DEFAULT_BRIGHTNESS;
- 701  0016 35280002      	mov	_sys+2,#40
- 702                     ; 266     sys.light2.briVal = DEFAULT_BRIGHTNESS;    
- 704  001a 35280006      	mov	_sys+6,#40
- 705                     ; 267     sys.calHzIntCnt = GET_AC_FRE_CNT;
- 707  001e 350a000b      	mov	_sys+11,#10
- 708                     ; 268     sys.hzCnt = 0;
- 710  0022 5f            	clrw	x
- 711  0023 bf0c          	ldw	_sys+12,x
- 712                     ; 269     sys.checkAcCnt = CHECK_AC_INPUT_CNT;
- 714  0025 ae07d0        	ldw	x,#2000
- 715  0028 bf0e          	ldw	_sys+14,x
- 716                     ; 270 		last_bright1 = 0.16;
- 718  002a ce0012        	ldw	x,L342+2
- 719  002d bf0c          	ldw	_last_bright1+2,x
- 720  002f ce0010        	ldw	x,L342
- 721  0032 bf0a          	ldw	_last_bright1,x
- 722                     ; 271 		aim_bright1 = 0;
- 724  0034 ae0000        	ldw	x,#0
- 725  0037 bf02          	ldw	_aim_bright1+2,x
- 726  0039 ae0000        	ldw	x,#0
- 727  003c bf00          	ldw	_aim_bright1,x
- 728                     ; 272 		last_bright2 = 0.16;
- 730  003e ce0012        	ldw	x,L342+2
- 731  0041 bf08          	ldw	_last_bright2+2,x
- 732  0043 ce0010        	ldw	x,L342
- 733  0046 bf06          	ldw	_last_bright2,x
- 734                     ; 273 		aim_bright2 = 0;
- 736  0048 ae0000        	ldw	x,#0
- 737  004b bf02          	ldw	_aim_bright2+2,x
- 738  004d ae0000        	ldw	x,#0
- 739  0050 bf00          	ldw	_aim_bright2,x
- 740                     ; 274 }
- 743  0052 81            	ret
- 769                     ; 276 static void ExtInterrupt_Config(void)
- 769                     ; 277 {
- 770                     .text:	section	.text,new
- 771  0000               L7_ExtInterrupt_Config:
- 775                     ; 279 	EXTI_DeInit();
- 777  0000 cd0000        	call	_EXTI_DeInit
- 779                     ; 280 	EXTI_SetExtIntSensitivity(EXTI_PORT_GPIOD, EXTI_SENSITIVITY_FALL_ONLY);
- 781  0003 ae0002        	ldw	x,#2
- 782  0006 a603          	ld	a,#3
- 783  0008 95            	ld	xh,a
- 784  0009 cd0000        	call	_EXTI_SetExtIntSensitivity
- 786                     ; 282 }
- 789  000c 81            	ret
- 819                     ; 288 @far @interrupt void Ext_PortD_ISR(void) {
- 821                     .text:	section	.text,new
- 822  0000               f_Ext_PortD_ISR:
- 825  0000 3b0002        	push	c_x+2
- 826  0003 be00          	ldw	x,c_x
- 827  0005 89            	pushw	x
- 828  0006 3b0002        	push	c_y+2
- 829  0009 be00          	ldw	x,c_y
- 830  000b 89            	pushw	x
- 833                     ; 291 	if (ZD_STATUS == 0)
- 835  000c ae500f        	ldw	x,#20495
- 836  000f cd0000        	call	_GPIO_ReadOutputData
- 838  0012 a508          	bcp	a,#8
- 839  0014 2704          	jreq	L62
- 840  0016 acc800c8      	jpf	L762
- 841  001a               L62:
- 842                     ; 293 		sys.checkAcCnt = CHECK_AC_INPUT_CNT;
- 844  001a ae07d0        	ldw	x,#2000
- 845  001d bf0e          	ldw	_sys+14,x
- 846                     ; 294 		sys.acErrFlag = FALSE;
- 848  001f 3f10          	clr	_sys+16
- 849                     ; 297 		if (!sys.gotHzFlag)
- 851  0021 3d09          	tnz	_sys+9
- 852  0023 262f          	jrne	L172
- 853                     ; 299 			if (!sys.reqCalHzFlag)
- 855  0025 3d08          	tnz	_sys+8
- 856  0027 2609          	jrne	L372
- 857                     ; 301 				TIM4_SetAutoreload(TIMER4_INT_TIME);				
- 859  0029 a632          	ld	a,#50
- 860  002b cd0000        	call	_TIM4_SetAutoreload
- 862                     ; 302 				sys.reqCalHzFlag = TRUE;
- 864  002e 35010008      	mov	_sys+8,#1
- 865  0032               L372:
- 866                     ; 304 			if (sys.calHzIntCnt == 0)
- 868  0032 3d0b          	tnz	_sys+11
- 869  0034 261a          	jrne	L572
- 870                     ; 306 				if ((sys.hzCnt/GET_AC_FRE_CNT) >= HZ_COUNT)
- 872  0036 be0c          	ldw	x,_sys+12
- 873  0038 a60a          	ld	a,#10
- 874  003a 62            	div	x,a
- 875  003b a300b4        	cpw	x,#180
- 876  003e 2506          	jrult	L772
- 877                     ; 308 					sys.hz50Flag = TRUE;
- 879  0040 3501000a      	mov	_sys+10,#1
- 881  0044 2002          	jra	L103
- 882  0046               L772:
- 883                     ; 312 					sys.hz50Flag = FALSE;
- 885  0046 3f0a          	clr	_sys+10
- 886  0048               L103:
- 887                     ; 315 				sys.gotHzFlag = TRUE;
- 889  0048 35010009      	mov	_sys+9,#1
- 890                     ; 316 				sys.reqCalHzFlag = FALSE;
- 892  004c 3f08          	clr	_sys+8
- 894  004e 2078          	jra	L762
- 895  0050               L572:
- 896                     ; 320 				sys.calHzIntCnt--;
- 898  0050 3a0b          	dec	_sys+11
- 899  0052 2074          	jra	L762
- 900  0054               L172:
- 901                     ; 325 			if (sys.light1.briVal == MAX_BRIGHTNESS)
- 903  0054 b602          	ld	a,_sys+2
- 904  0056 a1fa          	cp	a,#250
- 905  0058 2615          	jrne	L703
- 906                     ; 329 				L1_EN_ON;
- 908  005a 4b10          	push	#16
- 909  005c ae500a        	ldw	x,#20490
- 910  005f cd0000        	call	_GPIO_WriteLow
- 912  0062 84            	pop	a
- 915  0063 35280001      	mov	_sys+1,#40
- 916                     ; 330 				sys.light1.briCnt = 0;
- 918  0067 3f00          	clr	_sys
- 919                     ; 331 				sys.light1.onFlag = TRUE;			
- 921  0069 35010003      	mov	_sys+3,#1
- 923  006d 2011          	jra	L113
- 924  006f               L703:
- 925                     ; 336 				sys.light1.briCnt = MAX_BRIGHTNESS - sys.light1.briVal;				
- 927  006f a6fa          	ld	a,#250
- 928  0071 b002          	sub	a,_sys+2
- 929  0073 b700          	ld	_sys,a
- 930                     ; 337 				sys.light1.onFlag = FALSE;
- 932  0075 3f03          	clr	_sys+3
- 933                     ; 338 				L1_EN_OFF;
- 935  0077 4b10          	push	#16
- 936  0079 ae500a        	ldw	x,#20490
- 937  007c cd0000        	call	_GPIO_WriteHigh
- 939  007f 84            	pop	a
- 940  0080               L113:
- 941                     ; 341 			if (sys.light2.briVal == MAX_BRIGHTNESS)
- 943  0080 b606          	ld	a,_sys+6
- 944  0082 a1fa          	cp	a,#250
- 945  0084 2615          	jrne	L313
- 946                     ; 343 				L2_EN_ON;
- 948  0086 4b08          	push	#8
- 949  0088 ae500a        	ldw	x,#20490
- 950  008b cd0000        	call	_GPIO_WriteLow
- 952  008e 84            	pop	a
- 955  008f 35280005      	mov	_sys+5,#40
- 956                     ; 344 				sys.light2.briCnt = 0;
- 958  0093 3f04          	clr	_sys+4
- 959                     ; 345 				sys.light2.onFlag = TRUE;			
- 961  0095 35010007      	mov	_sys+7,#1
- 963  0099 2011          	jra	L513
- 964  009b               L313:
- 965                     ; 349 				sys.light2.briCnt = MAX_BRIGHTNESS - sys.light2.briVal;
- 967  009b a6fa          	ld	a,#250
- 968  009d b006          	sub	a,_sys+6
- 969  009f b704          	ld	_sys+4,a
- 970                     ; 350 				sys.light2.onFlag = FALSE;				
- 972  00a1 3f07          	clr	_sys+7
- 973                     ; 351 				L2_EN_OFF;
- 975  00a3 4b08          	push	#8
- 976  00a5 ae500a        	ldw	x,#20490
- 977  00a8 cd0000        	call	_GPIO_WriteHigh
- 979  00ab 84            	pop	a
- 980  00ac               L513:
- 981                     ; 354 			if (sys.light1.briCnt || sys.light2.briCnt)
- 983  00ac 3d00          	tnz	_sys
- 984  00ae 2604          	jrne	L123
- 986  00b0 3d04          	tnz	_sys+4
- 987  00b2 2714          	jreq	L762
- 988  00b4               L123:
- 989                     ; 357 				TIM2_SetAutoreload(sys.hz50Flag ? TIMER2_INT_TIME_50HZ: TIMER2_INT_TIME_60HZ);
- 991  00b4 3d0a          	tnz	_sys+10
- 992  00b6 2705          	jreq	L22
- 993  00b8 ae0028        	ldw	x,#40
- 994  00bb 2003          	jra	L42
- 995  00bd               L22:
- 996  00bd ae0021        	ldw	x,#33
- 997  00c0               L42:
- 998  00c0 cd0000        	call	_TIM2_SetAutoreload
-1000                     ; 358 				TIM2_Cmd(ENABLE);
-1002  00c3 a601          	ld	a,#1
-1003  00c5 cd0000        	call	_TIM2_Cmd
-1005  00c8               L762:
-1006                     ; 362 }
-1009  00c8 85            	popw	x
-1010  00c9 bf00          	ldw	c_y,x
-1011  00cb 320002        	pop	c_y+2
-1012  00ce 85            	popw	x
-1013  00cf bf00          	ldw	c_x,x
-1014  00d1 320002        	pop	c_x+2
-1015  00d4 80            	iret
-1041                     ; 382 static void TIMER4_Init(void)
-1041                     ; 383 {    
-1043                     .text:	section	.text,new
-1044  0000               L31_TIMER4_Init:
-1048                     ; 384     TIM4_TimeBaseInit(TIM4_PRESCALER_16, TIMER4_INT_TIME);
-1050  0000 ae0032        	ldw	x,#50
-1051  0003 a604          	ld	a,#4
-1052  0005 95            	ld	xh,a
-1053  0006 cd0000        	call	_TIM4_TimeBaseInit
-1055                     ; 385     TIM4_ClearFlag(TIM4_FLAG_UPDATE);
-1057  0009 a601          	ld	a,#1
-1058  000b cd0000        	call	_TIM4_ClearFlag
-1060                     ; 386     TIM4_ITConfig(TIM4_IT_UPDATE, ENABLE);	
-1062  000e ae0001        	ldw	x,#1
-1063  0011 a601          	ld	a,#1
-1064  0013 95            	ld	xh,a
-1065  0014 cd0000        	call	_TIM4_ITConfig
-1067                     ; 387     TIM4_Cmd(ENABLE);
-1069  0017 a601          	ld	a,#1
-1070  0019 cd0000        	call	_TIM4_Cmd
-1072                     ; 388 }
-1075  001c 81            	ret
-1103                     ; 394 @far @interrupt void Timer4_ISR(void) {
-1105                     .text:	section	.text,new
-1106  0000               f_Timer4_ISR:
-1109  0000 3b0002        	push	c_x+2
-1110  0003 be00          	ldw	x,c_x
-1111  0005 89            	pushw	x
-1112  0006 3b0002        	push	c_y+2
-1113  0009 be00          	ldw	x,c_y
-1114  000b 89            	pushw	x
-1117                     ; 396 TIM4_ClearITPendingBit(TIM4_IT_UPDATE);  
-1119  000c a601          	ld	a,#1
-1120  000e cd0000        	call	_TIM4_ClearITPendingBit
-1122                     ; 397   if (sys.reqCalHzFlag)
-1124  0011 3d08          	tnz	_sys+8
-1125  0013 2707          	jreq	L343
-1126                     ; 399 	  sys.hzCnt++; 	  
-1128  0015 be0c          	ldw	x,_sys+12
-1129  0017 1c0001        	addw	x,#1
-1130  001a bf0c          	ldw	_sys+12,x
-1131  001c               L343:
-1132                     ; 402   if (sys.light1.triacTriggeTime)
-1134  001c 3d01          	tnz	_sys+1
-1135  001e 270f          	jreq	L543
-1136                     ; 404 	  sys.light1.triacTriggeTime--;
-1138  0020 3a01          	dec	_sys+1
-1139                     ; 405 	  if (sys.light1.triacTriggeTime == 0)
-1141  0022 3d01          	tnz	_sys+1
-1142  0024 2609          	jrne	L543
-1143                     ; 407 		  L1_EN_OFF;
-1145  0026 4b10          	push	#16
-1146  0028 ae500a        	ldw	x,#20490
-1147  002b cd0000        	call	_GPIO_WriteHigh
-1149  002e 84            	pop	a
-1150  002f               L543:
-1151                     ; 412   if (sys.light2.triacTriggeTime)
-1153  002f 3d05          	tnz	_sys+5
-1154  0031 270f          	jreq	L153
-1155                     ; 414 	  sys.light2.triacTriggeTime--;
-1157  0033 3a05          	dec	_sys+5
-1158                     ; 415 	  if (sys.light2.triacTriggeTime == 0)
-1160  0035 3d05          	tnz	_sys+5
-1161  0037 2609          	jrne	L153
-1162                     ; 417 		  L2_EN_OFF;
-1164  0039 4b08          	push	#8
-1165  003b ae500a        	ldw	x,#20490
-1166  003e cd0000        	call	_GPIO_WriteHigh
-1168  0041 84            	pop	a
-1169  0042               L153:
-1170                     ; 421   if (sys.checkAcCnt)
-1172  0042 be0e          	ldw	x,_sys+14
-1173  0044 2707          	jreq	L553
-1174                     ; 423 		sys.checkAcCnt--;
-1176  0046 be0e          	ldw	x,_sys+14
-1177  0048 1d0001        	subw	x,#1
-1178  004b bf0e          	ldw	_sys+14,x
-1179  004d               L553:
-1180                     ; 426   if (sys.cnt1s)
-1182  004d be1b          	ldw	x,_sys+27
-1183  004f 2707          	jreq	L753
-1184                     ; 428 		sys.cnt1s--;
-1186  0051 be1b          	ldw	x,_sys+27
-1187  0053 1d0001        	subw	x,#1
-1188  0056 bf1b          	ldw	_sys+27,x
-1189  0058               L753:
-1190                     ; 430 	Tick100ms++;
-1192  0058 be02          	ldw	x,_Tick100ms
-1193  005a 1c0001        	addw	x,#1
-1194  005d bf02          	ldw	_Tick100ms,x
-1195                     ; 431 	if(Tick100ms >= 2000){
-1197  005f be02          	ldw	x,_Tick100ms
-1198  0061 a307d0        	cpw	x,#2000
-1199  0064 2507          	jrult	L163
-1200                     ; 432 		Tick100ms = 0;
-1202  0066 5f            	clrw	x
-1203  0067 bf02          	ldw	_Tick100ms,x
-1204                     ; 433 		f_100ms = 1;
-1206  0069 35010001      	mov	_f_100ms,#1
-1207  006d               L163:
-1208                     ; 435 }
-1211  006d 85            	popw	x
-1212  006e bf00          	ldw	c_y,x
-1213  0070 320002        	pop	c_y+2
-1214  0073 85            	popw	x
-1215  0074 bf00          	ldw	c_x,x
-1216  0076 320002        	pop	c_x+2
-1217  0079 80            	iret
-1243                     ; 437 static void TIMER2_Init(void)
-1243                     ; 438 {    
-1245                     .text:	section	.text,new
-1246  0000               L11_TIMER2_Init:
-1250                     ; 439 	TIM2_TimeBaseInit(TIM2_PRESCALER_16, sys.hz50Flag ? TIMER2_INT_TIME_50HZ: TIMER2_INT_TIME_60HZ);
-1252  0000 3d0a          	tnz	_sys+10
-1253  0002 2705          	jreq	L63
-1254  0004 ae0028        	ldw	x,#40
-1255  0007 2003          	jra	L04
-1256  0009               L63:
-1257  0009 ae0021        	ldw	x,#33
-1258  000c               L04:
-1259  000c 89            	pushw	x
-1260  000d a604          	ld	a,#4
-1261  000f cd0000        	call	_TIM2_TimeBaseInit
-1263  0012 85            	popw	x
-1264                     ; 440    	TIM2_ClearFlag(TIM2_FLAG_UPDATE);
-1266  0013 ae0001        	ldw	x,#1
-1267  0016 cd0000        	call	_TIM2_ClearFlag
-1269                     ; 441    	TIM2_ITConfig(TIM2_IT_UPDATE, ENABLE);	   
-1271  0019 ae0001        	ldw	x,#1
-1272  001c a601          	ld	a,#1
-1273  001e 95            	ld	xh,a
-1274  001f cd0000        	call	_TIM2_ITConfig
-1276                     ; 442 }
-1279  0022 81            	ret
-1306                     ; 448 @far @interrupt void Timer2_ISR(void) {
-1308                     .text:	section	.text,new
-1309  0000               f_Timer2_ISR:
-1312  0000 3b0002        	push	c_x+2
-1313  0003 be00          	ldw	x,c_x
-1314  0005 89            	pushw	x
-1315  0006 3b0002        	push	c_y+2
-1316  0009 be00          	ldw	x,c_y
-1317  000b 89            	pushw	x
-1320                     ; 450 	TIM2_ClearITPendingBit(TIM2_IT_UPDATE);  
-1322  000c a601          	ld	a,#1
-1323  000e cd0000        	call	_TIM2_ClearITPendingBit
-1325                     ; 451 	if (sys.light1.briCnt) 
-1327  0011 3d00          	tnz	_sys
-1328  0013 2702          	jreq	L304
-1329                     ; 453 		sys.light1.briCnt--;			
-1331  0015 3a00          	dec	_sys
-1332  0017               L304:
-1333                     ; 455 	if (sys.light1.briCnt == 0 && !sys.light1.onFlag)
-1335  0017 3d00          	tnz	_sys
-1336  0019 2615          	jrne	L504
-1338  001b 3d03          	tnz	_sys+3
-1339  001d 2611          	jrne	L504
-1340                     ; 457 		L1_EN_ON;
-1342  001f 4b10          	push	#16
-1343  0021 ae500a        	ldw	x,#20490
-1344  0024 cd0000        	call	_GPIO_WriteLow
-1346  0027 84            	pop	a
-1349  0028 35280001      	mov	_sys+1,#40
-1350                     ; 458 		sys.light1.onFlag = TRUE;
-1352  002c 35010003      	mov	_sys+3,#1
-1353  0030               L504:
-1354                     ; 462 	if (sys.light2.briCnt) 
-1356  0030 3d04          	tnz	_sys+4
-1357  0032 2702          	jreq	L704
-1358                     ; 464 		sys.light2.briCnt--;		
-1360  0034 3a04          	dec	_sys+4
-1361  0036               L704:
-1362                     ; 466 	if (sys.light2.briCnt == 0 && !sys.light2.onFlag)
-1364  0036 3d04          	tnz	_sys+4
-1365  0038 2615          	jrne	L114
-1367  003a 3d07          	tnz	_sys+7
-1368  003c 2611          	jrne	L114
-1369                     ; 468 		L2_EN_ON;
-1371  003e 4b08          	push	#8
-1372  0040 ae500a        	ldw	x,#20490
-1373  0043 cd0000        	call	_GPIO_WriteLow
-1375  0046 84            	pop	a
-1378  0047 35280005      	mov	_sys+5,#40
-1379                     ; 469 		sys.light2.onFlag = TRUE;
-1381  004b 35010007      	mov	_sys+7,#1
-1382  004f               L114:
-1383                     ; 472 	if ((sys.light1.briCnt ||  sys.light2.briCnt) == 0)
-1385  004f 3d00          	tnz	_sys
-1386  0051 2604          	jrne	L64
-1387  0053 3d04          	tnz	_sys+4
-1388  0055 2705          	jreq	L44
-1389  0057               L64:
-1390  0057 ae0001        	ldw	x,#1
-1391  005a 2001          	jra	L05
-1392  005c               L44:
-1393  005c 5f            	clrw	x
-1394  005d               L05:
-1395  005d a30000        	cpw	x,#0
-1396  0060 2604          	jrne	L314
-1397                     ; 474 		TIM2_Cmd(DISABLE);
-1399  0062 4f            	clr	a
-1400  0063 cd0000        	call	_TIM2_Cmd
-1402  0066               L314:
-1403                     ; 476 }
-1406  0066 85            	popw	x
-1407  0067 bf00          	ldw	c_y,x
-1408  0069 320002        	pop	c_y+2
-1409  006c 85            	popw	x
-1410  006d bf00          	ldw	c_x,x
-1411  006f 320002        	pop	c_x+2
-1412  0072 80            	iret
-1445                     ; 478 u8 Linear(float t)
-1445                     ; 479 {
-1447                     .text:	section	.text,new
-1448  0000               _Linear:
-1450  0000 5204          	subw	sp,#4
-1451       00000004      OFST:	set	4
-1454                     ; 480 	if((t >= 0)&&(t <=1))
-1456  0002 9c            	rvf
-1457  0003 0d07          	tnz	(OFST+3,sp)
-1458  0005 2f31          	jrslt	L334
-1460  0007 9c            	rvf
-1461  0008 a601          	ld	a,#1
-1462  000a cd0000        	call	c_ctof
-1464  000d 96            	ldw	x,sp
-1465  000e 1c0001        	addw	x,#OFST-3
-1466  0011 cd0000        	call	c_rtol
-1468  0014 96            	ldw	x,sp
-1469  0015 1c0007        	addw	x,#OFST+3
-1470  0018 cd0000        	call	c_ltor
-1472  001b 96            	ldw	x,sp
-1473  001c 1c0001        	addw	x,#OFST-3
-1474  001f cd0000        	call	c_fcmp
-1476  0022 2c14          	jrsgt	L334
-1477                     ; 481 		return (u8)(t*250);
-1479  0024 96            	ldw	x,sp
-1480  0025 1c0007        	addw	x,#OFST+3
-1481  0028 cd0000        	call	c_ltor
-1483  002b ae000c        	ldw	x,#L144
-1484  002e cd0000        	call	c_fmul
-1486  0031 cd0000        	call	c_ftol
-1488  0034 b603          	ld	a,c_lreg+3
-1490  0036 2002          	jra	L45
-1491  0038               L334:
-1492                     ; 483 		return 40;
-1494  0038 a628          	ld	a,#40
-1496  003a               L45:
-1498  003a 5b04          	addw	sp,#4
-1499  003c 81            	ret
-1533                     ; 485 u8 EraseIn(float t)
-1533                     ; 486 {
-1534                     .text:	section	.text,new
-1535  0000               _EraseIn:
-1537  0000 5204          	subw	sp,#4
-1538       00000004      OFST:	set	4
-1541                     ; 487 	if((t >= 0)&&(t <=1))
-1543  0002 9c            	rvf
-1544  0003 0d07          	tnz	(OFST+3,sp)
-1545  0005 2f38          	jrslt	L564
-1547  0007 9c            	rvf
-1548  0008 a601          	ld	a,#1
-1549  000a cd0000        	call	c_ctof
-1551  000d 96            	ldw	x,sp
-1552  000e 1c0001        	addw	x,#OFST-3
-1553  0011 cd0000        	call	c_rtol
-1555  0014 96            	ldw	x,sp
-1556  0015 1c0007        	addw	x,#OFST+3
-1557  0018 cd0000        	call	c_ltor
-1559  001b 96            	ldw	x,sp
-1560  001c 1c0001        	addw	x,#OFST-3
-1561  001f cd0000        	call	c_fcmp
-1563  0022 2c1b          	jrsgt	L564
-1564                     ; 488 		return (u8)(t*t*250);
-1566  0024 96            	ldw	x,sp
-1567  0025 1c0007        	addw	x,#OFST+3
-1568  0028 cd0000        	call	c_ltor
-1570  002b 96            	ldw	x,sp
-1571  002c 1c0007        	addw	x,#OFST+3
-1572  002f cd0000        	call	c_fmul
-1574  0032 ae000c        	ldw	x,#L144
-1575  0035 cd0000        	call	c_fmul
-1577  0038 cd0000        	call	c_ftol
-1579  003b b603          	ld	a,c_lreg+3
-1581  003d 2002          	jra	L06
-1582  003f               L564:
-1583                     ; 490 		return 40;
-1585  003f a628          	ld	a,#40
-1587  0041               L06:
-1589  0041 5b04          	addw	sp,#4
-1590  0043 81            	ret
-1624                     ; 492 u8 EraseOut(float t)
-1624                     ; 493 {
+   7  0001               _channel2:
+   8  0001 00            	dc.b	0
+   9  0002               _sys:
+  10  0002 00            	dc.b	0
+  11  0003 000000        	ds.b	3
+  12  0006 000000000000  	ds.b	25
+  13  001f               _tick:
+  14  001f 0000          	dc.w	0
+  15  0021 00000000      	ds.b	4
+  95                     ; 78 void mymemcpy(void *des, void *src, u32 n)  
+  95                     ; 79 {  
+  97                     .text:	section	.text,new
+  98  0000               _mymemcpy:
+ 100  0000 89            	pushw	x
+ 101  0001 5204          	subw	sp,#4
+ 102       00000004      OFST:	set	4
+ 105                     ; 80 	u8 *xdes = des;
+ 107  0003 1f01          	ldw	(OFST-3,sp),x
+ 108                     ; 81 	u8 *xsrc = src; 
+ 110  0005 1e09          	ldw	x,(OFST+5,sp)
+ 111  0007 1f03          	ldw	(OFST-1,sp),x
+ 113  0009 2016          	jra	L56
+ 114  000b               L16:
+ 115                     ; 82   	while(n--) *xdes++ = *xsrc++;  
+ 117  000b 1e03          	ldw	x,(OFST-1,sp)
+ 118  000d 1c0001        	addw	x,#1
+ 119  0010 1f03          	ldw	(OFST-1,sp),x
+ 120  0012 1d0001        	subw	x,#1
+ 121  0015 f6            	ld	a,(x)
+ 122  0016 1e01          	ldw	x,(OFST-3,sp)
+ 123  0018 1c0001        	addw	x,#1
+ 124  001b 1f01          	ldw	(OFST-3,sp),x
+ 125  001d 1d0001        	subw	x,#1
+ 126  0020 f7            	ld	(x),a
+ 127  0021               L56:
+ 130  0021 96            	ldw	x,sp
+ 131  0022 1c000b        	addw	x,#OFST+7
+ 132  0025 cd0000        	call	c_ltor
+ 134  0028 96            	ldw	x,sp
+ 135  0029 1c000b        	addw	x,#OFST+7
+ 136  002c a601          	ld	a,#1
+ 137  002e cd0000        	call	c_lgsbc
+ 139  0031 cd0000        	call	c_lrzmp
+ 141  0034 26d5          	jrne	L16
+ 142                     ; 83 }  
+ 145  0036 5b06          	addw	sp,#6
+ 146  0038 81            	ret
+ 198                     ; 89 void delay(u16 Count)
+ 198                     ; 90 {
+ 199                     .text:	section	.text,new
+ 200  0000               _delay:
+ 202  0000 89            	pushw	x
+ 203  0001 89            	pushw	x
+ 204       00000002      OFST:	set	2
+ 207  0002 2014          	jra	L121
+ 208  0004               L711:
+ 209                     ; 95 		for(i=0;i<100;i++)
+ 211  0004 0f01          	clr	(OFST-1,sp)
+ 212  0006               L521:
+ 213                     ; 96 		for(j=0;j<50;j++);
+ 215  0006 0f02          	clr	(OFST+0,sp)
+ 216  0008               L331:
+ 220  0008 0c02          	inc	(OFST+0,sp)
+ 223  000a 7b02          	ld	a,(OFST+0,sp)
+ 224  000c a132          	cp	a,#50
+ 225  000e 25f8          	jrult	L331
+ 226                     ; 95 		for(i=0;i<100;i++)
+ 228  0010 0c01          	inc	(OFST-1,sp)
+ 231  0012 7b01          	ld	a,(OFST-1,sp)
+ 232  0014 a164          	cp	a,#100
+ 233  0016 25ee          	jrult	L521
+ 234  0018               L121:
+ 235                     ; 94 	while (Count--){
+ 237  0018 1e03          	ldw	x,(OFST+1,sp)
+ 238  001a 1d0001        	subw	x,#1
+ 239  001d 1f03          	ldw	(OFST+1,sp),x
+ 240  001f 1c0001        	addw	x,#1
+ 241  0022 a30000        	cpw	x,#0
+ 242  0025 26dd          	jrne	L711
+ 243                     ; 99 }
+ 246  0027 5b04          	addw	sp,#4
+ 247  0029 81            	ret
+ 270                     ; 105  void system_clock_set(void)
+ 270                     ; 106  {
+ 271                     .text:	section	.text,new
+ 272  0000               _system_clock_set:
+ 276                     ; 109 	 CLK->SWCR |= 0x02; //开启切换
+ 278  0000 721250c5      	bset	20677,#1
+ 279                     ; 111 	 CLK->SWR	= 0xb4; 	  //选择时钟为外部16M
+ 281  0004 35b450c4      	mov	20676,#180
+ 283  0008               L551:
+ 284                     ; 112 	 while((CLK->SWCR & 0x01) == 0x01);
+ 286  0008 c650c5        	ld	a,20677
+ 287  000b a401          	and	a,#1
+ 288  000d a101          	cp	a,#1
+ 289  000f 27f7          	jreq	L551
+ 290                     ; 113 	 CLK->CKDIVR = 0x80;	//不分频
+ 292  0011 358050c6      	mov	20678,#128
+ 293                     ; 115 	 CLK->SWCR	&= ~0x02; //关闭切换
+ 295  0015 721350c5      	bres	20677,#1
+ 296                     ; 117  }
+ 299  0019 81            	ret
+ 336                     ; 122  u8 system_addr_get(void)
+ 336                     ; 123  {
+ 337                     .text:	section	.text,new
+ 338  0000               _system_addr_get:
+ 340  0000 88            	push	a
+ 341       00000001      OFST:	set	1
+ 344                     ; 124 	uint8_t slave_address = 0;
+ 346  0001 0f01          	clr	(OFST+0,sp)
+ 347                     ; 127 	 slave_address = 0; 
+ 349  0003 0f01          	clr	(OFST+0,sp)
+ 350                     ; 128 	 GPIO_Init(GPIOD, (GPIO_Pin_TypeDef)GPIO_PIN_2, GPIO_MODE_IN_FL_NO_IT);
+ 352  0005 4b00          	push	#0
+ 353  0007 4b04          	push	#4
+ 354  0009 ae500f        	ldw	x,#20495
+ 355  000c cd0000        	call	_GPIO_Init
+ 357  000f 85            	popw	x
+ 358                     ; 129 	 GPIO_Init(GPIOC, (GPIO_Pin_TypeDef)GPIO_PIN_5, GPIO_MODE_IN_FL_NO_IT);
+ 360  0010 4b00          	push	#0
+ 361  0012 4b20          	push	#32
+ 362  0014 ae500a        	ldw	x,#20490
+ 363  0017 cd0000        	call	_GPIO_Init
+ 365  001a 85            	popw	x
+ 366                     ; 130 	 GPIO_Init(GPIOC, (GPIO_Pin_TypeDef)GPIO_PIN_6, GPIO_MODE_IN_FL_NO_IT);
+ 368  001b 4b00          	push	#0
+ 369  001d 4b40          	push	#64
+ 370  001f ae500a        	ldw	x,#20490
+ 371  0022 cd0000        	call	_GPIO_Init
+ 373  0025 85            	popw	x
+ 374                     ; 131 	 GPIO_Init(GPIOC, (GPIO_Pin_TypeDef)GPIO_PIN_7, GPIO_MODE_IN_FL_NO_IT);
+ 376  0026 4b00          	push	#0
+ 377  0028 4b80          	push	#128
+ 378  002a ae500a        	ldw	x,#20490
+ 379  002d cd0000        	call	_GPIO_Init
+ 381  0030 85            	popw	x
+ 382                     ; 134 	 delay(100);
+ 384  0031 ae0064        	ldw	x,#100
+ 385  0034 cd0000        	call	_delay
+ 387                     ; 136 	 if(GPIO_ReadInputData(GPIOD) & 0x04)	 slave_address |= 0x08;
+ 389  0037 ae500f        	ldw	x,#20495
+ 390  003a cd0000        	call	_GPIO_ReadInputData
+ 392  003d a504          	bcp	a,#4
+ 393  003f 2706          	jreq	L771
+ 396  0041 7b01          	ld	a,(OFST+0,sp)
+ 397  0043 aa08          	or	a,#8
+ 398  0045 6b01          	ld	(OFST+0,sp),a
+ 399  0047               L771:
+ 400                     ; 137 	 if(GPIO_ReadInputData(GPIOC) & 0x20)	 slave_address |= 0x04;
+ 402  0047 ae500a        	ldw	x,#20490
+ 403  004a cd0000        	call	_GPIO_ReadInputData
+ 405  004d a520          	bcp	a,#32
+ 406  004f 2706          	jreq	L102
+ 409  0051 7b01          	ld	a,(OFST+0,sp)
+ 410  0053 aa04          	or	a,#4
+ 411  0055 6b01          	ld	(OFST+0,sp),a
+ 412  0057               L102:
+ 413                     ; 138 	 if(GPIO_ReadInputData(GPIOC) & 0x40)	 slave_address |= 0x02;
+ 415  0057 ae500a        	ldw	x,#20490
+ 416  005a cd0000        	call	_GPIO_ReadInputData
+ 418  005d a540          	bcp	a,#64
+ 419  005f 2706          	jreq	L302
+ 422  0061 7b01          	ld	a,(OFST+0,sp)
+ 423  0063 aa02          	or	a,#2
+ 424  0065 6b01          	ld	(OFST+0,sp),a
+ 425  0067               L302:
+ 426                     ; 139 	 if(GPIO_ReadInputData(GPIOC) & 0x80)	 slave_address |= 0x01;
+ 428  0067 ae500a        	ldw	x,#20490
+ 429  006a cd0000        	call	_GPIO_ReadInputData
+ 431  006d a580          	bcp	a,#128
+ 432  006f 2706          	jreq	L502
+ 435  0071 7b01          	ld	a,(OFST+0,sp)
+ 436  0073 aa01          	or	a,#1
+ 437  0075 6b01          	ld	(OFST+0,sp),a
+ 438  0077               L502:
+ 439                     ; 141 	return slave_address;
+ 441  0077 7b01          	ld	a,(OFST+0,sp)
+ 444  0079 5b01          	addw	sp,#1
+ 445  007b 81            	ret
+ 492                     .const:	section	.text
+ 493  0000               L61:
+ 494  0000 00004000      	dc.l	16384
+ 495                     ; 151  void MEEPROM_WriteByte(u16 dLocal_Addr, u8 dLocal_Data)
+ 495                     ; 152  {
+ 496                     .text:	section	.text,new
+ 497  0000               _MEEPROM_WriteByte:
+ 499  0000 89            	pushw	x
+ 500       00000000      OFST:	set	0
+ 503                     ; 153 	FLASH_Unlock(FLASH_MEMTYPE_DATA);
+ 505  0001 a6f7          	ld	a,#247
+ 506  0003 cd0000        	call	_FLASH_Unlock
+ 509  0006               L332:
+ 510                     ; 154 	while (FLASH_GetFlagStatus(FLASH_FLAG_DUL) == RESET);
+ 512  0006 a608          	ld	a,#8
+ 513  0008 cd0000        	call	_FLASH_GetFlagStatus
+ 515  000b 4d            	tnz	a
+ 516  000c 27f8          	jreq	L332
+ 517                     ; 156 	FLASH_ProgramByte(FLASH_DATA_START_PHYSICAL_ADDRESS + dLocal_Addr, dLocal_Data);
+ 519  000e 7b05          	ld	a,(OFST+5,sp)
+ 520  0010 88            	push	a
+ 521  0011 1e02          	ldw	x,(OFST+2,sp)
+ 522  0013 cd0000        	call	c_uitolx
+ 524  0016 ae0000        	ldw	x,#L61
+ 525  0019 cd0000        	call	c_ladd
+ 527  001c be02          	ldw	x,c_lreg+2
+ 528  001e 89            	pushw	x
+ 529  001f be00          	ldw	x,c_lreg
+ 530  0021 89            	pushw	x
+ 531  0022 cd0000        	call	_FLASH_ProgramByte
+ 533  0025 5b05          	addw	sp,#5
+ 534                     ; 157 	FLASH_Lock(FLASH_MEMTYPE_DATA);
+ 536  0027 a6f7          	ld	a,#247
+ 537  0029 cd0000        	call	_FLASH_Lock
+ 539                     ; 159  }
+ 542  002c 85            	popw	x
+ 543  002d 81            	ret
+ 587                     ; 167   u8 MEEPROM_ReadByte(u16 dLocal_Addr)
+ 587                     ; 168   {
+ 588                     .text:	section	.text,new
+ 589  0000               _MEEPROM_ReadByte:
+ 591  0000 88            	push	a
+ 592       00000001      OFST:	set	1
+ 595                     ; 170 	  dLocal_1 = FLASH_ReadByte(FLASH_DATA_START_PHYSICAL_ADDRESS + dLocal_Addr);
+ 597  0001 cd0000        	call	c_uitolx
+ 599  0004 ae0000        	ldw	x,#L61
+ 600  0007 cd0000        	call	c_ladd
+ 602  000a be02          	ldw	x,c_lreg+2
+ 603  000c 89            	pushw	x
+ 604  000d be00          	ldw	x,c_lreg
+ 605  000f 89            	pushw	x
+ 606  0010 cd0000        	call	_FLASH_ReadByte
+ 608  0013 5b04          	addw	sp,#4
+ 609  0015 6b01          	ld	(OFST+0,sp),a
+ 610                     ; 171 	  return dLocal_1;
+ 612  0017 7b01          	ld	a,(OFST+0,sp)
+ 615  0019 5b01          	addw	sp,#1
+ 616  001b 81            	ret
+ 645                     ; 179  void channel_status_save(void)
+ 645                     ; 180 {
+ 646                     .text:	section	.text,new
+ 647  0000               _channel_status_save:
+ 651                     ; 181 	FLASH_Unlock(FLASH_MEMTYPE_DATA);
+ 653  0000 a6f7          	ld	a,#247
+ 654  0002 cd0000        	call	_FLASH_Unlock
+ 657  0005               L372:
+ 658                     ; 182 	while (FLASH_GetFlagStatus(FLASH_FLAG_DUL) == RESET);
+ 660  0005 a608          	ld	a,#8
+ 661  0007 cd0000        	call	_FLASH_GetFlagStatus
+ 663  000a 4d            	tnz	a
+ 664  000b 27f8          	jreq	L372
+ 665                     ; 184 	FLASH_ProgramByte(FLASH_DATA_START_PHYSICAL_ADDRESS + EEPROM_CH1_STATUS_ADDRESS, slc.ch1_status);
+ 667  000d 3b003b        	push	_slc+31
+ 668  0010 ae402d        	ldw	x,#16429
+ 669  0013 89            	pushw	x
+ 670  0014 ae0000        	ldw	x,#0
+ 671  0017 89            	pushw	x
+ 672  0018 cd0000        	call	_FLASH_ProgramByte
+ 674  001b 5b05          	addw	sp,#5
+ 675                     ; 185 	FLASH_ProgramByte(FLASH_DATA_START_PHYSICAL_ADDRESS + EEPROM_CH2_STATUS_ADDRESS, slc.ch2_status);
+ 677  001d 3b003c        	push	_slc+32
+ 678  0020 ae402e        	ldw	x,#16430
+ 679  0023 89            	pushw	x
+ 680  0024 ae0000        	ldw	x,#0
+ 681  0027 89            	pushw	x
+ 682  0028 cd0000        	call	_FLASH_ProgramByte
+ 684  002b 5b05          	addw	sp,#5
+ 685                     ; 187 	FLASH_Lock(FLASH_MEMTYPE_DATA);
+ 687  002d a6f7          	ld	a,#247
+ 688  002f cd0000        	call	_FLASH_Lock
+ 690                     ; 189 }
+ 693  0032 81            	ret
+ 718                     ; 197 void default_info_set(void)
+ 718                     ; 198 {	 
+ 719                     .text:	section	.text,new
+ 720  0000               _default_info_set:
+ 724                     ; 199 	slc.ch1_status = 0;
+ 726  0000 3f3b          	clr	_slc+31
+ 727                     ; 200 	slc.ch2_status = 0;
+ 729  0002 3f3c          	clr	_slc+32
+ 730                     ; 201 	slc.ch3_status = 0;
+ 732  0004 3f3d          	clr	_slc+33
+ 733                     ; 202 	slc.ch4_status = 0;
+ 735  0006 3f3e          	clr	_slc+34
+ 736                     ; 204 	channel_status_save();
+ 738  0008 cd0000        	call	_channel_status_save
+ 740                     ; 206 }
+ 743  000b 81            	ret
+ 786                     ; 212  void device_info_read(void)
+ 786                     ; 213  {
+ 787                     .text:	section	.text,new
+ 788  0000               _device_info_read:
+ 790  0000 88            	push	a
+ 791       00000001      OFST:	set	1
+ 794                     ; 214 	u8 temp = 0;
+ 796  0001 0f01          	clr	(OFST+0,sp)
+ 797                     ; 216 	slc.savFlag = 0;
+ 799  0003 3f3a          	clr	_slc+30
+ 800                     ; 218 	slc.model = FLASH_ReadByte(FLASH_DATA_START_PHYSICAL_ADDRESS + EEPROM_MODEL_ADDRESS);
+ 802  0005 ae400b        	ldw	x,#16395
+ 803  0008 89            	pushw	x
+ 804  0009 ae0000        	ldw	x,#0
+ 805  000c 89            	pushw	x
+ 806  000d cd0000        	call	_FLASH_ReadByte
+ 808  0010 5b04          	addw	sp,#4
+ 809  0012 b720          	ld	_slc+4,a
+ 810                     ; 219  	slc.firmware_version = FLASH_ReadByte(FLASH_DATA_START_PHYSICAL_ADDRESS + EEPROM_FW_VERSION_ADDRESS);	
+ 812  0014 ae400d        	ldw	x,#16397
+ 813  0017 89            	pushw	x
+ 814  0018 ae0000        	ldw	x,#0
+ 815  001b 89            	pushw	x
+ 816  001c cd0000        	call	_FLASH_ReadByte
+ 818  001f 5b04          	addw	sp,#4
+ 819  0021 b721          	ld	_slc+5,a
+ 820                     ; 220 	if(slc.firmware_version == 1){		/* 第一版本，device ID 4个字节  */		
+ 822  0023 b621          	ld	a,_slc+5
+ 823  0025 a101          	cp	a,#1
+ 824  0027 263c          	jrne	L523
+ 825                     ; 221 		slc.deviceID[0] = FLASH_ReadByte(FLASH_DATA_START_PHYSICAL_ADDRESS + EEPROM_DEVICEID_ADDRESS + 3);
+ 827  0029 ae4004        	ldw	x,#16388
+ 828  002c 89            	pushw	x
+ 829  002d ae0000        	ldw	x,#0
+ 830  0030 89            	pushw	x
+ 831  0031 cd0000        	call	_FLASH_ReadByte
+ 833  0034 5b04          	addw	sp,#4
+ 834  0036 b71c          	ld	_slc,a
+ 835                     ; 222 		slc.deviceID[1] = FLASH_ReadByte(FLASH_DATA_START_PHYSICAL_ADDRESS + EEPROM_DEVICEID_ADDRESS + 2);
+ 837  0038 ae4003        	ldw	x,#16387
+ 838  003b 89            	pushw	x
+ 839  003c ae0000        	ldw	x,#0
+ 840  003f 89            	pushw	x
+ 841  0040 cd0000        	call	_FLASH_ReadByte
+ 843  0043 5b04          	addw	sp,#4
+ 844  0045 b71d          	ld	_slc+1,a
+ 845                     ; 223 		slc.deviceID[2] = FLASH_ReadByte(FLASH_DATA_START_PHYSICAL_ADDRESS + EEPROM_DEVICEID_ADDRESS + 1);
+ 847  0047 ae4002        	ldw	x,#16386
+ 848  004a 89            	pushw	x
+ 849  004b ae0000        	ldw	x,#0
+ 850  004e 89            	pushw	x
+ 851  004f cd0000        	call	_FLASH_ReadByte
+ 853  0052 5b04          	addw	sp,#4
+ 854  0054 b71e          	ld	_slc+2,a
+ 855                     ; 224 		slc.deviceID[3] = FLASH_ReadByte(FLASH_DATA_START_PHYSICAL_ADDRESS + EEPROM_DEVICEID_ADDRESS + 0);
+ 857  0056 ae4001        	ldw	x,#16385
+ 858  0059 89            	pushw	x
+ 859  005a ae0000        	ldw	x,#0
+ 860  005d 89            	pushw	x
+ 861  005e cd0000        	call	_FLASH_ReadByte
+ 863  0061 5b04          	addw	sp,#4
+ 864  0063 b71f          	ld	_slc+3,a
+ 865  0065               L523:
+ 866                     ; 226 	slc.HW_version = FLASH_ReadByte(FLASH_DATA_START_PHYSICAL_ADDRESS + EEPROM_HW_VERSION_ADDRESS);
+ 868  0065 ae400f        	ldw	x,#16399
+ 869  0068 89            	pushw	x
+ 870  0069 ae0000        	ldw	x,#0
+ 871  006c 89            	pushw	x
+ 872  006d cd0000        	call	_FLASH_ReadByte
+ 874  0070 5b04          	addw	sp,#4
+ 875  0072 b722          	ld	_slc+6,a
+ 876                     ; 228 	temp = FLASH_ReadByte(FLASH_DATA_START_PHYSICAL_ADDRESS + EEPROM_BASH_ADDRESS + 0);
+ 878  0074 ae4011        	ldw	x,#16401
+ 879  0077 89            	pushw	x
+ 880  0078 ae0000        	ldw	x,#0
+ 881  007b 89            	pushw	x
+ 882  007c cd0000        	call	_FLASH_ReadByte
+ 884  007f 5b04          	addw	sp,#4
+ 885  0081 6b01          	ld	(OFST+0,sp),a
+ 886                     ; 229 	slc.bash = temp + 256 * FLASH_ReadByte(FLASH_DATA_START_PHYSICAL_ADDRESS + EEPROM_BASH_ADDRESS + 1);
+ 888  0083 ae4012        	ldw	x,#16402
+ 889  0086 89            	pushw	x
+ 890  0087 ae0000        	ldw	x,#0
+ 891  008a 89            	pushw	x
+ 892  008b cd0000        	call	_FLASH_ReadByte
+ 894  008e 5b04          	addw	sp,#4
+ 895  0090 5f            	clrw	x
+ 896  0091 97            	ld	xl,a
+ 897  0092 4f            	clr	a
+ 898  0093 02            	rlwa	x,a
+ 899  0094 01            	rrwa	x,a
+ 900  0095 1b01          	add	a,(OFST+0,sp)
+ 901  0097 2401          	jrnc	L03
+ 902  0099 5c            	incw	x
+ 903  009a               L03:
+ 904  009a b728          	ld	_slc+12,a
+ 905  009c 9f            	ld	a,xl
+ 906  009d b727          	ld	_slc+11,a
+ 907                     ; 231 	slc.manaYear = FLASH_ReadByte(FLASH_DATA_START_PHYSICAL_ADDRESS + EEPROM_MANA_YEAR_ADDRESS);
+ 909  009f ae4013        	ldw	x,#16403
+ 910  00a2 89            	pushw	x
+ 911  00a3 ae0000        	ldw	x,#0
+ 912  00a6 89            	pushw	x
+ 913  00a7 cd0000        	call	_FLASH_ReadByte
+ 915  00aa 5b04          	addw	sp,#4
+ 916  00ac b724          	ld	_slc+8,a
+ 917                     ; 232 	slc.manaMonth = FLASH_ReadByte(FLASH_DATA_START_PHYSICAL_ADDRESS + EEPROM_MANA_MONTH_ADDRESS);
+ 919  00ae ae4014        	ldw	x,#16404
+ 920  00b1 89            	pushw	x
+ 921  00b2 ae0000        	ldw	x,#0
+ 922  00b5 89            	pushw	x
+ 923  00b6 cd0000        	call	_FLASH_ReadByte
+ 925  00b9 5b04          	addw	sp,#4
+ 926  00bb b725          	ld	_slc+9,a
+ 927                     ; 233 	slc.manaDay = FLASH_ReadByte(FLASH_DATA_START_PHYSICAL_ADDRESS + EEPROM_MANA_DAY_ADDRESS);
+ 929  00bd ae4015        	ldw	x,#16405
+ 930  00c0 89            	pushw	x
+ 931  00c1 ae0000        	ldw	x,#0
+ 932  00c4 89            	pushw	x
+ 933  00c5 cd0000        	call	_FLASH_ReadByte
+ 935  00c8 5b04          	addw	sp,#4
+ 936  00ca b726          	ld	_slc+10,a
+ 937                     ; 235 	slc.ch1_status = FLASH_ReadByte(FLASH_DATA_START_PHYSICAL_ADDRESS + EEPROM_CH1_STATUS_ADDRESS);
+ 939  00cc ae402d        	ldw	x,#16429
+ 940  00cf 89            	pushw	x
+ 941  00d0 ae0000        	ldw	x,#0
+ 942  00d3 89            	pushw	x
+ 943  00d4 cd0000        	call	_FLASH_ReadByte
+ 945  00d7 5b04          	addw	sp,#4
+ 946  00d9 b73b          	ld	_slc+31,a
+ 947                     ; 236 	slc.ch2_status = FLASH_ReadByte(FLASH_DATA_START_PHYSICAL_ADDRESS + EEPROM_CH2_STATUS_ADDRESS);
+ 949  00db ae402e        	ldw	x,#16430
+ 950  00de 89            	pushw	x
+ 951  00df ae0000        	ldw	x,#0
+ 952  00e2 89            	pushw	x
+ 953  00e3 cd0000        	call	_FLASH_ReadByte
+ 955  00e6 5b04          	addw	sp,#4
+ 956  00e8 b73c          	ld	_slc+32,a
+ 957                     ; 238 	realtime_bright1 = slc.ch1_status;
+ 959  00ea 453b13        	mov	_realtime_bright1,_slc+31
+ 960                     ; 239 	sys.light1.briVal = realtime_bright1;
+ 962  00ed 451304        	mov	_sys+2,_realtime_bright1
+ 963                     ; 241 	realtime_bright2 = slc.ch2_status;
+ 965  00f0 453c12        	mov	_realtime_bright2,_slc+32
+ 966                     ; 242 	sys.light2.briVal = realtime_bright2;
+ 968  00f3 451208        	mov	_sys+6,_realtime_bright2
+ 969                     ; 244 	aim_bright1 = ((float)realtime_bright1) / 100.0;
+ 971  00f6 b613          	ld	a,_realtime_bright1
+ 972  00f8 5f            	clrw	x
+ 973  00f9 97            	ld	xl,a
+ 974  00fa cd0000        	call	c_itof
+ 976  00fd ae0014        	ldw	x,#L333
+ 977  0100 cd0000        	call	c_fdiv
+ 979  0103 ae000d        	ldw	x,#_aim_bright1
+ 980  0106 cd0000        	call	c_rtol
+ 982                     ; 245 	aim_bright2 = ((float)realtime_bright2) / 100.0;
+ 984  0109 b612          	ld	a,_realtime_bright2
+ 985  010b 5f            	clrw	x
+ 986  010c 97            	ld	xl,a
+ 987  010d cd0000        	call	c_itof
+ 989  0110 ae0014        	ldw	x,#L333
+ 990  0113 cd0000        	call	c_fdiv
+ 992  0116 ae0009        	ldw	x,#_aim_bright2
+ 993  0119 cd0000        	call	c_rtol
+ 995                     ; 247 	last_bright1 = aim_bright1;
+ 997  011c be0f          	ldw	x,_aim_bright1+2
+ 998  011e bf1a          	ldw	_last_bright1+2,x
+ 999  0120 be0d          	ldw	x,_aim_bright1
+1000  0122 bf18          	ldw	_last_bright1,x
+1001                     ; 248 	last_bright2 = aim_bright2;
+1003  0124 be0b          	ldw	x,_aim_bright2+2
+1004  0126 bf16          	ldw	_last_bright2+2,x
+1005  0128 be09          	ldw	x,_aim_bright2
+1006  012a bf14          	ldw	_last_bright2,x
+1007                     ; 251  }
+1010  012c 84            	pop	a
+1011  012d 81            	ret
+1050                     ; 258  void MEEPROM_Init(void)
+1050                     ; 259  {
+1051                     .text:	section	.text,new
+1052  0000               _MEEPROM_Init:
+1054  0000 88            	push	a
+1055       00000001      OFST:	set	1
+1058                     ; 260 	u8 temp = 0;
+1060  0001 0f01          	clr	(OFST+0,sp)
+1061                     ; 262 	FLASH_DeInit();
+1063  0003 cd0000        	call	_FLASH_DeInit
+1065                     ; 263 	temp = MEEPROM_ReadByte(EEPROM_INIT_ADDRESS);
+1067  0006 5f            	clrw	x
+1068  0007 cd0000        	call	_MEEPROM_ReadByte
+1070  000a 6b01          	ld	(OFST+0,sp),a
+1071                     ; 266 	if(temp == EEPROM_INIT_FLAG) {		
+1073  000c 7b01          	ld	a,(OFST+0,sp)
+1074  000e a155          	cp	a,#85
+1075  0010 260a          	jrne	L553
+1076                     ; 267 		MEEPROM_WriteByte(EEPROM_INIT_ADDRESS, EEPROM_INIT_FLAG);
+1078  0012 4b55          	push	#85
+1079  0014 5f            	clrw	x
+1080  0015 cd0000        	call	_MEEPROM_WriteByte
+1082  0018 84            	pop	a
+1083                     ; 268 		default_info_set();
+1085  0019 cd0000        	call	_default_info_set
+1087  001c               L553:
+1088                     ; 271 	device_info_read();
+1090  001c cd0000        	call	_device_info_read
+1092                     ; 273  }
+1095  001f 84            	pop	a
+1096  0020 81            	ret
+1124                     ; 278  void interrupt_priority_set(void)
+1124                     ; 279  {
+1125                     .text:	section	.text,new
+1126  0000               _interrupt_priority_set:
+1130                     ; 282 	 disableInterrupts();
+1133  0000 9b            sim
+1135                     ; 284 	 ITC_DeInit();
+1138  0001 cd0000        	call	_ITC_DeInit
+1140                     ; 286 	 ITC_SetSoftwarePriority(ITC_IRQ_PORTD, ITC_PRIORITYLEVEL_3);
+1142  0004 ae0003        	ldw	x,#3
+1143  0007 a606          	ld	a,#6
+1144  0009 95            	ld	xh,a
+1145  000a cd0000        	call	_ITC_SetSoftwarePriority
+1147                     ; 287 	 ITC_SetSoftwarePriority(ITC_IRQ_TIM2_OVF, ITC_PRIORITYLEVEL_3);
+1149  000d ae0003        	ldw	x,#3
+1150  0010 a60d          	ld	a,#13
+1151  0012 95            	ld	xh,a
+1152  0013 cd0000        	call	_ITC_SetSoftwarePriority
+1154                     ; 288 	 ITC_SetSoftwarePriority(ITC_IRQ_TIM4_OVF, ITC_PRIORITYLEVEL_3);
+1156  0016 ae0003        	ldw	x,#3
+1157  0019 a617          	ld	a,#23
+1158  001b 95            	ld	xh,a
+1159  001c cd0000        	call	_ITC_SetSoftwarePriority
+1161                     ; 290 	 ITC_SetSoftwarePriority(ITC_IRQ_UART1_TX, ITC_PRIORITYLEVEL_2);
+1163  001f 5f            	clrw	x
+1164  0020 a611          	ld	a,#17
+1165  0022 95            	ld	xh,a
+1166  0023 cd0000        	call	_ITC_SetSoftwarePriority
+1168                     ; 291 	 ITC_SetSoftwarePriority(ITC_IRQ_UART1_RX, ITC_PRIORITYLEVEL_2);
+1170  0026 5f            	clrw	x
+1171  0027 a612          	ld	a,#18
+1172  0029 95            	ld	xh,a
+1173  002a cd0000        	call	_ITC_SetSoftwarePriority
+1175                     ; 294 	 enableInterrupts();
+1178  002d 9a            rim
+1180                     ; 297  }
+1184  002e 81            	ret
+1214                     ; 302  static void Sys_Init(void)
+1214                     ; 303  {
+1215                     .text:	section	.text,new
+1216  0000               L3_Sys_Init:
+1220                     ; 304 	CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER4, ENABLE);
+1222  0000 ae0001        	ldw	x,#1
+1223  0003 a604          	ld	a,#4
+1224  0005 95            	ld	xh,a
+1225  0006 cd0000        	call	_CLK_PeripheralClockConfig
+1227                     ; 305 	CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER2, ENABLE);
+1229  0009 ae0001        	ldw	x,#1
+1230  000c a605          	ld	a,#5
+1231  000e 95            	ld	xh,a
+1232  000f cd0000        	call	_CLK_PeripheralClockConfig
+1234                     ; 307 	sys.light1.briVal = DEFAULT_BRIGHTNESS;
+1236  0012 3f04          	clr	_sys+2
+1237                     ; 308 	sys.light2.briVal = DEFAULT_BRIGHTNESS; 
+1239  0014 3f08          	clr	_sys+6
+1240                     ; 311 	sys.gotHzFlag = FALSE;    
+1242  0016 3f0b          	clr	_sys+9
+1243                     ; 312 	sys.reqCalHzFlag = FALSE;
+1245  0018 3f0a          	clr	_sys+8
+1246                     ; 313 	sys.calHzIntCnt = GET_AC_FRE_CNT;
+1248  001a 350a000d      	mov	_sys+11,#10
+1249                     ; 314 	sys.hzCnt = 0;
+1251  001e 5f            	clrw	x
+1252  001f bf0e          	ldw	_sys+12,x
+1253                     ; 315 	sys.checkAcCnt = CHECK_AC_INPUT_CNT;
+1255  0021 ae07d0        	ldw	x,#2000
+1256  0024 bf10          	ldw	_sys+14,x
+1257                     ; 317 	sys.acOkFlag = FALSE;
+1259  0026 3f15          	clr	_sys+19
+1260                     ; 318 	sys.acErrFlag = TRUE;
+1262  0028 35010014      	mov	_sys+18,#1
+1263                     ; 320 	slc.f_mal.byte = 0;
+1265  002c 3f23          	clr	_slc+7
+1266                     ; 322 	slc.ch1_status = 0;
+1268  002e 3f3b          	clr	_slc+31
+1269                     ; 323 	slc.ch2_status = 0;
+1271  0030 3f3c          	clr	_slc+32
+1272                     ; 324 	slc.ch3_status = 0;
+1274  0032 3f3d          	clr	_slc+33
+1275                     ; 325 	slc.ch4_status = 0;
+1277  0034 3f3e          	clr	_slc+34
+1278                     ; 327 	last_bright1	 = 0;
+1280  0036 ae0000        	ldw	x,#0
+1281  0039 bf1a          	ldw	_last_bright1+2,x
+1282  003b ae0000        	ldw	x,#0
+1283  003e bf18          	ldw	_last_bright1,x
+1284                     ; 328 	aim_bright1	 = 0;
+1286  0040 ae0000        	ldw	x,#0
+1287  0043 bf0f          	ldw	_aim_bright1+2,x
+1288  0045 ae0000        	ldw	x,#0
+1289  0048 bf0d          	ldw	_aim_bright1,x
+1290                     ; 329 	last_bright2	 = 0;
+1292  004a ae0000        	ldw	x,#0
+1293  004d bf16          	ldw	_last_bright2+2,x
+1294  004f ae0000        	ldw	x,#0
+1295  0052 bf14          	ldw	_last_bright2,x
+1296                     ; 330 	aim_bright2	 = 0;
+1298  0054 ae0000        	ldw	x,#0
+1299  0057 bf0b          	ldw	_aim_bright2+2,x
+1300  0059 ae0000        	ldw	x,#0
+1301  005c bf09          	ldw	_aim_bright2,x
+1302                     ; 332  }
+1305  005e 81            	ret
+1350                     ; 340 void main(void)
+1350                     ; 341 {	
+1351                     .text:	section	.text,new
+1352  0000               _main:
+1356                     ; 343 	system_clock_set();
+1358  0000 cd0000        	call	_system_clock_set
+1360                     ; 345 	slc.MDID = system_addr_get();
+1362  0003 cd0000        	call	_system_addr_get
+1364  0006 b739          	ld	_slc+29,a
+1365                     ; 347 	GPIO_Config();
+1367  0008 cd0000        	call	L5_GPIO_Config
+1369                     ; 348 	uart1_init();
+1371  000b cd0000        	call	_uart1_init
+1373                     ; 349 	Sys_Init();
+1375  000e cd0000        	call	L3_Sys_Init
+1377                     ; 350 	ExtInterrupt_Config();
+1379  0011 cd0000        	call	L7_ExtInterrupt_Config
+1381                     ; 351 	TIMER4_Init();	
+1383  0014 cd0000        	call	L31_TIMER4_Init
+1385                     ; 354 	interrupt_priority_set();
+1387  0017 cd0000        	call	_interrupt_priority_set
+1389                     ; 388 	TIMER2_Init();
+1391  001a cd0000        	call	L11_TIMER2_Init
+1393                     ; 390 	MEEPROM_Init();
+1395  001d cd0000        	call	_MEEPROM_Init
+1397  0020               L704:
+1398                     ; 395 		if (sys.checkAcCnt == 0 && sys.acErrFlag == FALSE){			/* 在已经检测出强电之后再检测到故障 */
+1400  0020 be10          	ldw	x,_sys+14
+1401  0022 2610          	jrne	L314
+1403  0024 3d14          	tnz	_sys+18
+1404  0026 260c          	jrne	L314
+1405                     ; 399 			 sys.acErrFlag = TRUE;
+1407  0028 35010014      	mov	_sys+18,#1
+1408                     ; 400 			 sys.acOkFlag = FALSE;
+1410  002c 3f15          	clr	_sys+19
+1411                     ; 401 			 slc.f_mal.bit.f_ac = 1;
+1413  002e 72160023      	bset	_slc+7,#3
+1414                     ; 404 			sys.gotHzFlag = FALSE;    
+1416  0032 3f0b          	clr	_sys+9
+1417  0034               L314:
+1418                     ; 408 		if(!sys.gotHzFlag){				/* 还未计算出频率 */
+1420  0034 3d0b          	tnz	_sys+9
+1421  0036 2618          	jrne	L514
+1422                     ; 410 			if (sys.checkAcCnt == 0){	   	/* 第一次没有检测到故障 */
+1424  0038 be10          	ldw	x,_sys+14
+1425  003a 2614          	jrne	L514
+1426                     ; 411 				sys.gotHzFlag = FALSE;	 
+1428  003c 3f0b          	clr	_sys+9
+1429                     ; 412 				sys.reqCalHzFlag = FALSE;
+1431  003e 3f0a          	clr	_sys+8
+1432                     ; 413 				sys.calHzIntCnt = GET_AC_FRE_CNT;
+1434  0040 350a000d      	mov	_sys+11,#10
+1435                     ; 414 				sys.hzCnt = 0;
+1437  0044 5f            	clrw	x
+1438  0045 bf0e          	ldw	_sys+12,x
+1439                     ; 415 				sys.checkAcCnt = CHECK_AC_INPUT_CNT;				
+1441  0047 ae07d0        	ldw	x,#2000
+1442  004a bf10          	ldw	_sys+14,x
+1443                     ; 416 				slc.f_mal.bit.f_ac = 1;
+1445  004c 72160023      	bset	_slc+7,#3
+1446  0050               L514:
+1447                     ; 420 		if (sys.acOkFlag == FALSE && sys.acErrFlag == FALSE){
+1449  0050 3d15          	tnz	_sys+19
+1450  0052 2624          	jrne	L124
+1452  0054 3d14          	tnz	_sys+18
+1453  0056 2620          	jrne	L124
+1454                     ; 424 			if(sys.gotHzFlag){
+1456  0058 3d0b          	tnz	_sys+9
+1457  005a 2717          	jreq	L324
+1458                     ; 425 				sys.acOkFlag = TRUE;
+1460  005c 35010015      	mov	_sys+19,#1
+1461                     ; 426 				slc.f_mal.bit.f_ac = 0;
+1463  0060 72170023      	bres	_slc+7,#3
+1464                     ; 427 				TIM2_SetAutoreload(sys.hz50Flag ? TIMER2_INT_TIME_50HZ: TIMER2_INT_TIME_60HZ);
+1466  0064 3d0c          	tnz	_sys+10
+1467  0066 2705          	jreq	L24
+1468  0068 ae0064        	ldw	x,#100
+1469  006b 2003          	jra	L44
+1470  006d               L24:
+1471  006d ae0053        	ldw	x,#83
+1472  0070               L44:
+1473  0070 cd0000        	call	_TIM2_SetAutoreload
+1475  0073               L324:
+1476                     ; 429 			sys.cnt1s = CNT_1S;
+1478  0073 ae4e20        	ldw	x,#20000
+1479  0076 bf12          	ldw	_sys+16,x
+1480  0078               L124:
+1481                     ; 434 		if(uart1_frame.rxflag == 1){
+1483  0078 b601          	ld	a,_uart1_frame+1
+1484  007a a101          	cp	a,#1
+1485  007c 2605          	jrne	L524
+1486                     ; 435 			uart1_frame.rxflag = 0;
+1488  007e 3f01          	clr	_uart1_frame+1
+1489                     ; 436 			uart1_recv_handle();
+1491  0080 cd0000        	call	_uart1_recv_handle
+1493  0083               L524:
+1494                     ; 446 		if(tick.f_50ms){
+1496  0083 be21          	ldw	x,_tick+2
+1497  0085 2706          	jreq	L724
+1498                     ; 447 			tick.f_50ms = 0;
+1500  0087 5f            	clrw	x
+1501  0088 bf21          	ldw	_tick+2,x
+1502                     ; 448 			lightCtrl_50ms();		
+1504  008a cd0000        	call	_lightCtrl_50ms
+1506  008d               L724:
+1507                     ; 466 		if(channel1){
+1509  008d 3d00          	tnz	_channel1
+1510  008f 2706          	jreq	L134
+1511                     ; 467 			sys.light1.briVal = realtime_bright1;
+1513  0091 451304        	mov	_sys+2,_realtime_bright1
+1514                     ; 468 			slc.ch1_status = realtime_bright1;
+1516  0094 45133b        	mov	_slc+31,_realtime_bright1
+1517  0097               L134:
+1518                     ; 471 		if(channel2){
+1520  0097 3d01          	tnz	_channel2
+1521  0099 2706          	jreq	L334
+1522                     ; 472 			sys.light2.briVal = realtime_bright2;
+1524  009b 451208        	mov	_sys+6,_realtime_bright2
+1525                     ; 473 			slc.ch2_status = realtime_bright2;
+1527  009e 45123c        	mov	_slc+32,_realtime_bright2
+1528  00a1               L334:
+1529                     ; 477 		if(slc.savFlag == 1){
+1531  00a1 b63a          	ld	a,_slc+30
+1532  00a3 a101          	cp	a,#1
+1533  00a5 2605          	jrne	L534
+1534                     ; 478 			slc.savFlag = 0;
+1536  00a7 3f3a          	clr	_slc+30
+1537                     ; 479 			channel_status_save();
+1539  00a9 cd0000        	call	_channel_status_save
+1541  00ac               L534:
+1542                     ; 482 		if (sys.acOkFlag && sys.cnt1s == 0)
+1544  00ac 3d15          	tnz	_sys+19
+1545  00ae 2603          	jrne	L64
+1546  00b0 cc0020        	jp	L704
+1547  00b3               L64:
+1549  00b3 be12          	ldw	x,_sys+16
+1550  00b5 2703          	jreq	L05
+1551  00b7 cc0020        	jp	L704
+1552  00ba               L05:
+1553                     ; 487 			sys.cnt1s = CNT_1S;
+1555  00ba ae4e20        	ldw	x,#20000
+1556  00bd bf12          	ldw	_sys+16,x
+1557  00bf ac200020      	jpf	L704
+1592                     ; 505 void assert_failed(uint8_t* file, uint32_t line)
+1592                     ; 506 { 
+1593                     .text:	section	.text,new
+1594  0000               _assert_failed:
+1598  0000               L754:
+1599  0000 20fe          	jra	L754
+1624                     ; 525 static void GPIO_Config(void)
+1624                     ; 526 {
 1625                     .text:	section	.text,new
-1626  0000               _EraseOut:
-1628  0000 5204          	subw	sp,#4
-1629       00000004      OFST:	set	4
-1632                     ; 494 	if((t >= 0)&&(t <=1))
-1634  0002 9c            	rvf
-1635  0003 0d07          	tnz	(OFST+3,sp)
-1636  0005 2f3d          	jrslt	L705
-1638  0007 9c            	rvf
-1639  0008 a601          	ld	a,#1
-1640  000a cd0000        	call	c_ctof
-1642  000d 96            	ldw	x,sp
-1643  000e 1c0001        	addw	x,#OFST-3
-1644  0011 cd0000        	call	c_rtol
-1646  0014 96            	ldw	x,sp
-1647  0015 1c0007        	addw	x,#OFST+3
-1648  0018 cd0000        	call	c_ltor
-1650  001b 96            	ldw	x,sp
-1651  001c 1c0001        	addw	x,#OFST-3
-1652  001f cd0000        	call	c_fcmp
-1654  0022 2c20          	jrsgt	L705
-1655                     ; 495 		return (u8)((2-t)*t*250);
-1657  0024 a602          	ld	a,#2
-1658  0026 cd0000        	call	c_ctof
-1660  0029 96            	ldw	x,sp
-1661  002a 1c0007        	addw	x,#OFST+3
-1662  002d cd0000        	call	c_fsub
-1664  0030 96            	ldw	x,sp
-1665  0031 1c0007        	addw	x,#OFST+3
-1666  0034 cd0000        	call	c_fmul
-1668  0037 ae000c        	ldw	x,#L144
-1669  003a cd0000        	call	c_fmul
-1671  003d cd0000        	call	c_ftol
-1673  0040 b603          	ld	a,c_lreg+3
-1675  0042 2002          	jra	L46
-1676  0044               L705:
-1677                     ; 497 		return 40;
-1679  0044 a628          	ld	a,#40
-1681  0046               L46:
-1683  0046 5b04          	addw	sp,#4
-1684  0048 81            	ret
-1718                     ; 499 u8 Swing(float t)
-1718                     ; 500 {
-1719                     .text:	section	.text,new
-1720  0000               _Swing:
-1722  0000 5204          	subw	sp,#4
-1723       00000004      OFST:	set	4
-1726                     ; 501 	if((t >= 0)&&(t <=1)){
-1728  0002 9c            	rvf
-1729  0003 0d07          	tnz	(OFST+3,sp)
-1730  0005 2e03          	jrsge	L27
-1731  0007 cc0093        	jp	L135
-1732  000a               L27:
-1734  000a 9c            	rvf
-1735  000b a601          	ld	a,#1
-1736  000d cd0000        	call	c_ctof
-1738  0010 96            	ldw	x,sp
-1739  0011 1c0001        	addw	x,#OFST-3
-1740  0014 cd0000        	call	c_rtol
-1742  0017 96            	ldw	x,sp
-1743  0018 1c0007        	addw	x,#OFST+3
-1744  001b cd0000        	call	c_ltor
-1746  001e 96            	ldw	x,sp
-1747  001f 1c0001        	addw	x,#OFST-3
-1748  0022 cd0000        	call	c_fcmp
-1750  0025 2c6c          	jrsgt	L135
-1751                     ; 502 		if(t < 0.5)
-1753  0027 9c            	rvf
-1754  0028 96            	ldw	x,sp
-1755  0029 1c0007        	addw	x,#OFST+3
-1756  002c cd0000        	call	c_ltor
-1758  002f ae0008        	ldw	x,#L145
-1759  0032 cd0000        	call	c_fcmp
-1761  0035 2e21          	jrsge	L335
-1762                     ; 503 			return (u8)(2*t*t*250);
-1764  0037 96            	ldw	x,sp
-1765  0038 1c0007        	addw	x,#OFST+3
-1766  003b cd0000        	call	c_ltor
-1768  003e ae0004        	ldw	x,#L155
-1769  0041 cd0000        	call	c_fmul
-1771  0044 96            	ldw	x,sp
-1772  0045 1c0007        	addw	x,#OFST+3
-1773  0048 cd0000        	call	c_fmul
-1775  004b ae000c        	ldw	x,#L144
-1776  004e cd0000        	call	c_fmul
-1778  0051 cd0000        	call	c_ftol
-1780  0054 b603          	ld	a,c_lreg+3
-1782  0056 2038          	jra	L07
-1783  0058               L335:
-1784                     ; 505 			return (u8)(((4-2*t)*t - 1)*250);
-1786  0058 96            	ldw	x,sp
-1787  0059 1c0007        	addw	x,#OFST+3
-1788  005c cd0000        	call	c_ltor
-1790  005f ae0004        	ldw	x,#L155
-1791  0062 cd0000        	call	c_fmul
-1793  0065 96            	ldw	x,sp
-1794  0066 1c0001        	addw	x,#OFST-3
-1795  0069 cd0000        	call	c_rtol
-1797  006c a604          	ld	a,#4
-1798  006e cd0000        	call	c_ctof
-1800  0071 96            	ldw	x,sp
-1801  0072 1c0001        	addw	x,#OFST-3
-1802  0075 cd0000        	call	c_fsub
-1804  0078 96            	ldw	x,sp
-1805  0079 1c0007        	addw	x,#OFST+3
-1806  007c cd0000        	call	c_fmul
-1808  007f ae0000        	ldw	x,#L365
-1809  0082 cd0000        	call	c_fsub
-1811  0085 ae000c        	ldw	x,#L144
-1812  0088 cd0000        	call	c_fmul
-1814  008b cd0000        	call	c_ftol
-1816  008e b603          	ld	a,c_lreg+3
-1818  0090               L07:
-1820  0090 5b04          	addw	sp,#4
-1821  0092 81            	ret
-1822  0093               L135:
-1823                     ; 508 		return 40;
-1825  0093 a628          	ld	a,#40
-1827  0095 20f9          	jra	L07
-1864                     ; 511 void lightCtrl100ms(void)
-1864                     ; 512 {
-1865                     .text:	section	.text,new
-1866  0000               _lightCtrl100ms:
-1870                     ; 513 	if((channel & 0x01) == 0x01){
-1872  0000 b600          	ld	a,_channel
-1873  0002 a401          	and	a,#1
-1874  0004 a101          	cp	a,#1
-1875  0006 266e          	jrne	L106
-1876                     ; 514 	if(linear1_begin){//channel1 Linear调光开始
-1878  0008 b600          	ld	a,_action_flag
-1879  000a a501          	bcp	a,#1
-1880  000c 2768          	jreq	L106
-1881                     ; 515 		last_bright1 += change_step1;
-1883  000e ae0000        	ldw	x,#_change_step1
-1884  0011 cd0000        	call	c_ltor
-1886  0014 ae000a        	ldw	x,#_last_bright1
-1887  0017 cd0000        	call	c_fgadd
-1889                     ; 516 		realtime_bright1 = Linear(last_bright1);
-1891  001a be0c          	ldw	x,_last_bright1+2
-1892  001c 89            	pushw	x
-1893  001d be0a          	ldw	x,_last_bright1
-1894  001f 89            	pushw	x
-1895  0020 cd0000        	call	_Linear
-1897  0023 5b04          	addw	sp,#4
-1898  0025 b705          	ld	_realtime_bright1,a
-1899                     ; 517 		if(last_bright1 > aim_bright1){
-1901  0027 9c            	rvf
-1902  0028 ae000a        	ldw	x,#_last_bright1
-1903  002b cd0000        	call	c_ltor
-1905  002e ae0000        	ldw	x,#_aim_bright1
-1906  0031 cd0000        	call	c_fcmp
-1908  0034 2d21          	jrsle	L506
-1909                     ; 518 			if(((u8)((last_bright1 - aim_bright1)*250) <= 1))
-1911  0036 ae000a        	ldw	x,#_last_bright1
-1912  0039 cd0000        	call	c_ltor
-1914  003c ae0000        	ldw	x,#_aim_bright1
-1915  003f cd0000        	call	c_fsub
-1917  0042 ae000c        	ldw	x,#L144
-1918  0045 cd0000        	call	c_fmul
-1920  0048 cd0000        	call	c_ftol
-1922  004b b603          	ld	a,c_lreg+3
-1923  004d a102          	cp	a,#2
-1924  004f 2425          	jruge	L106
-1925                     ; 519 				linear1_begin = 0;
-1927  0051 72110000      	bres	_action_flag,#0
-1928  0055 201f          	jra	L106
-1929  0057               L506:
-1930                     ; 522 			if(((u8)((aim_bright1- last_bright1)*250) <= 1))
-1932  0057 ae0000        	ldw	x,#_aim_bright1
-1933  005a cd0000        	call	c_ltor
-1935  005d ae000a        	ldw	x,#_last_bright1
-1936  0060 cd0000        	call	c_fsub
-1938  0063 ae000c        	ldw	x,#L144
-1939  0066 cd0000        	call	c_fmul
-1941  0069 cd0000        	call	c_ftol
-1943  006c b603          	ld	a,c_lreg+3
-1944  006e a102          	cp	a,#2
-1945  0070 2404          	jruge	L106
-1946                     ; 523 				linear1_begin = 0;
-1948  0072 72110000      	bres	_action_flag,#0
-1949  0076               L106:
-1950                     ; 527 	if((channel & 0x02) == 0x02){
-1952  0076 b600          	ld	a,_channel
-1953  0078 a402          	and	a,#2
-1954  007a a102          	cp	a,#2
-1955  007c 266e          	jrne	L516
-1956                     ; 528 	if(linear2_begin){//channel2 Linear调光开始
-1958  007e b600          	ld	a,_action_flag
-1959  0080 a502          	bcp	a,#2
-1960  0082 2768          	jreq	L516
-1961                     ; 529 		last_bright2 += change_step2;
-1963  0084 ae0000        	ldw	x,#_change_step2
-1964  0087 cd0000        	call	c_ltor
-1966  008a ae0006        	ldw	x,#_last_bright2
-1967  008d cd0000        	call	c_fgadd
-1969                     ; 530 		realtime_bright2 = Linear(last_bright2);
-1971  0090 be08          	ldw	x,_last_bright2+2
-1972  0092 89            	pushw	x
-1973  0093 be06          	ldw	x,_last_bright2
-1974  0095 89            	pushw	x
-1975  0096 cd0000        	call	_Linear
-1977  0099 5b04          	addw	sp,#4
-1978  009b b704          	ld	_realtime_bright2,a
-1979                     ; 531 		if(last_bright2 > aim_bright2){
-1981  009d 9c            	rvf
-1982  009e ae0006        	ldw	x,#_last_bright2
-1983  00a1 cd0000        	call	c_ltor
-1985  00a4 ae0000        	ldw	x,#_aim_bright2
-1986  00a7 cd0000        	call	c_fcmp
-1988  00aa 2d21          	jrsle	L126
-1989                     ; 532 			if(((u8)((last_bright2 - aim_bright2)*250)	<= 1))
-1991  00ac ae0006        	ldw	x,#_last_bright2
-1992  00af cd0000        	call	c_ltor
-1994  00b2 ae0000        	ldw	x,#_aim_bright2
-1995  00b5 cd0000        	call	c_fsub
-1997  00b8 ae000c        	ldw	x,#L144
-1998  00bb cd0000        	call	c_fmul
-2000  00be cd0000        	call	c_ftol
-2002  00c1 b603          	ld	a,c_lreg+3
-2003  00c3 a102          	cp	a,#2
-2004  00c5 2425          	jruge	L516
-2005                     ; 533 				linear2_begin = 0;
-2007  00c7 72130000      	bres	_action_flag,#1
-2008  00cb 201f          	jra	L516
-2009  00cd               L126:
-2010                     ; 536 			if(((u8)((aim_bright2- last_bright2)*250) <= 1))
-2012  00cd ae0000        	ldw	x,#_aim_bright2
-2013  00d0 cd0000        	call	c_ltor
-2015  00d3 ae0006        	ldw	x,#_last_bright2
-2016  00d6 cd0000        	call	c_fsub
-2018  00d9 ae000c        	ldw	x,#L144
-2019  00dc cd0000        	call	c_fmul
-2021  00df cd0000        	call	c_ftol
-2023  00e2 b603          	ld	a,c_lreg+3
-2024  00e4 a102          	cp	a,#2
-2025  00e6 2404          	jruge	L516
-2026                     ; 537 				linear2_begin = 0;
-2028  00e8 72130000      	bres	_action_flag,#1
-2029  00ec               L516:
-2030                     ; 541 	if(eraseIn1_begin){//channel1 EraseIn调光开始
-2032  00ec b600          	ld	a,_action_flag
-2033  00ee a504          	bcp	a,#4
-2034  00f0 2770          	jreq	L136
-2035                     ; 542 		last_bright1 += change_step1;
-2037  00f2 ae0000        	ldw	x,#_change_step1
-2038  00f5 cd0000        	call	c_ltor
-2040  00f8 ae000a        	ldw	x,#_last_bright1
-2041  00fb cd0000        	call	c_fgadd
-2043                     ; 543 		realtime_bright1 = EraseIn(last_bright1);	
-2045  00fe be0c          	ldw	x,_last_bright1+2
-2046  0100 89            	pushw	x
-2047  0101 be0a          	ldw	x,_last_bright1
-2048  0103 89            	pushw	x
-2049  0104 cd0000        	call	_EraseIn
-2051  0107 5b04          	addw	sp,#4
-2052  0109 b705          	ld	_realtime_bright1,a
-2053                     ; 544 		if(last_bright1 > aim_bright1){
-2055  010b 9c            	rvf
-2056  010c ae000a        	ldw	x,#_last_bright1
-2057  010f cd0000        	call	c_ltor
-2059  0112 ae0000        	ldw	x,#_aim_bright1
-2060  0115 cd0000        	call	c_fcmp
-2062  0118 2d25          	jrsle	L336
-2063                     ; 545 			if(((u8)((last_bright1 - aim_bright1)*250) <= 1))
-2065  011a ae000a        	ldw	x,#_last_bright1
-2066  011d cd0000        	call	c_ltor
-2068  0120 ae0000        	ldw	x,#_aim_bright1
-2069  0123 cd0000        	call	c_fsub
-2071  0126 ae000c        	ldw	x,#L144
-2072  0129 cd0000        	call	c_fmul
-2074  012c cd0000        	call	c_ftol
-2076  012f b603          	ld	a,c_lreg+3
-2077  0131 a102          	cp	a,#2
-2078  0133 2404          	jruge	L536
-2079                     ; 546 				eraseIn1_begin = 0;channel &= ~(0x01);
-2081  0135 72150000      	bres	_action_flag,#2
-2082  0139               L536:
-2085  0139 72110000      	bres	_channel,#0
-2087  013d 2023          	jra	L136
-2088  013f               L336:
-2089                     ; 549 			if(((u8)((aim_bright1- last_bright1)*250) <= 1))
-2091  013f ae0000        	ldw	x,#_aim_bright1
-2092  0142 cd0000        	call	c_ltor
-2094  0145 ae000a        	ldw	x,#_last_bright1
-2095  0148 cd0000        	call	c_fsub
-2097  014b ae000c        	ldw	x,#L144
-2098  014e cd0000        	call	c_fmul
-2100  0151 cd0000        	call	c_ftol
-2102  0154 b603          	ld	a,c_lreg+3
-2103  0156 a102          	cp	a,#2
-2104  0158 2404          	jruge	L146
-2105                     ; 550 				eraseIn1_begin = 0;channel &= ~(0x01);
-2107  015a 72150000      	bres	_action_flag,#2
-2108  015e               L146:
-2111  015e 72110000      	bres	_channel,#0
-2112  0162               L136:
-2113                     ; 553 	if(eraseIn2_begin){//channel2 EraseIn调光开始
-2115  0162 b600          	ld	a,_action_flag
-2116  0164 a508          	bcp	a,#8
-2117  0166 2770          	jreq	L346
-2118                     ; 554 		last_bright2 += change_step2;
-2120  0168 ae0000        	ldw	x,#_change_step2
-2121  016b cd0000        	call	c_ltor
-2123  016e ae0006        	ldw	x,#_last_bright2
-2124  0171 cd0000        	call	c_fgadd
-2126                     ; 555 		realtime_bright2 = EraseIn(last_bright2);
-2128  0174 be08          	ldw	x,_last_bright2+2
-2129  0176 89            	pushw	x
-2130  0177 be06          	ldw	x,_last_bright2
-2131  0179 89            	pushw	x
-2132  017a cd0000        	call	_EraseIn
-2134  017d 5b04          	addw	sp,#4
-2135  017f b704          	ld	_realtime_bright2,a
-2136                     ; 556 		if(last_bright2 > aim_bright2){
-2138  0181 9c            	rvf
-2139  0182 ae0006        	ldw	x,#_last_bright2
-2140  0185 cd0000        	call	c_ltor
-2142  0188 ae0000        	ldw	x,#_aim_bright2
-2143  018b cd0000        	call	c_fcmp
-2145  018e 2d25          	jrsle	L546
-2146                     ; 557 			if(((u8)((last_bright2 - aim_bright2)*250)	<= 1))
-2148  0190 ae0006        	ldw	x,#_last_bright2
-2149  0193 cd0000        	call	c_ltor
-2151  0196 ae0000        	ldw	x,#_aim_bright2
-2152  0199 cd0000        	call	c_fsub
-2154  019c ae000c        	ldw	x,#L144
-2155  019f cd0000        	call	c_fmul
-2157  01a2 cd0000        	call	c_ftol
-2159  01a5 b603          	ld	a,c_lreg+3
-2160  01a7 a102          	cp	a,#2
-2161  01a9 2404          	jruge	L746
-2162                     ; 558 				eraseIn2_begin = 0;channel &= ~(0x02);
-2164  01ab 72170000      	bres	_action_flag,#3
-2165  01af               L746:
-2168  01af 72130000      	bres	_channel,#1
-2170  01b3 2023          	jra	L346
-2171  01b5               L546:
-2172                     ; 561 			if(((u8)((aim_bright2- last_bright2)*250) <= 1))
-2174  01b5 ae0000        	ldw	x,#_aim_bright2
-2175  01b8 cd0000        	call	c_ltor
-2177  01bb ae0006        	ldw	x,#_last_bright2
-2178  01be cd0000        	call	c_fsub
-2180  01c1 ae000c        	ldw	x,#L144
-2181  01c4 cd0000        	call	c_fmul
-2183  01c7 cd0000        	call	c_ftol
-2185  01ca b603          	ld	a,c_lreg+3
-2186  01cc a102          	cp	a,#2
-2187  01ce 2404          	jruge	L356
-2188                     ; 562 				eraseIn2_begin = 0;channel &= ~(0x02);
-2190  01d0 72170000      	bres	_action_flag,#3
-2191  01d4               L356:
-2194  01d4 72130000      	bres	_channel,#1
-2195  01d8               L346:
-2196                     ; 565 	if(eraseOut1_begin){//channel1 EraseOut调光开始
-2198  01d8 b600          	ld	a,_action_flag
-2199  01da a510          	bcp	a,#16
-2200  01dc 2770          	jreq	L556
-2201                     ; 566 		last_bright1 += change_step1;
-2203  01de ae0000        	ldw	x,#_change_step1
-2204  01e1 cd0000        	call	c_ltor
-2206  01e4 ae000a        	ldw	x,#_last_bright1
-2207  01e7 cd0000        	call	c_fgadd
-2209                     ; 567 		realtime_bright1 = EraseOut(last_bright1);	
-2211  01ea be0c          	ldw	x,_last_bright1+2
-2212  01ec 89            	pushw	x
-2213  01ed be0a          	ldw	x,_last_bright1
-2214  01ef 89            	pushw	x
-2215  01f0 cd0000        	call	_EraseOut
-2217  01f3 5b04          	addw	sp,#4
-2218  01f5 b705          	ld	_realtime_bright1,a
-2219                     ; 568 		if(last_bright1 > aim_bright1){
-2221  01f7 9c            	rvf
-2222  01f8 ae000a        	ldw	x,#_last_bright1
-2223  01fb cd0000        	call	c_ltor
-2225  01fe ae0000        	ldw	x,#_aim_bright1
-2226  0201 cd0000        	call	c_fcmp
-2228  0204 2d25          	jrsle	L756
-2229                     ; 569 			if(((u8)((last_bright1 - aim_bright1)*250) <= 1))
-2231  0206 ae000a        	ldw	x,#_last_bright1
-2232  0209 cd0000        	call	c_ltor
-2234  020c ae0000        	ldw	x,#_aim_bright1
-2235  020f cd0000        	call	c_fsub
-2237  0212 ae000c        	ldw	x,#L144
-2238  0215 cd0000        	call	c_fmul
-2240  0218 cd0000        	call	c_ftol
-2242  021b b603          	ld	a,c_lreg+3
-2243  021d a102          	cp	a,#2
-2244  021f 2404          	jruge	L166
-2245                     ; 570 				eraseOut1_begin = 0;channel &= ~(0x01);
-2247  0221 72190000      	bres	_action_flag,#4
-2248  0225               L166:
-2251  0225 72110000      	bres	_channel,#0
-2253  0229 2023          	jra	L556
-2254  022b               L756:
-2255                     ; 573 			if(((u8)((aim_bright1- last_bright1)*250) <= 1))
-2257  022b ae0000        	ldw	x,#_aim_bright1
-2258  022e cd0000        	call	c_ltor
-2260  0231 ae000a        	ldw	x,#_last_bright1
-2261  0234 cd0000        	call	c_fsub
-2263  0237 ae000c        	ldw	x,#L144
-2264  023a cd0000        	call	c_fmul
-2266  023d cd0000        	call	c_ftol
-2268  0240 b603          	ld	a,c_lreg+3
-2269  0242 a102          	cp	a,#2
-2270  0244 2404          	jruge	L566
-2271                     ; 574 				eraseOut1_begin = 0;channel &= ~(0x01);
-2273  0246 72190000      	bres	_action_flag,#4
-2274  024a               L566:
-2277  024a 72110000      	bres	_channel,#0
-2278  024e               L556:
-2279                     ; 577 	if(eraseOut2_begin){//channel2 EraseOut调光开始
-2281  024e b600          	ld	a,_action_flag
-2282  0250 a520          	bcp	a,#32
-2283  0252 2770          	jreq	L766
-2284                     ; 578 		last_bright2 += change_step2;
-2286  0254 ae0000        	ldw	x,#_change_step2
-2287  0257 cd0000        	call	c_ltor
-2289  025a ae0006        	ldw	x,#_last_bright2
-2290  025d cd0000        	call	c_fgadd
-2292                     ; 579 		realtime_bright2 = EraseOut(last_bright2);
-2294  0260 be08          	ldw	x,_last_bright2+2
-2295  0262 89            	pushw	x
-2296  0263 be06          	ldw	x,_last_bright2
-2297  0265 89            	pushw	x
-2298  0266 cd0000        	call	_EraseOut
-2300  0269 5b04          	addw	sp,#4
-2301  026b b704          	ld	_realtime_bright2,a
-2302                     ; 580 		if(last_bright2 > aim_bright2){
-2304  026d 9c            	rvf
-2305  026e ae0006        	ldw	x,#_last_bright2
-2306  0271 cd0000        	call	c_ltor
-2308  0274 ae0000        	ldw	x,#_aim_bright2
-2309  0277 cd0000        	call	c_fcmp
-2311  027a 2d25          	jrsle	L176
-2312                     ; 581 			if(((u8)((last_bright2 - aim_bright2)*250)	<= 1))
-2314  027c ae0006        	ldw	x,#_last_bright2
-2315  027f cd0000        	call	c_ltor
-2317  0282 ae0000        	ldw	x,#_aim_bright2
-2318  0285 cd0000        	call	c_fsub
-2320  0288 ae000c        	ldw	x,#L144
-2321  028b cd0000        	call	c_fmul
-2323  028e cd0000        	call	c_ftol
-2325  0291 b603          	ld	a,c_lreg+3
-2326  0293 a102          	cp	a,#2
-2327  0295 2404          	jruge	L376
-2328                     ; 582 				eraseOut2_begin = 0;channel &= ~(0x02);
-2330  0297 721b0000      	bres	_action_flag,#5
-2331  029b               L376:
-2334  029b 72130000      	bres	_channel,#1
-2336  029f 2023          	jra	L766
-2337  02a1               L176:
-2338                     ; 585 			if(((u8)((aim_bright2- last_bright2)*250) <= 1))
-2340  02a1 ae0000        	ldw	x,#_aim_bright2
-2341  02a4 cd0000        	call	c_ltor
-2343  02a7 ae0006        	ldw	x,#_last_bright2
-2344  02aa cd0000        	call	c_fsub
-2346  02ad ae000c        	ldw	x,#L144
-2347  02b0 cd0000        	call	c_fmul
-2349  02b3 cd0000        	call	c_ftol
-2351  02b6 b603          	ld	a,c_lreg+3
-2352  02b8 a102          	cp	a,#2
-2353  02ba 2404          	jruge	L776
-2354                     ; 586 				eraseOut2_begin = 0;channel &= ~(0x02);
-2356  02bc 721b0000      	bres	_action_flag,#5
-2357  02c0               L776:
-2360  02c0 72130000      	bres	_channel,#1
-2361  02c4               L766:
-2362                     ; 589 	if(swing1_begin){//channel1 Swing调光开始
-2364  02c4 b600          	ld	a,_action_flag
-2365  02c6 a540          	bcp	a,#64
-2366  02c8 2770          	jreq	L107
-2367                     ; 590 		last_bright1 += change_step1;
-2369  02ca ae0000        	ldw	x,#_change_step1
-2370  02cd cd0000        	call	c_ltor
-2372  02d0 ae000a        	ldw	x,#_last_bright1
-2373  02d3 cd0000        	call	c_fgadd
-2375                     ; 591 		realtime_bright1 = Swing(last_bright1);	
-2377  02d6 be0c          	ldw	x,_last_bright1+2
-2378  02d8 89            	pushw	x
-2379  02d9 be0a          	ldw	x,_last_bright1
-2380  02db 89            	pushw	x
-2381  02dc cd0000        	call	_Swing
-2383  02df 5b04          	addw	sp,#4
-2384  02e1 b705          	ld	_realtime_bright1,a
-2385                     ; 592 		if(last_bright1 > aim_bright1){
-2387  02e3 9c            	rvf
-2388  02e4 ae000a        	ldw	x,#_last_bright1
-2389  02e7 cd0000        	call	c_ltor
-2391  02ea ae0000        	ldw	x,#_aim_bright1
-2392  02ed cd0000        	call	c_fcmp
-2394  02f0 2d25          	jrsle	L307
-2395                     ; 593 			if(((u8)((last_bright1 - aim_bright1)*250) <= 1))
-2397  02f2 ae000a        	ldw	x,#_last_bright1
-2398  02f5 cd0000        	call	c_ltor
-2400  02f8 ae0000        	ldw	x,#_aim_bright1
-2401  02fb cd0000        	call	c_fsub
-2403  02fe ae000c        	ldw	x,#L144
-2404  0301 cd0000        	call	c_fmul
-2406  0304 cd0000        	call	c_ftol
-2408  0307 b603          	ld	a,c_lreg+3
-2409  0309 a102          	cp	a,#2
-2410  030b 2404          	jruge	L507
-2411                     ; 594 				swing1_begin = 0;channel &= ~(0x01);
-2413  030d 721d0000      	bres	_action_flag,#6
-2414  0311               L507:
-2417  0311 72110000      	bres	_channel,#0
-2419  0315 2023          	jra	L107
-2420  0317               L307:
-2421                     ; 597 			if(((u8)((aim_bright1- last_bright1)*250) <= 1))
-2423  0317 ae0000        	ldw	x,#_aim_bright1
-2424  031a cd0000        	call	c_ltor
-2426  031d ae000a        	ldw	x,#_last_bright1
-2427  0320 cd0000        	call	c_fsub
-2429  0323 ae000c        	ldw	x,#L144
-2430  0326 cd0000        	call	c_fmul
-2432  0329 cd0000        	call	c_ftol
-2434  032c b603          	ld	a,c_lreg+3
-2435  032e a102          	cp	a,#2
-2436  0330 2404          	jruge	L117
-2437                     ; 598 				swing1_begin = 0;channel &= ~(0x01);
-2439  0332 721d0000      	bres	_action_flag,#6
-2440  0336               L117:
-2443  0336 72110000      	bres	_channel,#0
-2444  033a               L107:
-2445                     ; 601 	if(swing2_begin){//channel2 Swing调光开始
-2447  033a b600          	ld	a,_action_flag
-2448  033c a580          	bcp	a,#128
-2449  033e 2770          	jreq	L317
-2450                     ; 602 		last_bright2 += change_step2;
-2452  0340 ae0000        	ldw	x,#_change_step2
-2453  0343 cd0000        	call	c_ltor
-2455  0346 ae0006        	ldw	x,#_last_bright2
-2456  0349 cd0000        	call	c_fgadd
-2458                     ; 603 		realtime_bright2 = Swing(last_bright2);
-2460  034c be08          	ldw	x,_last_bright2+2
-2461  034e 89            	pushw	x
-2462  034f be06          	ldw	x,_last_bright2
-2463  0351 89            	pushw	x
-2464  0352 cd0000        	call	_Swing
-2466  0355 5b04          	addw	sp,#4
-2467  0357 b704          	ld	_realtime_bright2,a
-2468                     ; 604 		if(last_bright2 > aim_bright2){
-2470  0359 9c            	rvf
-2471  035a ae0006        	ldw	x,#_last_bright2
-2472  035d cd0000        	call	c_ltor
-2474  0360 ae0000        	ldw	x,#_aim_bright2
-2475  0363 cd0000        	call	c_fcmp
-2477  0366 2d25          	jrsle	L517
-2478                     ; 605 			if(((u8)((last_bright2 - aim_bright2)*250)	<= 1))
-2480  0368 ae0006        	ldw	x,#_last_bright2
-2481  036b cd0000        	call	c_ltor
-2483  036e ae0000        	ldw	x,#_aim_bright2
-2484  0371 cd0000        	call	c_fsub
-2486  0374 ae000c        	ldw	x,#L144
-2487  0377 cd0000        	call	c_fmul
-2489  037a cd0000        	call	c_ftol
-2491  037d b603          	ld	a,c_lreg+3
-2492  037f a102          	cp	a,#2
-2493  0381 2404          	jruge	L717
-2494                     ; 606 				swing2_begin = 0;channel &= ~(0x02);
-2496  0383 721f0000      	bres	_action_flag,#7
-2497  0387               L717:
-2500  0387 72130000      	bres	_channel,#1
-2502  038b 2023          	jra	L317
-2503  038d               L517:
-2504                     ; 609 			if(((u8)((aim_bright2- last_bright2)*250) <= 1))
-2506  038d ae0000        	ldw	x,#_aim_bright2
-2507  0390 cd0000        	call	c_ltor
-2509  0393 ae0006        	ldw	x,#_last_bright2
-2510  0396 cd0000        	call	c_fsub
-2512  0399 ae000c        	ldw	x,#L144
-2513  039c cd0000        	call	c_fmul
-2515  039f cd0000        	call	c_ftol
-2517  03a2 b603          	ld	a,c_lreg+3
-2518  03a4 a102          	cp	a,#2
-2519  03a6 2404          	jruge	L327
-2520                     ; 610 				swing2_begin = 0;channel &= ~(0x02);
-2522  03a8 721f0000      	bres	_action_flag,#7
-2523  03ac               L327:
-2526  03ac 72130000      	bres	_channel,#1
-2527  03b0               L317:
-2528                     ; 613 }
-2531  03b0 81            	ret
-2833                     	xdef	_Swing
-2834                     	xdef	_EraseOut
-2835                     	xdef	_EraseIn
-2836                     	xdef	_Linear
-2837                     	xdef	_main
-2838                     	xdef	_delay
-2839                     	switch	.ubsct
-2840  0000               _tick1s:
-2841  0000 00            	ds.b	1
-2842                     	xdef	_tick1s
-2843  0001               _f_100ms:
-2844  0001 00            	ds.b	1
-2845                     	xdef	_f_100ms
-2846  0002               _Tick100ms:
-2847  0002 0000          	ds.b	2
-2848                     	xdef	_Tick100ms
-2849                     	xref.b	_action_flag
-2850                     	xref.b	_change_step2
-2851                     	xref.b	_change_step1
-2852                     	xref.b	_aim_bright2
-2853                     	xref.b	_aim_bright1
-2854                     	xref.b	_channel
-2855  0004               _realtime_bright2:
-2856  0004 00            	ds.b	1
-2857                     	xdef	_realtime_bright2
-2858  0005               _realtime_bright1:
-2859  0005 00            	ds.b	1
-2860                     	xdef	_realtime_bright1
-2861  0006               _last_bright2:
-2862  0006 00000000      	ds.b	4
-2863                     	xdef	_last_bright2
-2864  000a               _last_bright1:
-2865  000a 00000000      	ds.b	4
-2866                     	xdef	_last_bright1
-2867                     	xref.b	_ReceiveState
-2868                     	xref.b	_GetDataIndex
-2869                     	xref.b	_slave_address
-2870                     	xref.b	_slc
-2871                     	xref	_IIC_SlaveConfig
-2872                     	xdef	f_Timer4_ISR
-2873                     	xdef	f_Timer2_ISR
-2874                     	xdef	f_Ext_PortD_ISR
-2875                     	xdef	_lightCtrl100ms
-2876                     	xdef	_sys
-2877                     	xdef	_assert_failed
-2878                     	xref	_TIM4_ClearITPendingBit
-2879                     	xref	_TIM4_ClearFlag
-2880                     	xref	_TIM4_SetAutoreload
-2881                     	xref	_TIM4_ITConfig
-2882                     	xref	_TIM4_Cmd
-2883                     	xref	_TIM4_TimeBaseInit
-2884                     	xref	_TIM2_ClearITPendingBit
-2885                     	xref	_TIM2_ClearFlag
-2886                     	xref	_TIM2_SetAutoreload
-2887                     	xref	_TIM2_ITConfig
-2888                     	xref	_TIM2_Cmd
-2889                     	xref	_TIM2_TimeBaseInit
-2890                     	xref	_ITC_SetSoftwarePriority
-2891                     	xref	_ITC_DeInit
-2892                     	xref	_GPIO_ReadOutputData
-2893                     	xref	_GPIO_ReadInputData
-2894                     	xref	_GPIO_WriteLow
-2895                     	xref	_GPIO_WriteHigh
-2896                     	xref	_GPIO_Init
-2897                     	xref	_EXTI_SetExtIntSensitivity
-2898                     	xref	_EXTI_DeInit
-2899                     	xref	_CLK_PeripheralClockConfig
-2900                     .const:	section	.text
-2901  0000               L365:
-2902  0000 3f800000      	dc.w	16256,0
-2903  0004               L155:
-2904  0004 40000000      	dc.w	16384,0
-2905  0008               L145:
-2906  0008 3f000000      	dc.w	16128,0
-2907  000c               L144:
-2908  000c 437a0000      	dc.w	17274,0
-2909  0010               L342:
-2910  0010 3e23d70a      	dc.w	15907,-10486
-2911  0014               L561:
-2912  0014 3ecccccc      	dc.w	16076,-13108
-2913                     	xref.b	c_lreg
-2914                     	xref.b	c_x
-2915                     	xref.b	c_y
-2935                     	xref	c_fgadd
-2936                     	xref	c_fsub
-2937                     	xref	c_fcmp
-2938                     	xref	c_rtol
-2939                     	xref	c_ctof
-2940                     	xref	c_ltor
-2941                     	xref	c_ftol
-2942                     	xref	c_fmul
-2943                     	xref	c_itof
-2944                     	end
+1626  0000               L5_GPIO_Config:
+1630                     ; 528  	GPIO_Init(L1_EN_PIN_PORT, (GPIO_Pin_TypeDef)L1_EN_PIN, GPIO_MODE_OUT_PP_HIGH_SLOW);
+1632  0000 4bd0          	push	#208
+1633  0002 4b10          	push	#16
+1634  0004 ae500a        	ldw	x,#20490
+1635  0007 cd0000        	call	_GPIO_Init
+1637  000a 85            	popw	x
+1638                     ; 529 	GPIO_Init(L2_EN_PIN_PORT, (GPIO_Pin_TypeDef)L2_EN_PIN, GPIO_MODE_OUT_PP_HIGH_SLOW);   
+1640  000b 4bd0          	push	#208
+1641  000d 4b08          	push	#8
+1642  000f ae500a        	ldw	x,#20490
+1643  0012 cd0000        	call	_GPIO_Init
+1645  0015 85            	popw	x
+1646                     ; 530 	L1_EN_OFF;
+1648  0016 4b10          	push	#16
+1649  0018 ae500a        	ldw	x,#20490
+1650  001b cd0000        	call	_GPIO_WriteHigh
+1652  001e 84            	pop	a
+1653                     ; 531 	L2_EN_OFF;
+1655  001f 4b08          	push	#8
+1656  0021 ae500a        	ldw	x,#20490
+1657  0024 cd0000        	call	_GPIO_WriteHigh
+1659  0027 84            	pop	a
+1660                     ; 532     	GPIO_Init(ZD_PIN_PORT, (GPIO_Pin_TypeDef)ZD_PIN, GPIO_MODE_IN_FL_IT);  
+1662  0028 4b20          	push	#32
+1663  002a 4b08          	push	#8
+1664  002c ae500f        	ldw	x,#20495
+1665  002f cd0000        	call	_GPIO_Init
+1667  0032 85            	popw	x
+1668                     ; 534 }
+1671  0033 81            	ret
+1697                     ; 540 static void ExtInterrupt_Config(void)
+1697                     ; 541 {
+1698                     .text:	section	.text,new
+1699  0000               L7_ExtInterrupt_Config:
+1703                     ; 542 	EXTI_DeInit();
+1705  0000 cd0000        	call	_EXTI_DeInit
+1707                     ; 543 	EXTI_SetExtIntSensitivity(EXTI_PORT_GPIOD, EXTI_SENSITIVITY_FALL_ONLY);
+1709  0003 ae0002        	ldw	x,#2
+1710  0006 a603          	ld	a,#3
+1711  0008 95            	ld	xh,a
+1712  0009 cd0000        	call	_EXTI_SetExtIntSensitivity
+1714                     ; 545 }
+1717  000c 81            	ret
+1747                     ; 552 @far @interrupt void Ext_PortD_ISR(void)
+1747                     ; 553 {
+1749                     .text:	section	.text,new
+1750  0000               f_Ext_PortD_ISR:
+1753  0000 3b0002        	push	c_x+2
+1754  0003 be00          	ldw	x,c_x
+1755  0005 89            	pushw	x
+1756  0006 3b0002        	push	c_y+2
+1757  0009 be00          	ldw	x,c_y
+1758  000b 89            	pushw	x
+1761                     ; 555 	if (ZD_STATUS == 0)
+1763  000c ae500f        	ldw	x,#20495
+1764  000f cd0000        	call	_GPIO_ReadOutputData
+1766  0012 a508          	bcp	a,#8
+1767  0014 2704          	jreq	L66
+1768  0016 accf00cf      	jpf	L315
+1769  001a               L66:
+1770                     ; 557 		sys.checkAcCnt = CHECK_AC_INPUT_CNT;
+1772  001a ae07d0        	ldw	x,#2000
+1773  001d bf10          	ldw	_sys+14,x
+1774                     ; 558 		sys.acErrFlag = FALSE;
+1776  001f 3f14          	clr	_sys+18
+1777                     ; 561 		if (!sys.gotHzFlag){		/* 还未获取频率值 */	
+1779  0021 3d0b          	tnz	_sys+9
+1780  0023 2636          	jrne	L515
+1781                     ; 562 			if (!sys.reqCalHzFlag){
+1783  0025 3d0a          	tnz	_sys+8
+1784  0027 2610          	jrne	L715
+1785                     ; 563 				TIM4_SetAutoreload(TIMER4_INT_TIME);				
+1787  0029 a632          	ld	a,#50
+1788  002b cd0000        	call	_TIM4_SetAutoreload
+1790                     ; 564 				sys.reqCalHzFlag = TRUE;				/* 强制开始计算频率 */
+1792  002e 3501000a      	mov	_sys+8,#1
+1793                     ; 565 				sys.hzCnt = 0;						/* fyl: */
+1795  0032 5f            	clrw	x
+1796  0033 bf0e          	ldw	_sys+12,x
+1797                     ; 566 				sys.calHzIntCnt = GET_AC_FRE_CNT;
+1799  0035 350a000d      	mov	_sys+11,#10
+1800  0039               L715:
+1801                     ; 568 			if (sys.calHzIntCnt == 0){
+1803  0039 3d0d          	tnz	_sys+11
+1804  003b 261a          	jrne	L125
+1805                     ; 570 				if ((sys.hzCnt /GET_AC_FRE_CNT) >= HZ_COUNT){
+1807  003d be0e          	ldw	x,_sys+12
+1808  003f a60a          	ld	a,#10
+1809  0041 62            	div	x,a
+1810  0042 a300b4        	cpw	x,#180
+1811  0045 2506          	jrult	L325
+1812                     ; 572 					sys.hz50Flag = TRUE;
+1814  0047 3501000c      	mov	_sys+10,#1
+1816  004b 2002          	jra	L525
+1817  004d               L325:
+1818                     ; 576 					sys.hz50Flag = FALSE;
+1820  004d 3f0c          	clr	_sys+10
+1821  004f               L525:
+1822                     ; 580 				sys.gotHzFlag = TRUE;				/* */
+1824  004f 3501000b      	mov	_sys+9,#1
+1825                     ; 581 				sys.reqCalHzFlag = FALSE;			/* 计算完 */
+1827  0053 3f0a          	clr	_sys+8
+1829  0055 2078          	jra	L315
+1830  0057               L125:
+1831                     ; 585 				sys.calHzIntCnt--;
+1833  0057 3a0d          	dec	_sys+11
+1834  0059 2074          	jra	L315
+1835  005b               L515:
+1836                     ; 591 			if (sys.light1.briVal == MAX_BRIGHTNESS){
+1838  005b b604          	ld	a,_sys+2
+1839  005d a164          	cp	a,#100
+1840  005f 2615          	jrne	L335
+1841                     ; 595 				L1_EN_ON;
+1843  0061 4b10          	push	#16
+1844  0063 ae500a        	ldw	x,#20490
+1845  0066 cd0000        	call	_GPIO_WriteLow
+1847  0069 84            	pop	a
+1850  006a 35280003      	mov	_sys+1,#40
+1851                     ; 596 				sys.light1.briCnt = 0;
+1853  006e 3f02          	clr	_sys
+1854                     ; 597 				sys.light1.onFlag = TRUE;		
+1856  0070 35010005      	mov	_sys+3,#1
+1858  0074 2011          	jra	L535
+1859  0076               L335:
+1860                     ; 602 				sys.light1.briCnt = MAX_BRIGHTNESS - sys.light1.briVal;				
+1862  0076 a664          	ld	a,#100
+1863  0078 b004          	sub	a,_sys+2
+1864  007a b702          	ld	_sys,a
+1865                     ; 603 				sys.light1.onFlag = FALSE;
+1867  007c 3f05          	clr	_sys+3
+1868                     ; 604 				L1_EN_OFF;
+1870  007e 4b10          	push	#16
+1871  0080 ae500a        	ldw	x,#20490
+1872  0083 cd0000        	call	_GPIO_WriteHigh
+1874  0086 84            	pop	a
+1875  0087               L535:
+1876                     ; 607 			if (sys.light2.briVal == MAX_BRIGHTNESS){
+1878  0087 b608          	ld	a,_sys+6
+1879  0089 a164          	cp	a,#100
+1880  008b 2615          	jrne	L735
+1881                     ; 608 				L2_EN_ON;
+1883  008d 4b08          	push	#8
+1884  008f ae500a        	ldw	x,#20490
+1885  0092 cd0000        	call	_GPIO_WriteLow
+1887  0095 84            	pop	a
+1890  0096 35280007      	mov	_sys+5,#40
+1891                     ; 609 				sys.light2.briCnt = 0;
+1893  009a 3f06          	clr	_sys+4
+1894                     ; 610 				sys.light2.onFlag = TRUE;		
+1896  009c 35010009      	mov	_sys+7,#1
+1898  00a0 2011          	jra	L145
+1899  00a2               L735:
+1900                     ; 613 				sys.light2.briCnt = MAX_BRIGHTNESS - sys.light2.briVal;
+1902  00a2 a664          	ld	a,#100
+1903  00a4 b008          	sub	a,_sys+6
+1904  00a6 b706          	ld	_sys+4,a
+1905                     ; 614 				sys.light2.onFlag = FALSE;				
+1907  00a8 3f09          	clr	_sys+7
+1908                     ; 615 				L2_EN_OFF;
+1910  00aa 4b08          	push	#8
+1911  00ac ae500a        	ldw	x,#20490
+1912  00af cd0000        	call	_GPIO_WriteHigh
+1914  00b2 84            	pop	a
+1915  00b3               L145:
+1916                     ; 619 			if (sys.light1.briCnt || sys.light2.briCnt){
+1918  00b3 3d02          	tnz	_sys
+1919  00b5 2604          	jrne	L545
+1921  00b7 3d06          	tnz	_sys+4
+1922  00b9 2714          	jreq	L315
+1923  00bb               L545:
+1924                     ; 621 				TIM2_SetAutoreload(sys.hz50Flag ? TIMER2_INT_TIME_50HZ: TIMER2_INT_TIME_60HZ);
+1926  00bb 3d0c          	tnz	_sys+10
+1927  00bd 2705          	jreq	L26
+1928  00bf ae0064        	ldw	x,#100
+1929  00c2 2003          	jra	L46
+1930  00c4               L26:
+1931  00c4 ae0053        	ldw	x,#83
+1932  00c7               L46:
+1933  00c7 cd0000        	call	_TIM2_SetAutoreload
+1935                     ; 622 				TIM2_Cmd(ENABLE);
+1937  00ca a601          	ld	a,#1
+1938  00cc cd0000        	call	_TIM2_Cmd
+1940  00cf               L315:
+1941                     ; 629 }
+1944  00cf 85            	popw	x
+1945  00d0 bf00          	ldw	c_y,x
+1946  00d2 320002        	pop	c_y+2
+1947  00d5 85            	popw	x
+1948  00d6 bf00          	ldw	c_x,x
+1949  00d8 320002        	pop	c_x+2
+1950  00db 80            	iret
+1976                     ; 654 static void TIMER4_Init(void)
+1976                     ; 655 {    
+1978                     .text:	section	.text,new
+1979  0000               L31_TIMER4_Init:
+1983                     ; 656 	TIM4_TimeBaseInit(TIM4_PRESCALER_16, TIMER4_INT_TIME);
+1985  0000 ae0032        	ldw	x,#50
+1986  0003 a604          	ld	a,#4
+1987  0005 95            	ld	xh,a
+1988  0006 cd0000        	call	_TIM4_TimeBaseInit
+1990                     ; 657 	TIM4_ClearFlag(TIM4_FLAG_UPDATE);
+1992  0009 a601          	ld	a,#1
+1993  000b cd0000        	call	_TIM4_ClearFlag
+1995                     ; 658 	TIM4_ITConfig(TIM4_IT_UPDATE, ENABLE);	
+1997  000e ae0001        	ldw	x,#1
+1998  0011 a601          	ld	a,#1
+1999  0013 95            	ld	xh,a
+2000  0014 cd0000        	call	_TIM4_ITConfig
+2002                     ; 659 	TIM4_Cmd(ENABLE);
+2004  0017 a601          	ld	a,#1
+2005  0019 cd0000        	call	_TIM4_Cmd
+2007                     ; 660 }
+2010  001c 81            	ret
+2037                     ; 665 @far @interrupt void Timer4_ISR(void) 
+2037                     ; 666 {
+2039                     .text:	section	.text,new
+2040  0000               f_Timer4_ISR:
+2043  0000 3b0002        	push	c_x+2
+2044  0003 be00          	ldw	x,c_x
+2045  0005 89            	pushw	x
+2046  0006 3b0002        	push	c_y+2
+2047  0009 be00          	ldw	x,c_y
+2048  000b 89            	pushw	x
+2051                     ; 667 	TIM4_ClearITPendingBit(TIM4_IT_UPDATE);  
+2053  000c a601          	ld	a,#1
+2054  000e cd0000        	call	_TIM4_ClearITPendingBit
+2056                     ; 670 	if (sys.reqCalHzFlag){
+2058  0011 3d0a          	tnz	_sys+8
+2059  0013 2707          	jreq	L765
+2060                     ; 671 	 	sys.hzCnt++; 	  
+2062  0015 be0e          	ldw	x,_sys+12
+2063  0017 1c0001        	addw	x,#1
+2064  001a bf0e          	ldw	_sys+12,x
+2065  001c               L765:
+2066                     ; 675 	if (sys.light1.triacTriggeTime)
+2068  001c 3d03          	tnz	_sys+1
+2069  001e 270f          	jreq	L175
+2070                     ; 677 		sys.light1.triacTriggeTime--;
+2072  0020 3a03          	dec	_sys+1
+2073                     ; 678 		if (sys.light1.triacTriggeTime == 0)
+2075  0022 3d03          	tnz	_sys+1
+2076  0024 2609          	jrne	L175
+2077                     ; 680 			L1_EN_OFF;
+2079  0026 4b10          	push	#16
+2080  0028 ae500a        	ldw	x,#20490
+2081  002b cd0000        	call	_GPIO_WriteHigh
+2083  002e 84            	pop	a
+2084  002f               L175:
+2085                     ; 684 	 if (sys.light2.triacTriggeTime)
+2087  002f 3d07          	tnz	_sys+5
+2088  0031 270f          	jreq	L575
+2089                     ; 686 		sys.light2.triacTriggeTime--;
+2091  0033 3a07          	dec	_sys+5
+2092                     ; 687 		 if (sys.light2.triacTriggeTime == 0)
+2094  0035 3d07          	tnz	_sys+5
+2095  0037 2609          	jrne	L575
+2096                     ; 689 			 L2_EN_OFF;
+2098  0039 4b08          	push	#8
+2099  003b ae500a        	ldw	x,#20490
+2100  003e cd0000        	call	_GPIO_WriteHigh
+2102  0041 84            	pop	a
+2103  0042               L575:
+2104                     ; 694 	 if (sys.checkAcCnt){
+2106  0042 be10          	ldw	x,_sys+14
+2107  0044 2707          	jreq	L106
+2108                     ; 695 		sys.checkAcCnt--;
+2110  0046 be10          	ldw	x,_sys+14
+2111  0048 1d0001        	subw	x,#1
+2112  004b bf10          	ldw	_sys+14,x
+2113  004d               L106:
+2114                     ; 698 	 if (sys.cnt1s){
+2116  004d be12          	ldw	x,_sys+16
+2117  004f 2707          	jreq	L306
+2118                     ; 699 		sys.cnt1s--;
+2120  0051 be12          	ldw	x,_sys+16
+2121  0053 1d0001        	subw	x,#1
+2122  0056 bf12          	ldw	_sys+16,x
+2123  0058               L306:
+2124                     ; 702 	tick.c_50ms++;
+2126  0058 be1f          	ldw	x,_tick
+2127  005a 1c0001        	addw	x,#1
+2128  005d bf1f          	ldw	_tick,x
+2129                     ; 703 	if(tick.c_50ms >= 1000){
+2131  005f be1f          	ldw	x,_tick
+2132  0061 a303e8        	cpw	x,#1000
+2133  0064 2516          	jrult	L506
+2134                     ; 704 		tick.c_50ms = 0;
+2136  0066 5f            	clrw	x
+2137  0067 bf1f          	ldw	_tick,x
+2138                     ; 705 		tick.f_50ms = 1;
+2140  0069 ae0001        	ldw	x,#1
+2141  006c bf21          	ldw	_tick+2,x
+2142                     ; 707 		tick.c_100ms++;
+2144  006e 3c23          	inc	_tick+4
+2145                     ; 708 		if(tick.c_100ms >= 2){
+2147  0070 b623          	ld	a,_tick+4
+2148  0072 a102          	cp	a,#2
+2149  0074 2506          	jrult	L506
+2150                     ; 709 			tick.c_100ms = 0;
+2152  0076 3f23          	clr	_tick+4
+2153                     ; 710 			tick.f_100ms = 1;
+2155  0078 35010024      	mov	_tick+5,#1
+2156  007c               L506:
+2157                     ; 716 }
+2160  007c 85            	popw	x
+2161  007d bf00          	ldw	c_y,x
+2162  007f 320002        	pop	c_y+2
+2163  0082 85            	popw	x
+2164  0083 bf00          	ldw	c_x,x
+2165  0085 320002        	pop	c_x+2
+2166  0088 80            	iret
+2192                     ; 723 static void TIMER2_Init(void)
+2192                     ; 724 {    
+2194                     .text:	section	.text,new
+2195  0000               L11_TIMER2_Init:
+2199                     ; 725 	TIM2_TimeBaseInit(TIM2_PRESCALER_16, sys.hz50Flag ? TIMER2_INT_TIME_50HZ: TIMER2_INT_TIME_60HZ);
+2201  0000 3d0c          	tnz	_sys+10
+2202  0002 2705          	jreq	L67
+2203  0004 ae0064        	ldw	x,#100
+2204  0007 2003          	jra	L001
+2205  0009               L67:
+2206  0009 ae0053        	ldw	x,#83
+2207  000c               L001:
+2208  000c 89            	pushw	x
+2209  000d a604          	ld	a,#4
+2210  000f cd0000        	call	_TIM2_TimeBaseInit
+2212  0012 85            	popw	x
+2213                     ; 726    	TIM2_ClearFlag(TIM2_FLAG_UPDATE);
+2215  0013 ae0001        	ldw	x,#1
+2216  0016 cd0000        	call	_TIM2_ClearFlag
+2218                     ; 727    	TIM2_ITConfig(TIM2_IT_UPDATE, ENABLE);	   
+2220  0019 ae0001        	ldw	x,#1
+2221  001c a601          	ld	a,#1
+2222  001e 95            	ld	xh,a
+2223  001f cd0000        	call	_TIM2_ITConfig
+2225                     ; 728 }
+2228  0022 81            	ret
+2255                     ; 733 @far @interrupt void Timer2_ISR(void) 
+2255                     ; 734 {
+2257                     .text:	section	.text,new
+2258  0000               f_Timer2_ISR:
+2261  0000 3b0002        	push	c_x+2
+2262  0003 be00          	ldw	x,c_x
+2263  0005 89            	pushw	x
+2264  0006 3b0002        	push	c_y+2
+2265  0009 be00          	ldw	x,c_y
+2266  000b 89            	pushw	x
+2269                     ; 736 	TIM2_ClearITPendingBit(TIM2_IT_UPDATE);  
+2271  000c a601          	ld	a,#1
+2272  000e cd0000        	call	_TIM2_ClearITPendingBit
+2274                     ; 738 	if (sys.light1.briCnt) {
+2276  0011 3d02          	tnz	_sys
+2277  0013 2702          	jreq	L136
+2278                     ; 739 		sys.light1.briCnt--;			
+2280  0015 3a02          	dec	_sys
+2281  0017               L136:
+2282                     ; 742 	if ((sys.light1.briCnt == 0) && (!sys.light1.onFlag)){
+2284  0017 3d02          	tnz	_sys
+2285  0019 2615          	jrne	L336
+2287  001b 3d05          	tnz	_sys+3
+2288  001d 2611          	jrne	L336
+2289                     ; 743 		L1_EN_ON;
+2291  001f 4b10          	push	#16
+2292  0021 ae500a        	ldw	x,#20490
+2293  0024 cd0000        	call	_GPIO_WriteLow
+2295  0027 84            	pop	a
+2298  0028 35280003      	mov	_sys+1,#40
+2299                     ; 744 		sys.light1.onFlag = TRUE;		
+2301  002c 35010005      	mov	_sys+3,#1
+2302  0030               L336:
+2303                     ; 747 	if (sys.light2.briCnt) {
+2305  0030 3d06          	tnz	_sys+4
+2306  0032 2702          	jreq	L536
+2307                     ; 748 		sys.light2.briCnt--;		
+2309  0034 3a06          	dec	_sys+4
+2310  0036               L536:
+2311                     ; 751 	if ((sys.light2.briCnt == 0) && (!sys.light2.onFlag)){
+2313  0036 3d06          	tnz	_sys+4
+2314  0038 2615          	jrne	L736
+2316  003a 3d09          	tnz	_sys+7
+2317  003c 2611          	jrne	L736
+2318                     ; 752 		L2_EN_ON;
+2320  003e 4b08          	push	#8
+2321  0040 ae500a        	ldw	x,#20490
+2322  0043 cd0000        	call	_GPIO_WriteLow
+2324  0046 84            	pop	a
+2327  0047 35280007      	mov	_sys+5,#40
+2328                     ; 753 		sys.light2.onFlag = TRUE;
+2330  004b 35010009      	mov	_sys+7,#1
+2331  004f               L736:
+2332                     ; 761 	if ((sys.light1.briCnt == 0) &&  (sys.light2.briCnt == 0)){
+2334  004f 3d02          	tnz	_sys
+2335  0051 2608          	jrne	L146
+2337  0053 3d06          	tnz	_sys+4
+2338  0055 2604          	jrne	L146
+2339                     ; 762 		TIM2_Cmd(DISABLE);
+2341  0057 4f            	clr	a
+2342  0058 cd0000        	call	_TIM2_Cmd
+2344  005b               L146:
+2345                     ; 768 }
+2348  005b 85            	popw	x
+2349  005c bf00          	ldw	c_y,x
+2350  005e 320002        	pop	c_y+2
+2351  0061 85            	popw	x
+2352  0062 bf00          	ldw	c_x,x
+2353  0064 320002        	pop	c_x+2
+2354  0067 80            	iret
+2405                     ; 803 u8 Linear(float t)
+2405                     ; 804 {
+2407                     .text:	section	.text,new
+2408  0000               _Linear:
+2410  0000 5209          	subw	sp,#9
+2411       00000009      OFST:	set	9
+2414                     ; 805 	float 	temp1 = t * MAX_BRIGHTNESS;
+2416  0002 96            	ldw	x,sp
+2417  0003 1c000c        	addw	x,#OFST+3
+2418  0006 cd0000        	call	c_ltor
+2420  0009 ae0014        	ldw	x,#L333
+2421  000c cd0000        	call	c_fmul
+2423  000f 96            	ldw	x,sp
+2424  0010 1c0005        	addw	x,#OFST-4
+2425  0013 cd0000        	call	c_rtol
+2427                     ; 806 	u8	temp2 = (u8)(t * MAX_BRIGHTNESS);
+2429  0016 96            	ldw	x,sp
+2430  0017 1c000c        	addw	x,#OFST+3
+2431  001a cd0000        	call	c_ltor
+2433  001d ae0014        	ldw	x,#L333
+2434  0020 cd0000        	call	c_fmul
+2436  0023 cd0000        	call	c_ftol
+2438  0026 b603          	ld	a,c_lreg+3
+2439  0028 6b09          	ld	(OFST+0,sp),a
+2440                     ; 808 	if((t >= 0) && (t <= 1)){
+2442  002a 9c            	rvf
+2443  002b 0d0c          	tnz	(OFST+3,sp)
+2444  002d 2f4c          	jrslt	L176
+2446  002f 9c            	rvf
+2447  0030 a601          	ld	a,#1
+2448  0032 cd0000        	call	c_ctof
+2450  0035 96            	ldw	x,sp
+2451  0036 1c0001        	addw	x,#OFST-8
+2452  0039 cd0000        	call	c_rtol
+2454  003c 96            	ldw	x,sp
+2455  003d 1c000c        	addw	x,#OFST+3
+2456  0040 cd0000        	call	c_ltor
+2458  0043 96            	ldw	x,sp
+2459  0044 1c0001        	addw	x,#OFST-8
+2460  0047 cd0000        	call	c_fcmp
+2462  004a 2c2f          	jrsgt	L176
+2463                     ; 810 		if(temp1 - temp2 >= 0.5){
+2465  004c 9c            	rvf
+2466  004d 7b09          	ld	a,(OFST+0,sp)
+2467  004f 5f            	clrw	x
+2468  0050 97            	ld	xl,a
+2469  0051 cd0000        	call	c_itof
+2471  0054 96            	ldw	x,sp
+2472  0055 1c0001        	addw	x,#OFST-8
+2473  0058 cd0000        	call	c_rtol
+2475  005b 96            	ldw	x,sp
+2476  005c 1c0005        	addw	x,#OFST-4
+2477  005f cd0000        	call	c_ltor
+2479  0062 96            	ldw	x,sp
+2480  0063 1c0001        	addw	x,#OFST-8
+2481  0066 cd0000        	call	c_fsub
+2483  0069 ae0010        	ldw	x,#L107
+2484  006c cd0000        	call	c_fcmp
+2486  006f 2f05          	jrslt	L376
+2487                     ; 811 			return (temp2 + 1);
+2489  0071 7b09          	ld	a,(OFST+0,sp)
+2490  0073 4c            	inc	a
+2492  0074 2002          	jra	L601
+2493  0076               L376:
+2494                     ; 813 			return temp2;
+2496  0076 7b09          	ld	a,(OFST+0,sp)
+2498  0078               L601:
+2500  0078 5b09          	addw	sp,#9
+2501  007a 81            	ret
+2502  007b               L176:
+2503                     ; 818 		return DEFAULT_BRIGHTNESS;
+2505  007b 4f            	clr	a
+2507  007c 20fa          	jra	L601
+2541                     ; 824 u8 EraseIn(float t)
+2541                     ; 825 {
+2542                     .text:	section	.text,new
+2543  0000               _EraseIn:
+2545  0000 5204          	subw	sp,#4
+2546       00000004      OFST:	set	4
+2549                     ; 826 	if((t >= 0)&&(t <=1))
+2551  0002 9c            	rvf
+2552  0003 0d07          	tnz	(OFST+3,sp)
+2553  0005 2f38          	jrslt	L727
+2555  0007 9c            	rvf
+2556  0008 a601          	ld	a,#1
+2557  000a cd0000        	call	c_ctof
+2559  000d 96            	ldw	x,sp
+2560  000e 1c0001        	addw	x,#OFST-3
+2561  0011 cd0000        	call	c_rtol
+2563  0014 96            	ldw	x,sp
+2564  0015 1c0007        	addw	x,#OFST+3
+2565  0018 cd0000        	call	c_ltor
+2567  001b 96            	ldw	x,sp
+2568  001c 1c0001        	addw	x,#OFST-3
+2569  001f cd0000        	call	c_fcmp
+2571  0022 2c1b          	jrsgt	L727
+2572                     ; 827 		return (u8)(t*t*MAX_BRIGHTNESS);
+2574  0024 96            	ldw	x,sp
+2575  0025 1c0007        	addw	x,#OFST+3
+2576  0028 cd0000        	call	c_ltor
+2578  002b 96            	ldw	x,sp
+2579  002c 1c0007        	addw	x,#OFST+3
+2580  002f cd0000        	call	c_fmul
+2582  0032 ae0014        	ldw	x,#L333
+2583  0035 cd0000        	call	c_fmul
+2585  0038 cd0000        	call	c_ftol
+2587  003b b603          	ld	a,c_lreg+3
+2589  003d 2001          	jra	L211
+2590  003f               L727:
+2591                     ; 829 		return DEFAULT_BRIGHTNESS;
+2593  003f 4f            	clr	a
+2595  0040               L211:
+2597  0040 5b04          	addw	sp,#4
+2598  0042 81            	ret
+2632                     ; 832 u8 EraseOut(float t)
+2632                     ; 833 {
+2633                     .text:	section	.text,new
+2634  0000               _EraseOut:
+2636  0000 5204          	subw	sp,#4
+2637       00000004      OFST:	set	4
+2640                     ; 834 	if((t >= 0)&&(t <=1))
+2642  0002 9c            	rvf
+2643  0003 0d07          	tnz	(OFST+3,sp)
+2644  0005 2f3d          	jrslt	L157
+2646  0007 9c            	rvf
+2647  0008 a601          	ld	a,#1
+2648  000a cd0000        	call	c_ctof
+2650  000d 96            	ldw	x,sp
+2651  000e 1c0001        	addw	x,#OFST-3
+2652  0011 cd0000        	call	c_rtol
+2654  0014 96            	ldw	x,sp
+2655  0015 1c0007        	addw	x,#OFST+3
+2656  0018 cd0000        	call	c_ltor
+2658  001b 96            	ldw	x,sp
+2659  001c 1c0001        	addw	x,#OFST-3
+2660  001f cd0000        	call	c_fcmp
+2662  0022 2c20          	jrsgt	L157
+2663                     ; 835 		return (u8)((2-t) * t * MAX_BRIGHTNESS);
+2665  0024 a602          	ld	a,#2
+2666  0026 cd0000        	call	c_ctof
+2668  0029 96            	ldw	x,sp
+2669  002a 1c0007        	addw	x,#OFST+3
+2670  002d cd0000        	call	c_fsub
+2672  0030 96            	ldw	x,sp
+2673  0031 1c0007        	addw	x,#OFST+3
+2674  0034 cd0000        	call	c_fmul
+2676  0037 ae0014        	ldw	x,#L333
+2677  003a cd0000        	call	c_fmul
+2679  003d cd0000        	call	c_ftol
+2681  0040 b603          	ld	a,c_lreg+3
+2683  0042 2001          	jra	L611
+2684  0044               L157:
+2685                     ; 837 		return DEFAULT_BRIGHTNESS;
+2687  0044 4f            	clr	a
+2689  0045               L611:
+2691  0045 5b04          	addw	sp,#4
+2692  0047 81            	ret
+2726                     ; 840 u8 Swing(float t)
+2726                     ; 841 {
+2727                     .text:	section	.text,new
+2728  0000               _Swing:
+2730  0000 5204          	subw	sp,#4
+2731       00000004      OFST:	set	4
+2734                     ; 842 	if((t >= 0)&&(t <=1)){
+2736  0002 9c            	rvf
+2737  0003 0d07          	tnz	(OFST+3,sp)
+2738  0005 2e03          	jrsge	L421
+2739  0007 cc0093        	jp	L377
+2740  000a               L421:
+2742  000a 9c            	rvf
+2743  000b a601          	ld	a,#1
+2744  000d cd0000        	call	c_ctof
+2746  0010 96            	ldw	x,sp
+2747  0011 1c0001        	addw	x,#OFST-3
+2748  0014 cd0000        	call	c_rtol
+2750  0017 96            	ldw	x,sp
+2751  0018 1c0007        	addw	x,#OFST+3
+2752  001b cd0000        	call	c_ltor
+2754  001e 96            	ldw	x,sp
+2755  001f 1c0001        	addw	x,#OFST-3
+2756  0022 cd0000        	call	c_fcmp
+2758  0025 2c6c          	jrsgt	L377
+2759                     ; 843 		if(t < 0.5)
+2761  0027 9c            	rvf
+2762  0028 96            	ldw	x,sp
+2763  0029 1c0007        	addw	x,#OFST+3
+2764  002c cd0000        	call	c_ltor
+2766  002f ae0010        	ldw	x,#L107
+2767  0032 cd0000        	call	c_fcmp
+2769  0035 2e21          	jrsge	L577
+2770                     ; 844 			return (u8)(2 * t * t * MAX_BRIGHTNESS);
+2772  0037 96            	ldw	x,sp
+2773  0038 1c0007        	addw	x,#OFST+3
+2774  003b cd0000        	call	c_ltor
+2776  003e ae000c        	ldw	x,#L3001
+2777  0041 cd0000        	call	c_fmul
+2779  0044 96            	ldw	x,sp
+2780  0045 1c0007        	addw	x,#OFST+3
+2781  0048 cd0000        	call	c_fmul
+2783  004b ae0014        	ldw	x,#L333
+2784  004e cd0000        	call	c_fmul
+2786  0051 cd0000        	call	c_ftol
+2788  0054 b603          	ld	a,c_lreg+3
+2790  0056 2038          	jra	L221
+2791  0058               L577:
+2792                     ; 846 			return (u8)(((4-2*t)*t - 1) * MAX_BRIGHTNESS);
+2794  0058 96            	ldw	x,sp
+2795  0059 1c0007        	addw	x,#OFST+3
+2796  005c cd0000        	call	c_ltor
+2798  005f ae000c        	ldw	x,#L3001
+2799  0062 cd0000        	call	c_fmul
+2801  0065 96            	ldw	x,sp
+2802  0066 1c0001        	addw	x,#OFST-3
+2803  0069 cd0000        	call	c_rtol
+2805  006c a604          	ld	a,#4
+2806  006e cd0000        	call	c_ctof
+2808  0071 96            	ldw	x,sp
+2809  0072 1c0001        	addw	x,#OFST-3
+2810  0075 cd0000        	call	c_fsub
+2812  0078 96            	ldw	x,sp
+2813  0079 1c0007        	addw	x,#OFST+3
+2814  007c cd0000        	call	c_fmul
+2816  007f ae0008        	ldw	x,#L5101
+2817  0082 cd0000        	call	c_fsub
+2819  0085 ae0014        	ldw	x,#L333
+2820  0088 cd0000        	call	c_fmul
+2822  008b cd0000        	call	c_ftol
+2824  008e b603          	ld	a,c_lreg+3
+2826  0090               L221:
+2828  0090 5b04          	addw	sp,#4
+2829  0092 81            	ret
+2830  0093               L377:
+2831                     ; 849 		return DEFAULT_BRIGHTNESS;
+2833  0093 4f            	clr	a
+2835  0094 20fa          	jra	L221
+2869                     ; 854 void lightCtrl100ms(void)
+2869                     ; 855 {
+2870                     .text:	section	.text,new
+2871  0000               _lightCtrl100ms:
+2873  0000 5204          	subw	sp,#4
+2874       00000004      OFST:	set	4
+2877                     ; 857 	if(channel & 0x01){
+2879  0002 b611          	ld	a,_channel
+2880  0004 a501          	bcp	a,#1
+2881  0006 2603          	jrne	L031
+2882  0008 cc00b3        	jp	L3301
+2883  000b               L031:
+2884                     ; 858 		if(linear1_begin){//channel Linear调光开始
+2886  000b b600          	ld	a,_action_flag
+2887  000d a501          	bcp	a,#1
+2888  000f 2603          	jrne	L231
+2889  0011 cc00b3        	jp	L3301
+2890  0014               L231:
+2891                     ; 860 			if(last_bright1 == aim_bright1){
+2893  0014 ae0018        	ldw	x,#_last_bright1
+2894  0017 cd0000        	call	c_ltor
+2896  001a ae000d        	ldw	x,#_aim_bright1
+2897  001d cd0000        	call	c_fcmp
+2899  0020 260c          	jrne	L7301
+2900                     ; 861 				linear1_begin = 0;
+2902  0022 72110000      	bres	_action_flag,#0
+2903                     ; 862 				channel &= ~(0x01);
+2905  0026 72110011      	bres	_channel,#0
+2907  002a acb300b3      	jpf	L3301
+2908  002e               L7301:
+2909                     ; 866 				if(last_bright1 > aim_bright1){
+2911  002e 9c            	rvf
+2912  002f ae0018        	ldw	x,#_last_bright1
+2913  0032 cd0000        	call	c_ltor
+2915  0035 ae000d        	ldw	x,#_aim_bright1
+2916  0038 cd0000        	call	c_fcmp
+2918  003b 2d3e          	jrsle	L3401
+2919                     ; 867 					if((last_bright1 - aim_bright1) < (0 -change_step1)){
+2921  003d 9c            	rvf
+2922  003e ae0005        	ldw	x,#_change_step1
+2923  0041 cd0000        	call	c_ltor
+2925  0044 cd0000        	call	c_fneg
+2927  0047 96            	ldw	x,sp
+2928  0048 1c0001        	addw	x,#OFST-3
+2929  004b cd0000        	call	c_rtol
+2931  004e ae0018        	ldw	x,#_last_bright1
+2932  0051 cd0000        	call	c_ltor
+2934  0054 ae000d        	ldw	x,#_aim_bright1
+2935  0057 cd0000        	call	c_fsub
+2937  005a 96            	ldw	x,sp
+2938  005b 1c0001        	addw	x,#OFST-3
+2939  005e cd0000        	call	c_fcmp
+2941  0061 2e0a          	jrsge	L5401
+2942                     ; 868 						last_bright1 = aim_bright1;
+2944  0063 be0f          	ldw	x,_aim_bright1+2
+2945  0065 bf1a          	ldw	_last_bright1+2,x
+2946  0067 be0d          	ldw	x,_aim_bright1
+2947  0069 bf18          	ldw	_last_bright1,x
+2949  006b 2039          	jra	L1501
+2950  006d               L5401:
+2951                     ; 870 						last_bright1 += change_step1;
+2953  006d ae0005        	ldw	x,#_change_step1
+2954  0070 cd0000        	call	c_ltor
+2956  0073 ae0018        	ldw	x,#_last_bright1
+2957  0076 cd0000        	call	c_fgadd
+2959  0079 202b          	jra	L1501
+2960  007b               L3401:
+2961                     ; 874 					if((aim_bright1 - last_bright1) < change_step1){
+2963  007b 9c            	rvf
+2964  007c ae000d        	ldw	x,#_aim_bright1
+2965  007f cd0000        	call	c_ltor
+2967  0082 ae0018        	ldw	x,#_last_bright1
+2968  0085 cd0000        	call	c_fsub
+2970  0088 ae0005        	ldw	x,#_change_step1
+2971  008b cd0000        	call	c_fcmp
+2973  008e 2e0a          	jrsge	L3501
+2974                     ; 875 						last_bright1 = aim_bright1;
+2976  0090 be0f          	ldw	x,_aim_bright1+2
+2977  0092 bf1a          	ldw	_last_bright1+2,x
+2978  0094 be0d          	ldw	x,_aim_bright1
+2979  0096 bf18          	ldw	_last_bright1,x
+2981  0098 200c          	jra	L1501
+2982  009a               L3501:
+2983                     ; 877 						last_bright1 += change_step1;
+2985  009a ae0005        	ldw	x,#_change_step1
+2986  009d cd0000        	call	c_ltor
+2988  00a0 ae0018        	ldw	x,#_last_bright1
+2989  00a3 cd0000        	call	c_fgadd
+2991  00a6               L1501:
+2992                     ; 880 				realtime_bright1 = Linear(last_bright1);
+2994  00a6 be1a          	ldw	x,_last_bright1+2
+2995  00a8 89            	pushw	x
+2996  00a9 be18          	ldw	x,_last_bright1
+2997  00ab 89            	pushw	x
+2998  00ac cd0000        	call	_Linear
+3000  00af 5b04          	addw	sp,#4
+3001  00b1 b713          	ld	_realtime_bright1,a
+3002  00b3               L3301:
+3003                     ; 905 	if(channel & 0x02){
+3005  00b3 b611          	ld	a,_channel
+3006  00b5 a502          	bcp	a,#2
+3007  00b7 2603          	jrne	L431
+3008  00b9 cc0164        	jp	L7501
+3009  00bc               L431:
+3010                     ; 906 		if(linear2_begin){//channel2 Linear调光开始
+3012  00bc b600          	ld	a,_action_flag
+3013  00be a502          	bcp	a,#2
+3014  00c0 2603          	jrne	L631
+3015  00c2 cc0164        	jp	L7501
+3016  00c5               L631:
+3017                     ; 909 			if(last_bright2 == aim_bright2){
+3019  00c5 ae0014        	ldw	x,#_last_bright2
+3020  00c8 cd0000        	call	c_ltor
+3022  00cb ae0009        	ldw	x,#_aim_bright2
+3023  00ce cd0000        	call	c_fcmp
+3025  00d1 260c          	jrne	L3601
+3026                     ; 910 				linear2_begin = 0;
+3028  00d3 72130000      	bres	_action_flag,#1
+3029                     ; 911 				channel &= ~(0x02);
+3031  00d7 72130011      	bres	_channel,#1
+3033  00db ac640164      	jpf	L7501
+3034  00df               L3601:
+3035                     ; 915 				if(last_bright2 > aim_bright2){
+3037  00df 9c            	rvf
+3038  00e0 ae0014        	ldw	x,#_last_bright2
+3039  00e3 cd0000        	call	c_ltor
+3041  00e6 ae0009        	ldw	x,#_aim_bright2
+3042  00e9 cd0000        	call	c_fcmp
+3044  00ec 2d3e          	jrsle	L7601
+3045                     ; 916 					if((last_bright2 - aim_bright2) < (0 -change_step2)){
+3047  00ee 9c            	rvf
+3048  00ef ae0001        	ldw	x,#_change_step2
+3049  00f2 cd0000        	call	c_ltor
+3051  00f5 cd0000        	call	c_fneg
+3053  00f8 96            	ldw	x,sp
+3054  00f9 1c0001        	addw	x,#OFST-3
+3055  00fc cd0000        	call	c_rtol
+3057  00ff ae0014        	ldw	x,#_last_bright2
+3058  0102 cd0000        	call	c_ltor
+3060  0105 ae0009        	ldw	x,#_aim_bright2
+3061  0108 cd0000        	call	c_fsub
+3063  010b 96            	ldw	x,sp
+3064  010c 1c0001        	addw	x,#OFST-3
+3065  010f cd0000        	call	c_fcmp
+3067  0112 2e0a          	jrsge	L1701
+3068                     ; 917 						last_bright2 = aim_bright2;
+3070  0114 be0b          	ldw	x,_aim_bright2+2
+3071  0116 bf16          	ldw	_last_bright2+2,x
+3072  0118 be09          	ldw	x,_aim_bright2
+3073  011a bf14          	ldw	_last_bright2,x
+3075  011c 2039          	jra	L5701
+3076  011e               L1701:
+3077                     ; 919 						last_bright2 += change_step2;
+3079  011e ae0001        	ldw	x,#_change_step2
+3080  0121 cd0000        	call	c_ltor
+3082  0124 ae0014        	ldw	x,#_last_bright2
+3083  0127 cd0000        	call	c_fgadd
+3085  012a 202b          	jra	L5701
+3086  012c               L7601:
+3087                     ; 923 					if((aim_bright2 - last_bright2) < change_step2){
+3089  012c 9c            	rvf
+3090  012d ae0009        	ldw	x,#_aim_bright2
+3091  0130 cd0000        	call	c_ltor
+3093  0133 ae0014        	ldw	x,#_last_bright2
+3094  0136 cd0000        	call	c_fsub
+3096  0139 ae0001        	ldw	x,#_change_step2
+3097  013c cd0000        	call	c_fcmp
+3099  013f 2e0a          	jrsge	L7701
+3100                     ; 924 						last_bright2 = aim_bright2;
+3102  0141 be0b          	ldw	x,_aim_bright2+2
+3103  0143 bf16          	ldw	_last_bright2+2,x
+3104  0145 be09          	ldw	x,_aim_bright2
+3105  0147 bf14          	ldw	_last_bright2,x
+3107  0149 200c          	jra	L5701
+3108  014b               L7701:
+3109                     ; 926 						last_bright2 += change_step2;
+3111  014b ae0001        	ldw	x,#_change_step2
+3112  014e cd0000        	call	c_ltor
+3114  0151 ae0014        	ldw	x,#_last_bright2
+3115  0154 cd0000        	call	c_fgadd
+3117  0157               L5701:
+3118                     ; 929 				realtime_bright2 = Linear(last_bright2);
+3120  0157 be16          	ldw	x,_last_bright2+2
+3121  0159 89            	pushw	x
+3122  015a be14          	ldw	x,_last_bright2
+3123  015c 89            	pushw	x
+3124  015d cd0000        	call	_Linear
+3126  0160 5b04          	addw	sp,#4
+3127  0162 b712          	ld	_realtime_bright2,a
+3128  0164               L7501:
+3129                     ; 1038 }
+3132  0164 5b04          	addw	sp,#4
+3133  0166 81            	ret
+3168                     ; 1044 void lightCtrl_50ms(void)
+3168                     ; 1045 {
+3169                     .text:	section	.text,new
+3170  0000               _lightCtrl_50ms:
+3172  0000 5204          	subw	sp,#4
+3173       00000004      OFST:	set	4
+3176                     ; 1103 	if(channel1){
+3178  0002 3d00          	tnz	_channel1
+3179  0004 2603          	jrne	L241
+3180  0006 cc00bd        	jp	L3111
+3181  0009               L241:
+3182                     ; 1105 		if(last_bright1 == aim_bright1){		//channel1 Linear调光开始
+3184  0009 ae0018        	ldw	x,#_last_bright1
+3185  000c cd0000        	call	c_ltor
+3187  000f ae000d        	ldw	x,#_aim_bright1
+3188  0012 cd0000        	call	c_fcmp
+3190  0015 260a          	jrne	L5111
+3191                     ; 1106 			channel1 = 0;
+3193  0017 3f00          	clr	_channel1
+3194                     ; 1107 			slc.savFlag = 1;
+3196  0019 3501003a      	mov	_slc+30,#1
+3198  001d acbd00bd      	jpf	L3111
+3199  0021               L5111:
+3200                     ; 1111 			if(last_bright1 > aim_bright1){
+3202  0021 9c            	rvf
+3203  0022 ae0018        	ldw	x,#_last_bright1
+3204  0025 cd0000        	call	c_ltor
+3206  0028 ae000d        	ldw	x,#_aim_bright1
+3207  002b cd0000        	call	c_fcmp
+3209  002e 2d41          	jrsle	L1211
+3210                     ; 1112 				if((last_bright1 - aim_bright1) <= (0.000001 -change_step1)){
+3212  0030 9c            	rvf
+3213  0031 ae0004        	ldw	x,#L1311
+3214  0034 cd0000        	call	c_ltor
+3216  0037 ae0005        	ldw	x,#_change_step1
+3217  003a cd0000        	call	c_fsub
+3219  003d 96            	ldw	x,sp
+3220  003e 1c0001        	addw	x,#OFST-3
+3221  0041 cd0000        	call	c_rtol
+3223  0044 ae0018        	ldw	x,#_last_bright1
+3224  0047 cd0000        	call	c_ltor
+3226  004a ae000d        	ldw	x,#_aim_bright1
+3227  004d cd0000        	call	c_fsub
+3229  0050 96            	ldw	x,sp
+3230  0051 1c0001        	addw	x,#OFST-3
+3231  0054 cd0000        	call	c_fcmp
+3233  0057 2c0a          	jrsgt	L3211
+3234                     ; 1113 					last_bright1 = aim_bright1;
+3236  0059 be0f          	ldw	x,_aim_bright1+2
+3237  005b bf1a          	ldw	_last_bright1+2,x
+3238  005d be0d          	ldw	x,_aim_bright1
+3239  005f bf18          	ldw	_last_bright1,x
+3241  0061 204d          	jra	L7311
+3242  0063               L3211:
+3243                     ; 1115 					last_bright1 += change_step1;
+3245  0063 ae0005        	ldw	x,#_change_step1
+3246  0066 cd0000        	call	c_ltor
+3248  0069 ae0018        	ldw	x,#_last_bright1
+3249  006c cd0000        	call	c_fgadd
+3251  006f 203f          	jra	L7311
+3252  0071               L1211:
+3253                     ; 1119 				if((aim_bright1 - last_bright1) <= (change_step1 + 0.000001)){
+3255  0071 9c            	rvf
+3256  0072 ae0005        	ldw	x,#_change_step1
+3257  0075 cd0000        	call	c_ltor
+3259  0078 ae0004        	ldw	x,#L1311
+3260  007b cd0000        	call	c_fadd
+3262  007e 96            	ldw	x,sp
+3263  007f 1c0001        	addw	x,#OFST-3
+3264  0082 cd0000        	call	c_rtol
+3266  0085 ae000d        	ldw	x,#_aim_bright1
+3267  0088 cd0000        	call	c_ltor
+3269  008b ae0018        	ldw	x,#_last_bright1
+3270  008e cd0000        	call	c_fsub
+3272  0091 96            	ldw	x,sp
+3273  0092 1c0001        	addw	x,#OFST-3
+3274  0095 cd0000        	call	c_fcmp
+3276  0098 2c0a          	jrsgt	L1411
+3277                     ; 1120 					last_bright1 = aim_bright1;
+3279  009a be0f          	ldw	x,_aim_bright1+2
+3280  009c bf1a          	ldw	_last_bright1+2,x
+3281  009e be0d          	ldw	x,_aim_bright1
+3282  00a0 bf18          	ldw	_last_bright1,x
+3284  00a2 200c          	jra	L7311
+3285  00a4               L1411:
+3286                     ; 1122 					last_bright1 += change_step1;
+3288  00a4 ae0005        	ldw	x,#_change_step1
+3289  00a7 cd0000        	call	c_ltor
+3291  00aa ae0018        	ldw	x,#_last_bright1
+3292  00ad cd0000        	call	c_fgadd
+3294  00b0               L7311:
+3295                     ; 1125 			realtime_bright1 = Linear(last_bright1);
+3297  00b0 be1a          	ldw	x,_last_bright1+2
+3298  00b2 89            	pushw	x
+3299  00b3 be18          	ldw	x,_last_bright1
+3300  00b5 89            	pushw	x
+3301  00b6 cd0000        	call	_Linear
+3303  00b9 5b04          	addw	sp,#4
+3304  00bb b713          	ld	_realtime_bright1,a
+3305  00bd               L3111:
+3306                     ; 1130 	if(channel2){
+3308  00bd 3d01          	tnz	_channel2
+3309  00bf 2603          	jrne	L441
+3310  00c1 cc0178        	jp	L5411
+3311  00c4               L441:
+3312                     ; 1132 		if(last_bright2 == aim_bright2){
+3314  00c4 ae0014        	ldw	x,#_last_bright2
+3315  00c7 cd0000        	call	c_ltor
+3317  00ca ae0009        	ldw	x,#_aim_bright2
+3318  00cd cd0000        	call	c_fcmp
+3320  00d0 260a          	jrne	L7411
+3321                     ; 1133 			channel2 = 0;
+3323  00d2 3f01          	clr	_channel2
+3324                     ; 1134 			slc.savFlag = 1;
+3326  00d4 3501003a      	mov	_slc+30,#1
+3328  00d8 ac780178      	jpf	L5411
+3329  00dc               L7411:
+3330                     ; 1138 			if(last_bright2 > aim_bright2){
+3332  00dc 9c            	rvf
+3333  00dd ae0014        	ldw	x,#_last_bright2
+3334  00e0 cd0000        	call	c_ltor
+3336  00e3 ae0009        	ldw	x,#_aim_bright2
+3337  00e6 cd0000        	call	c_fcmp
+3339  00e9 2d41          	jrsle	L3511
+3340                     ; 1139 				if((last_bright2 - aim_bright2) <= (0.000001 -change_step2)){
+3342  00eb 9c            	rvf
+3343  00ec ae0004        	ldw	x,#L1311
+3344  00ef cd0000        	call	c_ltor
+3346  00f2 ae0001        	ldw	x,#_change_step2
+3347  00f5 cd0000        	call	c_fsub
+3349  00f8 96            	ldw	x,sp
+3350  00f9 1c0001        	addw	x,#OFST-3
+3351  00fc cd0000        	call	c_rtol
+3353  00ff ae0014        	ldw	x,#_last_bright2
+3354  0102 cd0000        	call	c_ltor
+3356  0105 ae0009        	ldw	x,#_aim_bright2
+3357  0108 cd0000        	call	c_fsub
+3359  010b 96            	ldw	x,sp
+3360  010c 1c0001        	addw	x,#OFST-3
+3361  010f cd0000        	call	c_fcmp
+3363  0112 2c0a          	jrsgt	L5511
+3364                     ; 1140 					last_bright2 = aim_bright2;
+3366  0114 be0b          	ldw	x,_aim_bright2+2
+3367  0116 bf16          	ldw	_last_bright2+2,x
+3368  0118 be09          	ldw	x,_aim_bright2
+3369  011a bf14          	ldw	_last_bright2,x
+3371  011c 204d          	jra	L1611
+3372  011e               L5511:
+3373                     ; 1142 					last_bright2 += change_step2;
+3375  011e ae0001        	ldw	x,#_change_step2
+3376  0121 cd0000        	call	c_ltor
+3378  0124 ae0014        	ldw	x,#_last_bright2
+3379  0127 cd0000        	call	c_fgadd
+3381  012a 203f          	jra	L1611
+3382  012c               L3511:
+3383                     ; 1146 				if((aim_bright2 - last_bright2) <= (change_step2 + 0.000001)){
+3385  012c 9c            	rvf
+3386  012d ae0001        	ldw	x,#_change_step2
+3387  0130 cd0000        	call	c_ltor
+3389  0133 ae0004        	ldw	x,#L1311
+3390  0136 cd0000        	call	c_fadd
+3392  0139 96            	ldw	x,sp
+3393  013a 1c0001        	addw	x,#OFST-3
+3394  013d cd0000        	call	c_rtol
+3396  0140 ae0009        	ldw	x,#_aim_bright2
+3397  0143 cd0000        	call	c_ltor
+3399  0146 ae0014        	ldw	x,#_last_bright2
+3400  0149 cd0000        	call	c_fsub
+3402  014c 96            	ldw	x,sp
+3403  014d 1c0001        	addw	x,#OFST-3
+3404  0150 cd0000        	call	c_fcmp
+3406  0153 2c0a          	jrsgt	L3611
+3407                     ; 1147 					last_bright2 = aim_bright2;
+3409  0155 be0b          	ldw	x,_aim_bright2+2
+3410  0157 bf16          	ldw	_last_bright2+2,x
+3411  0159 be09          	ldw	x,_aim_bright2
+3412  015b bf14          	ldw	_last_bright2,x
+3414  015d 200c          	jra	L1611
+3415  015f               L3611:
+3416                     ; 1149 					last_bright2 += change_step2;
+3418  015f ae0001        	ldw	x,#_change_step2
+3419  0162 cd0000        	call	c_ltor
+3421  0165 ae0014        	ldw	x,#_last_bright2
+3422  0168 cd0000        	call	c_fgadd
+3424  016b               L1611:
+3425                     ; 1152 			realtime_bright2 = Linear(last_bright2);
+3427  016b be16          	ldw	x,_last_bright2+2
+3428  016d 89            	pushw	x
+3429  016e be14          	ldw	x,_last_bright2
+3430  0170 89            	pushw	x
+3431  0171 cd0000        	call	_Linear
+3433  0174 5b04          	addw	sp,#4
+3434  0176 b712          	ld	_realtime_bright2,a
+3435  0178               L5411:
+3436                     ; 1160 }
+3439  0178 5b04          	addw	sp,#4
+3440  017a 81            	ret
+4207                     	xdef	_Swing
+4208                     	xdef	_EraseOut
+4209                     	xdef	_EraseIn
+4210                     	xdef	_Linear
+4211                     	xdef	_assert_failed
+4212                     	xdef	_main
+4213                     	xdef	_interrupt_priority_set
+4214                     	xdef	_MEEPROM_Init
+4215                     	xdef	_device_info_read
+4216                     	xdef	_default_info_set
+4217                     	xdef	_channel_status_save
+4218                     	xdef	_MEEPROM_ReadByte
+4219                     	xdef	_MEEPROM_WriteByte
+4220                     	xdef	_system_addr_get
+4221                     	xdef	_system_clock_set
+4222                     	xdef	_delay
+4223                     	xref	_uart1_recv_handle
+4224                     	xref	_uart1_init
+4225                     	xref.b	_uart1_frame
+4226                     	xdef	f_Timer4_ISR
+4227                     	xdef	f_Timer2_ISR
+4228                     	xdef	f_Ext_PortD_ISR
+4229                     	xdef	_mymemcpy
+4230                     	xdef	_lightCtrl_50ms
+4231                     	xdef	_lightCtrl100ms
+4232                     	switch	.ubsct
+4233  0000               _action_flag:
+4234  0000 00            	ds.b	1
+4235                     	xdef	_action_flag
+4236  0001               _change_step2:
+4237  0001 00000000      	ds.b	4
+4238                     	xdef	_change_step2
+4239  0005               _change_step1:
+4240  0005 00000000      	ds.b	4
+4241                     	xdef	_change_step1
+4242  0009               _aim_bright2:
+4243  0009 00000000      	ds.b	4
+4244                     	xdef	_aim_bright2
+4245  000d               _aim_bright1:
+4246  000d 00000000      	ds.b	4
+4247                     	xdef	_aim_bright1
+4248                     	xdef	_channel2
+4249                     	xdef	_channel1
+4250  0011               _channel:
+4251  0011 00            	ds.b	1
+4252                     	xdef	_channel
+4253  0012               _realtime_bright2:
+4254  0012 00            	ds.b	1
+4255                     	xdef	_realtime_bright2
+4256  0013               _realtime_bright1:
+4257  0013 00            	ds.b	1
+4258                     	xdef	_realtime_bright1
+4259  0014               _last_bright2:
+4260  0014 00000000      	ds.b	4
+4261                     	xdef	_last_bright2
+4262  0018               _last_bright1:
+4263  0018 00000000      	ds.b	4
+4264                     	xdef	_last_bright1
+4265  001c               _slc:
+4266  001c 000000000000  	ds.b	35
+4267                     	xdef	_slc
+4268                     	xdef	_sys
+4269                     	xdef	_tick
+4270                     	xref	_TIM4_ClearITPendingBit
+4271                     	xref	_TIM4_ClearFlag
+4272                     	xref	_TIM4_SetAutoreload
+4273                     	xref	_TIM4_ITConfig
+4274                     	xref	_TIM4_Cmd
+4275                     	xref	_TIM4_TimeBaseInit
+4276                     	xref	_TIM2_ClearITPendingBit
+4277                     	xref	_TIM2_ClearFlag
+4278                     	xref	_TIM2_SetAutoreload
+4279                     	xref	_TIM2_ITConfig
+4280                     	xref	_TIM2_Cmd
+4281                     	xref	_TIM2_TimeBaseInit
+4282                     	xref	_ITC_SetSoftwarePriority
+4283                     	xref	_ITC_DeInit
+4284                     	xref	_GPIO_ReadOutputData
+4285                     	xref	_GPIO_ReadInputData
+4286                     	xref	_GPIO_WriteLow
+4287                     	xref	_GPIO_WriteHigh
+4288                     	xref	_GPIO_Init
+4289                     	xref	_FLASH_GetFlagStatus
+4290                     	xref	_FLASH_ReadByte
+4291                     	xref	_FLASH_ProgramByte
+4292                     	xref	_FLASH_DeInit
+4293                     	xref	_FLASH_Lock
+4294                     	xref	_FLASH_Unlock
+4295                     	xref	_EXTI_SetExtIntSensitivity
+4296                     	xref	_EXTI_DeInit
+4297                     	xref	_CLK_PeripheralClockConfig
+4298                     	switch	.const
+4299  0004               L1311:
+4300  0004 358637bd      	dc.w	13702,14269
+4301  0008               L5101:
+4302  0008 3f800000      	dc.w	16256,0
+4303  000c               L3001:
+4304  000c 40000000      	dc.w	16384,0
+4305  0010               L107:
+4306  0010 3f000000      	dc.w	16128,0
+4307  0014               L333:
+4308  0014 42c80000      	dc.w	17096,0
+4309                     	xref.b	c_lreg
+4310                     	xref.b	c_x
+4311                     	xref.b	c_y
+4331                     	xref	c_fadd
+4332                     	xref	c_fgadd
+4333                     	xref	c_fneg
+4334                     	xref	c_fsub
+4335                     	xref	c_fcmp
+4336                     	xref	c_ctof
+4337                     	xref	c_ftol
+4338                     	xref	c_fmul
+4339                     	xref	c_rtol
+4340                     	xref	c_fdiv
+4341                     	xref	c_itof
+4342                     	xref	c_ladd
+4343                     	xref	c_uitolx
+4344                     	xref	c_lrzmp
+4345                     	xref	c_lgsbc
+4346                     	xref	c_ltor
+4347                     	end

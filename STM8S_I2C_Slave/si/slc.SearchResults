@@ -1,0 +1,6 @@
+---- slc.f_mal Matches (5 in 2 files) ----
+Main.c (d:\fyl\wp\stm8s\stm8s_i2c_slave_slc\src):	slc.f_mal.byte = 0;
+Main.c (d:\fyl\wp\stm8s\stm8s_i2c_slave_slc\src):			 slc.f_mal.bit.f_ac = 1;
+Main.c (d:\fyl\wp\stm8s\stm8s_i2c_slave_slc\src):				slc.f_mal.bit.f_ac = 0;
+Uart.c (d:\fyl\wp\stm8s\stm8s_i2c_slave_slc\src):	uart1_frame.txbuf[12] = slc.f_mal.byte;
+Uart.c (d:\fyl\wp\stm8s\stm8s_i2c_slave_slc\src):	uart1_frame.txbuf[11] = slc.f_mal.byte;
